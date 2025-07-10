@@ -1,0 +1,37 @@
+{
+  "id": "",
+  "name": "",
+  "publisher": "TCN",
+  "version": "",
+  "brief": "Breve explicación de la APP",
+  "description": "Descripcióbn ampliada de la app",
+  "privacyStatement": "https://www.tecon.es/",
+  "EULA": "https://www.tecon.es/",
+  "help": "https://www.tecon.es/",
+  "url": "https://www.tecon.es/",
+  "logo": "./Logo/Tecon.png",
+  "dependencies": [
+    {
+      "appId": "09e8e853-9a52-43c6-a954-1a4a69cd7cbc",
+      "name": "Tecon AddOn Comun",
+      "publisher": "TCN",
+      "version": "1..."
+    }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "19.0.0.0",
+  "idRanges": [
+    {
+      "from": 64400,
+      "to": 64599
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "target": "Cloud",
+  "runtime": "8.0"
+}
