@@ -1,4 +1,4 @@
-page 7268940 "TCNCommissionsSetupCOMI"
+page 56200 "TCNCommissionsSetupCOMI"
 {
     Caption = 'Commissions Setup';
     PageType = Card;

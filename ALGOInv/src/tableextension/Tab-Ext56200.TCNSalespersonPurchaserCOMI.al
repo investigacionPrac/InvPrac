@@ -1,4 +1,4 @@
-tableextension 7268940 "TCNSalespersonPurchaserCOMI" extends "Salesperson/Purchaser"
+tableextension 56200 "TCNSalespersonPurchaserCOMI" extends "Salesperson/Purchaser"
 {
     fields
     {

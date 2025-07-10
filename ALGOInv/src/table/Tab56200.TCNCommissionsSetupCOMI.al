@@ -1,4 +1,4 @@
-table 7268940 "TCNCommissionsSetupCOMI"
+table 56200 "TCNCommissionsSetupCOMI"
 {
     Caption = 'Commissions Setup';
     DataClassification = CustomerContent;

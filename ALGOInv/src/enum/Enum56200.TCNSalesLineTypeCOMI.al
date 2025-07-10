@@ -1,4 +1,4 @@
-enum 7268940 "TCNSalesLineTypeCOMI"
+enum 56200 "TCNSalesLineTypeCOMI"
 {
     Extensible = true;
     //AssignmentCompatibility = true;

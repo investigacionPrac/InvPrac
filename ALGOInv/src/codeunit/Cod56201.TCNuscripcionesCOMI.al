@@ -1,4 +1,4 @@
-codeunit 7268941 "TCNuscripcionesCOMI"
+codeunit 56201 "TCNuscripcionesCOMI"
 {
     SingleInstance = true;
 

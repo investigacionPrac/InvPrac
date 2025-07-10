@@ -1,4 +1,4 @@
-codeunit 7268943 "TCNCuInstalacionCOMI"
+codeunit 56203 "TCNCuInstalacionCOMI"
 {
     Subtype = Install;
 
