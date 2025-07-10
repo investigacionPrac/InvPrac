@@ -15,8 +15,7 @@
   ],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "14.0.0.0",
-  "runtime": "3.0",
+  "application": "26.0.0.0",
   "idRanges": [
     {
       "from": 56200,
