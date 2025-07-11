@@ -141,6 +141,12 @@ jobs:
           getEnvironments: '*'
           type: 'CD'
 
+      #testeo de porque no entra en la fase de build
+      - name: Set buildOrderJson output
+        run: echo "buildOrderJson=$env:buildOrderJson" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+
   CheckForUpdates:
     needs: [ Initialization ]
     runs-on: [ windows-latest ]
