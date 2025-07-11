@@ -4,11 +4,10 @@
   "appFolders": [],
   "testFolders": [],
   "bcptTestFolders": [],
-  "useProjectDependencies": true,
   "appDependencyProbingPaths": [
     {
       "repo": ".",
-      "release_status": "latest-build",
+      "release_status": "include",
       "projects": "ALGOInv"
     }
   ]
