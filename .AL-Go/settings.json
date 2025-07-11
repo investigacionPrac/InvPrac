@@ -4,7 +4,6 @@
   "appFolders": [],
   "testFolders": [],
   "bcptTestFolders": [],
-
   "appDependencyProbingPaths": [
     {
       "repo": ".",
