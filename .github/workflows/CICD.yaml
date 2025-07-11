@@ -145,6 +145,11 @@ jobs:
       - name: Set buildOrderJson output
         run: echo "buildOrderJson=$env:buildOrderJson" >> $env:GITHUB_OUTPUT
         shell: pwsh
+      - name: Debug buildOrderJson
+        shell: pwsh
+        run: |
+          Write-Host "buildOrderJson: $env:buildOrderJson"
+
 
 
   CheckForUpdates:
