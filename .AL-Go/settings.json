@@ -6,9 +6,11 @@
   "bcptTestFolders": [],
   "appDependencyProbingPaths": [
     {
-      "repo": ".",
-      "release_status": "include",
-      "projects": "ALGOInv"
+      "repo": "https://github.com/AlvaroMartinezGuija/comon",
+      "version": "latest",
+      "release_status": "release",
+      "authTokenSecret":"",
+      "projects": "*"
     }
   ]
 }
