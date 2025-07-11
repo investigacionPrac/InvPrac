@@ -7,7 +7,7 @@
   "useProjectDependencies": true,
   "appDependencyProbingPaths": [
     {
-      "repo":".",
+      "repo": ".",
       "release_status": "include",
       "projects": "ALGOInv"
     }
