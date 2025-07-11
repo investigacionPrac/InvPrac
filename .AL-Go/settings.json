@@ -9,7 +9,6 @@
       "repo": "https://github.com/AlvaroMartinezGuija/comon",
       "version": "latest",
       "release_status": "release",
-      "authTokenSecret":"",
       "projects": "*"
     }
   ]
