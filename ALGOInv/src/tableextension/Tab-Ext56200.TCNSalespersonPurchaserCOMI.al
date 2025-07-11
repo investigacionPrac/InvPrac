@@ -2,7 +2,7 @@ tableextension 56200 "TCNSalespersonPurchaserCOMI" extends "Salesperson/Purchase
 {
     fields
     {
-        field(7268940; TCNVendorNoCOMI; Code[20])
+        field(56200; TCNVendorNoCOMI; Code[20])
         {
             Caption = 'Vendor No.';
             TableRelation = Vendor;

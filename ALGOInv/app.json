@@ -14,18 +14,16 @@
   "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "18.0.0.0",
+  "application": "25.0.0.0",
   "idRanges": [
     {
       "from": 56200,
       "to": 56400
     }
   ],
-  "runtime": "7.0",
-  "showMyCode": false,
-  "target": "Extension",
+  "runtime": "14.0",
   "features": [
-      "NoImplicitWith",
-      "TranslationFile"
+    "NoImplicitWith",
+    "TranslationFile"
   ]
 }
