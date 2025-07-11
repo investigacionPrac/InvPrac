@@ -3,12 +3,5 @@
   "country": "es",
   "appFolders": [],
   "testFolders": [],
-  "bcptTestFolders": [],
-  "appDependencyProbingPaths": [
-    {
-      "repo": ".",
-      "version": "include",
-      "projects": "*"
-    }
-  ]
+  "bcptTestFolders": []
 }
