@@ -3,5 +3,13 @@
   "country": "es",
   "appFolders": [],
   "testFolders": [],
-  "bcptTestFolders": []
+  "bcptTestFolders": [],
+  "useProjectDependencies": true,
+  "appDependencyProbingPaths": [
+    {
+      "repo":".",
+      "release_status": "include",
+      "projects": "ALGOInv"
+    }
+  ]
 }
