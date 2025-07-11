@@ -8,7 +8,7 @@
   "appDependencyProbingPaths": [
     {
       "repo": ".",
-      "release_status": "include",
+      "release_status": "latest-build",
       "projects": "ALGOInv"
     }
   ]
