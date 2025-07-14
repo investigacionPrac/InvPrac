@@ -3,9 +3,5 @@
   "country": "es",
   "appFolders": ["ALGOInv"],
   "testFolders": [],
-  "bcptTestFolders": [],
-  "DeployToBC-SANDBOX-DEV":{
-    "EnvironmentName": "BC-SANDBOX-DEV",
-    "continuousDeployment": true,
-  }
+  "bcptTestFolders": []
 }
