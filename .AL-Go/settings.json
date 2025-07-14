@@ -1,16 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/settings.schema.json",
   "country": "es",
-  "appFolders": [
-    "ALGOInv"
-  ],
+  "appFolders": ["ALGOInv"],
   "testFolders": [],
-  "bcptTestFolders": []//,
-  // "appDependencyProbingPaths": [
-  //   {
-  //     "repo": "https://github.com/AlvaroMartinezGuija/comon",
-  //     "release_status": "latestBuild",
-  //     "AuthTokenSecret": "GhTokenWorkflow"
-  //   }
-  // ]
+  "bcptTestFolders": []
 }
