@@ -11,14 +11,7 @@
   "url": "https://www.tecon.es/",
   "contextSensitiveHelpUrl": "https://www.tecon.es/",
   "logo": "./Logo/Tecon.png",
-  "dependencies": [
-    {
-      "id": "09e8e853-9a52-43c6-a954-1a4a69cd7cbc",
-      "name": "Tecon AddOn Comun",
-      "publisher": "TCN",
-      "version": "1.20250613.0.0"
-    }
-  ],
+  "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
   "application": "25.0.0.0",

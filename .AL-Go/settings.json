@@ -3,12 +3,12 @@
   "country": "es",
   "appFolders": ["ALGOInv"],
   "testFolders": [],
-  "bcptTestFolders": [],
-  "appDependencyProbingPaths": [
-    {
-      "repo": "https://github.com/AlvaroMartinezGuija/comon",
-      "release_status": "latestBuild",
-      "AuthTokenSecret": "GhTokenWorkflow"
-    }
-  ]
+  "bcptTestFolders": []//,
+  // "appDependencyProbingPaths": [
+  //   {
+  //     "repo": "https://github.com/AlvaroMartinezGuija/comon",
+  //     "release_status": "latestBuild",
+  //     "AuthTokenSecret": "GhTokenWorkflow"
+  //   }
+  // ]
 }
