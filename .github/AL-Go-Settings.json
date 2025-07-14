@@ -5,5 +5,6 @@
   "templateSha": "e2478819f6dda468d6716036ccdd2dc89dd458b6",
   "DeliverToStorage": {
     "CreateContainerIfNotExists": true
-  }
+  },
+  "environments":[ "BC-SANDBOX-DEV" ]
 }
