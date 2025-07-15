@@ -140,6 +140,16 @@ jobs:
           shell: powershell
           getEnvironments: '*'
           type: 'CD'
+      #eliminar luego es debug
+      
+      - name: Set buildOrderJson output
+        run: echo "buildOrderJson=$env:buildOrderJson" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+     
+      - name: Debug buildOrderJson
+        run: echo "${{ needs.Initialization.outputs.buildOrderJson }}"
+
+
 
   CheckForUpdates:
     needs: [ Initialization ]
