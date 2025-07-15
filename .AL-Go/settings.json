@@ -7,5 +7,11 @@
   "testFolders": [
     "ALGOInv.Test"
   ],
-  "bcptTestFolders": []
+  "addDependenciesProbingPaths":[
+    {
+      "repo":"https://github.com/investigacionPrac/common",
+      "release_status":"latestBuild",
+      "AuthtokenSecret":"GhTokenWorkflow"
+    }
+  ]
 }
