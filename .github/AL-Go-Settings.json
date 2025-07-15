@@ -8,5 +8,6 @@
   },
   "environments": [
     "BC-SANDBOX-DEV"
-  ]
+  ],
+  "useProjectDependencies": true
 }
