@@ -7,11 +7,11 @@
   "testFolders": [
     "ALGOInv.Test"
   ],
-  "addDependenciesProbingPaths":[
+  "addDependenciesProbingPaths": [
     {
-      "repo":"https://github.com/investigacionPrac/common",
-      "release_status":"latestBuild",
-      "AuthtokenSecret":"GhTokenWorkflow"
+      "repo": "https://github.com/investigacionPrac/common",
+      "release_status": "latestBuild",
+      "AuthtokenSecret": "GhTokenWorkflow"
     }
   ],
   "generateDependencyArtifact": true
