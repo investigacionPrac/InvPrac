@@ -4,6 +4,6 @@
   "appFolders": [
     "ALGOInv"
   ],
-  "testFolders": [],
-  "bcptTestFolders": []
+  "testFolders": ["ALGOInv.Test"],
+  "bcptTestFolders": ["ALGOInv.Test"]
 }
