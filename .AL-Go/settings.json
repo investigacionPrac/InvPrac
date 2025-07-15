@@ -13,5 +13,6 @@
       "release_status":"latestBuild",
       "AuthtokenSecret":"GhTokenWorkflow"
     }
-  ]
+  ],
+  "generateDependencyArtifact": true
 }
