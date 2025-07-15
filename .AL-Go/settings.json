@@ -5,5 +5,5 @@
     "ALGOInv"
   ],
   "testFolders": ["ALGOInv.Test"],
-  "bcptTestFolders": ["ALGOInv.Test"]
+  "bcptTestFolders": []
 }
