@@ -6,7 +6,6 @@
   "DeliverToStorage": {
     "CreateContainerIfNotExists": true
   },
-  "environments": [
-  ],
+  "environments": [],
   "useProjectDependencies": true
 }
