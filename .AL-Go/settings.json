@@ -9,7 +9,7 @@
   ],
   "bcptTestFolders": [],
   "generateDependencyArtifact": true,
-  "configPackages":[
+  "configPackages": [
     "STANDARD"
   ]
 }
