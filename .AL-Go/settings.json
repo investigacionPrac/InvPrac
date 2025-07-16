@@ -3,9 +3,11 @@
   "country": "es",
   "appFolders": [
     "ALGOInv",
-    "app1"
+    "app1",
   ],
-  "testFolders": ["ALGOInv.Test"],
+  "testFolders": [
+    "ALGOInv.Test"
+  ],
   "bcptTestFolders": [],
   "generateDependencyArtifact": true
 }
