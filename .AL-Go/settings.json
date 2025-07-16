@@ -5,7 +5,7 @@
     "ALGOInv",
     "app1"
   ],
-  "testFolders": [],
+  "testFolders": ["ALGOInv.Test"],
   "bcptTestFolders": [],
   "generateDependencyArtifact": true
 }
