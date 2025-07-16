@@ -6,6 +6,7 @@
   "DeliverToStorage": {
     "CreateContainerIfNotExists": true
   },
-  "environments": [],
-  "useProjectDependencies": true
+  "environments": ["BC-SANDBOX-DEV"],
+  "useProjectDependencies": true,
+  "versioningStrategy": 3
 }
