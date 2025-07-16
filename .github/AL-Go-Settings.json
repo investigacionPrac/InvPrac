@@ -7,7 +7,6 @@
     "CreateContainerIfNotExists": true
   },
   "environments": [
-    "BC-SANDBOX-DEV"
   ],
   "useProjectDependencies": true
 }
