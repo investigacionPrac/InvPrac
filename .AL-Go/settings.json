@@ -4,9 +4,7 @@
   "appFolders": [
     "ALGOInv"
   ],
-  "testFolders": [
-
-  ],
+  "testFolders": [],
   "bcptTestFolders": [],
   "generateDependencyArtifact": true
 }
