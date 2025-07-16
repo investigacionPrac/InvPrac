@@ -8,5 +8,8 @@
     "ALGOInv.Test"
   ],
   "bcptTestFolders": [],
-  "generateDependencyArtifact": true
+  "generateDependencyArtifact": true,
+  "configPackages": [
+    "STANDARD"
+  ]
 }
