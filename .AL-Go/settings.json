@@ -10,5 +10,6 @@
   ],
   "bcptTestFolders": [],
   "generateDependencyArtifact": true,
-  "versioningStrategy": 3
+  "versioningStrategy": 3,
+  "doNotRunTests": true
 }
