@@ -293,9 +293,9 @@ codeunit 7268949 TCNTestCOMI
         SalesInvoice.GoToRecord(SalesHeader);
         SalesInvoice.Post.Invoke();
 
-        SalesInvoiceHeader.SetRange("Pre-Assigned No.", SalesHeader."No.");
-        if SalesInvoiceHeader.FindLast() then
-            InvoiceNo := SalesInvoiceHeader."No.";
+        // SalesInvoiceHeader.SetRange("Pre-Assigned No.", SalesHeader."No.");
+        // if SalesInvoiceHeader.FindLast() then
+        //     InvoiceNo := SalesInvoiceHeader."No.";
 
     end;
 
