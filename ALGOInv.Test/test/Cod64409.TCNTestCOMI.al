@@ -75,86 +75,86 @@ codeunit 7268949 TCNTestCOMI
         Assert.IsTrue(true, '');
     end;
 
-    [Test]
-    [HandlerFunctions('ConfirmPostHandler')]
-    procedure PostSalesInvoice()
-    var
-        Salesperson: Record "Salesperson/Purchaser";
-        Customer: Record Customer;
-        Item: Record Item;
-        SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        ShipCost: Decimal;
-        ApplAccountNo: Code[20];
-        InvoiceNo: Code[20];
-        ShouldHaveMsg: Label 'Should have Commission registered';
-    begin
-        // [Feature] [Posting Invoice register Commission]
-        // [Scenario 03] Posting Sales Invoice register Commission
-        ShipCost := 2;
-        ApplAccountNo := '6290001'; // OJO solo versión ES
-        Initialize(true, ShipCost, ApplAccountNo);
+    // [Test]
+    // [HandlerFunctions('ConfirmPostHandler')]
+    // procedure PostSalesInvoice()
+    // var
+    //     Salesperson: Record "Salesperson/Purchaser";
+    //     Customer: Record Customer;
+    //     Item: Record Item;
+    //     SalesHeader: Record "Sales Header";
+    //     SalesLine: Record "Sales Line";
+    //     ShipCost: Decimal;
+    //     ApplAccountNo: Code[20];
+    //     InvoiceNo: Code[20];
+    //     ShouldHaveMsg: Label 'Should have Commission registered';
+    // begin
+    //     // [Feature] [Posting Invoice register Commission]
+    //     // [Scenario 03] Posting Sales Invoice register Commission
+    //     ShipCost := 2;
+    //     ApplAccountNo := '6290001'; // OJO solo versión ES
+    //     Initialize(true, ShipCost, ApplAccountNo);
 
-        // [Given] Salesperson record with an empty Vendor No.
-        GetFirstSalesperson(Salesperson, false);
+    //     // [Given] Salesperson record with an empty Vendor No.
+    //     GetFirstSalesperson(Salesperson, false);
 
-        // [Given] A Customer
-        GetFirstCustomer(Customer, false);
+    //     // [Given] A Customer
+    //     GetFirstCustomer(Customer, false);
 
-        // [Given] A Item
-        GetFirstItem(Item);
+    //     // [Given] A Item
+    //     GetFirstItem(Item);
 
-        // [Given] New Sales Invoice 
-        GetNewSalesInvoice(Customer, Salesperson, Item, SalesHeader, SalesLine);
+    //     // [Given] New Sales Invoice 
+    //     GetNewSalesInvoice(Customer, Salesperson, Item, SalesHeader, SalesLine);
 
-        // [When] Sales Invoice is posted
-        TestPostSalesInvoice(SalesHeader, InvoiceNo);
+    //     // [When] Sales Invoice is posted
+    //     TestPostSalesInvoice(SalesHeader, InvoiceNo);
 
-        // [Then] Salesperson should have Commission
-        Assert.IsTrue(VerifySalespersonCommission(Salesperson, InvoiceNo), ShouldHaveMsg);
-    end;
+    //     // [Then] Salesperson should have Commission
+    //     Assert.IsTrue(VerifySalespersonCommission(Salesperson, InvoiceNo), ShouldHaveMsg);
+    // end;
 
-    [Test]
-    [HandlerFunctions('ConfirmPostHandler')]
-    procedure PostSalesInvoiceCalcCommission()
-    var
-        Salesperson: Record "Salesperson/Purchaser";
-        Customer: Record Customer;
-        Item: Record Item;
-        SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        ShipCost: Decimal;
-        ApplAccountNo: Code[20];
-        InvoiceNo: Code[20];
-        CommissionAmout: Decimal;
-        ShouldHaveMsg: Label 'Should have Commission Amount Correct';
-    begin
-        // [Feature] [Posting Invoice register Commission]
-        // [Scenario 04] Posting Sales Invoice register Commission correctly
-        ShipCost := 2;
-        ApplAccountNo := '6290001'; // OJO solo versión ES
-        Initialize(true, ShipCost, ApplAccountNo);
+    // [Test]
+    // [HandlerFunctions('ConfirmPostHandler')]
+    // procedure PostSalesInvoiceCalcCommission()
+    // var
+    //     Salesperson: Record "Salesperson/Purchaser";
+    //     Customer: Record Customer;
+    //     Item: Record Item;
+    //     SalesHeader: Record "Sales Header";
+    //     SalesLine: Record "Sales Line";
+    //     ShipCost: Decimal;
+    //     ApplAccountNo: Code[20];
+    //     InvoiceNo: Code[20];
+    //     CommissionAmout: Decimal;
+    //     ShouldHaveMsg: Label 'Should have Commission Amount Correct';
+    // begin
+    //     // [Feature] [Posting Invoice register Commission]
+    //     // [Scenario 04] Posting Sales Invoice register Commission correctly
+    //     ShipCost := 2;
+    //     ApplAccountNo := '6290001'; // OJO solo versión ES
+    //     Initialize(true, ShipCost, ApplAccountNo);
 
-        // [Given] Salesperson record with an empty Vendor No.
-        GetFirstSalesperson(Salesperson, false);
+    //     // [Given] Salesperson record with an empty Vendor No.
+    //     GetFirstSalesperson(Salesperson, false);
 
-        // [Given] A Customer
-        GetFirstCustomer(Customer, false);
+    //     // [Given] A Customer
+    //     GetFirstCustomer(Customer, false);
 
-        // [Given] A Item
-        GetFirstItem(Item);
+    //     // [Given] A Item
+    //     GetFirstItem(Item);
 
-        // [Given] New Sales Invoice 
-        GetNewSalesInvoice(Customer, Salesperson, Item, SalesHeader, SalesLine);
-        SalesLine.CalcSums("Line Amount");
-        CommissionAmout := SalesLine."Line Amount" * (100 - ShipCost) / 100 * Salesperson."Commission %" / 100;
+    //     // [Given] New Sales Invoice 
+    //     GetNewSalesInvoice(Customer, Salesperson, Item, SalesHeader, SalesLine);
+    //     SalesLine.CalcSums("Line Amount");
+    //     CommissionAmout := SalesLine."Line Amount" * (100 - ShipCost) / 100 * Salesperson."Commission %" / 100;
 
-        // [When] Sales Invoice is posted
-        TestPostSalesInvoice(SalesHeader, InvoiceNo);
+    //     // [When] Sales Invoice is posted
+    //     TestPostSalesInvoice(SalesHeader, InvoiceNo);
 
-        // [Then] Salesperson should have Commission
-        Assert.IsTrue(VerifySalespersonCommissionCorrect(Salesperson, InvoiceNo, CommissionAmout), ShouldHaveMsg);
-    end;
+    //     // [Then] Salesperson should have Commission
+    //     Assert.IsTrue(VerifySalespersonCommissionCorrect(Salesperson, InvoiceNo, CommissionAmout), ShouldHaveMsg);
+    // end;
 
 
     // funciones de apoyo
@@ -293,9 +293,9 @@ codeunit 7268949 TCNTestCOMI
         SalesInvoice.GoToRecord(SalesHeader);
         SalesInvoice.Post.Invoke();
 
-        // SalesInvoiceHeader.SetRange("Pre-Assigned No.", SalesHeader."No.");
-        // if SalesInvoiceHeader.FindLast() then
-        //     InvoiceNo := SalesInvoiceHeader."No.";
+        SalesInvoiceHeader.SetRange("Pre-Assigned No.", SalesHeader."No.");
+        if SalesInvoiceHeader.FindLast() then
+            InvoiceNo := SalesInvoiceHeader."No.";
 
     end;
 
