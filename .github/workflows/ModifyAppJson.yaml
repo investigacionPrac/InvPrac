@@ -1,8 +1,6 @@
 name: Modify app.json
 
 on: 
-  CreateApp:
-    types: [completed]
   workflow_dispatch:
     inputs:
       directCommit:
