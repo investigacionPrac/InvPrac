@@ -3,7 +3,7 @@
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url', 'contextSensitiveHelpUrl')
-$path= '.'
+$path= (ls | sort CreationTime)[-1].FullName
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
 $files = Get-ChildItem -Path $path -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
@@ -18,7 +18,7 @@ foreach ($file in $files) {
     try {
         # Leer y convertir JSON a objeto PowerShell
         $data = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
-        Write-Host "Version actual: $($data.version)"
+        Write-Host $path
         # Asegurar campos necesarios
         foreach ($field in $fieldsToCheck) {
             if (-not $data.$field) {
