@@ -43,11 +43,15 @@ jobs:
 
       - name: Calculate Commit Options
         id: CalculateCommit
-        env:
-          directCommit: '${{ github.event.inputs.directCommit || 'true' }}'
         run: |
-          echo "directCommit=$env:directCommit" >> $GITHUB_OUTPUT
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $directCommit = "${{ github.event.inputs.directCommit }}"
+          } else {
+            $directCommit = "true"
+          }
+          echo "directCommit=$directCommit" >> $env:GITHUB_OUTPUT
         shell: pwsh
+
 
   ModifyAppJson:
     needs: Initialize
