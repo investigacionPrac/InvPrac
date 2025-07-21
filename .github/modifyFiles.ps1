@@ -2,10 +2,11 @@
 
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
-$fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
+$fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url', 'contextSensitiveHelpUrl')
+$path= '.'
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
-$files = Get-ChildItem -Path . -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
+$files = Get-ChildItem -Path $path -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
 
 if (-not $files) {
     Write-Host "No se encontraron archivos app.json"
