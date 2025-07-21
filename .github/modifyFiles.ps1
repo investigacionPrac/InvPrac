@@ -4,12 +4,14 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 
-# Initialize contextSensitiveHelp
-$data['contextSensitiveHelp'] = $defaultUrl 
+
 
 # Read JSON file
 $jsonContent = Get-Content -Path 'app.json' -Raw -Encoding UTF8
 $data = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonContent)
+
+# Initialize contextSensitiveHelp
+$data['contextSensitiveHelp'] = $defaultUrl 
 
 foreach ($field in $fieldsToCheck) {
     if (-not $data[$field]) {
