@@ -1,0 +1,47 @@
+name: Modify app.json
+on: 
+  workflow_dispatch:
+    inputs:
+      directCommit:
+        description: 'Direct commit to the main branch'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  ModifyAppJson:
+    runs-on: [windows-latest]
+    name: Modify app.json
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Modify app.json
+        with:
+          script: |
+            $defaultUrl = 'https://www.tecon.es/'
+            $defaultLogo = './Logo/Tecon.png'
+            $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
+            
+            # Initialize contextSensitiveHelp
+            $data['contextSensitiveHelp'] = $defaultUrl 
+            
+            # Read JSON file
+            $jsonContent = Get-Content -Path 'app.json' -Raw -Encoding UTF8
+            $data = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonContent)
+            
+            foreach ($field in $fieldsToCheck) {
+                if (-not $data[$field]) {
+                    $data[$field] = $defaultUrl
+                }
+            }
+            
+            if (-not $data['logo']) {
+                $data['logo'] = $defaultLogo
+            }
+            
+            $data['version'] = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
+            
+            # Write JSON file
+            $jsonOutput = [Newtonsoft.Json.JsonConvert]::SerializeObject($data, [Newtonsoft.Json.Formatting]::Indented)
+            Set-Content -Path 'app.json' -Value $jsonOutput -Encoding UTF8
