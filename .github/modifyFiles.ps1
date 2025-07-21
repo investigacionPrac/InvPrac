@@ -1,5 +1,4 @@
-# Importing necessary modules
-Import-Module -Name 'Newtonsoft.Json'
+
 
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
