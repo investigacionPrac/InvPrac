@@ -2,15 +2,9 @@ name: Modify app.json
 
 on:
   workflow_dispatch:
-    inputs:
-      directCommit:
-        description: 'Direct commit to the main branch'
-        required: false
-        default: 'false'
-        type: boolean
 
   workflow_run:
-    workflows: ["CreateApp"]
+    workflows: ["Create a new app"]
     types:
       - completed
 
