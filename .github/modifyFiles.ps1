@@ -4,43 +4,41 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 
-
-
 # Read JSON file
 # Buscar app.json en subdirectorios
+# Buscar el primer app.json
 $file = Get-ChildItem -Path . -Filter "app.json" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
 
-if ($null -eq $file) {
+if (-not $file) {
     Write-Error "No se encontró ningún archivo app.json"
     exit 1
 }
 
-# Leer contenido del archivo JSON
+# Leer contenido JSON y convertirlo en objeto PowerShell
 $jsonText = Get-Content -Path $file.FullName -Raw -Encoding UTF8
-
-# Deserializar JSON
-$data = [Newtonsoft.Json.JsonConvert]::DeserializeObject($jsonText)
+$data = $jsonText | ConvertFrom-Json
 
 # Inicializar campo contextSensitiveHelp
-$data['contextSensitiveHelp'] = $defaultUrl 
+$data.contextSensitiveHelp = $defaultUrl
 
-# Validar campos y completarlos si están vacíos
+# Completar campos si están vacíos
 foreach ($field in $fieldsToCheck) {
-    if (-not $data[$field]) {
-        $data[$field] = $defaultUrl
+    if (-not $data.$field) {
+        $data.$field = $defaultUrl
     }
 }
 
-# Establecer logo si no está presente
-if (-not $data['logo']) {
-    $data['logo'] = $defaultLogo
+# Agregar logo si no existe
+if (-not $data.logo) {
+    $data.logo = $defaultLogo
 }
 
 # Agregar versión
-$data['version'] = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
+$data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
 
-# Serializar JSON actualizado
-$jsonOutput = [Newtonsoft.Json.JsonConvert]::SerializeObject($data, [Newtonsoft.Json.Formatting]::Indented)
+# Convertir a JSON de nuevo
+$jsonOutput = $data | ConvertTo-Json -Depth 10
 
-# Sobrescribir el archivo original
+# Escribir archivo
 Set-Content -Path $file.FullName -Value $jsonOutput -Encoding UTF8
+
