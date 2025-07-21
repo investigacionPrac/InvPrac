@@ -86,7 +86,6 @@ jobs:
           }
 
       - name: Push changes
-        if: ${{ needs.Initialize.outputs.directCommit == 'true' }}
         shell: powershell
         env:
           GH_TOKEN: ${{ secrets.ghTokenWorkflow }}
