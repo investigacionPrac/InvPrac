@@ -91,9 +91,6 @@ jobs:
           idrange: ${{ github.event.inputs.idrange }}
           sampleCode: ${{ github.event.inputs.sampleCode }}
           directCommit: ${{ github.event.inputs.directCommit }}
-        
-      - name: Hello World
-        run: echo "-----------------------------------------------------------------Hello world."
 
       - name: Finalize the workflow
         if: always()
