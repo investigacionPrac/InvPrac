@@ -17,4 +17,5 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Modify app.json
-        uses: .github/modifyFiles.ps1
+        shell: powershell
+        run: .github/modifyFiles.ps1
