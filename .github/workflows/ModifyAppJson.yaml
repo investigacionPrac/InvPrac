@@ -8,7 +8,12 @@ on:
         required: false
         default: 'false'
         type: boolean
-    
+
+  workflow_run:
+    workflows: ["CreateApp"]
+    types:
+      - completed
+
 jobs:
   Initialize:
     runs-on: windows-latest
@@ -19,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ghTokenWorkflow }}
 
       - name: Read settings
         id: ReadSettings
@@ -37,10 +44,10 @@ jobs:
       - name: Calculate Commit Options
         id: CalculateCommit
         env:
-          directCommit: '${{ github.event.inputs.directCommit }}'
+          directCommit: '${{ github.event.inputs.directCommit || 'true' }}'
         run: |
           echo "directCommit=$env:directCommit" >> $GITHUB_OUTPUT
-
+        shell: pwsh
 
   ModifyAppJson:
     needs: Initialize
@@ -56,23 +63,30 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
+          token: ${{ secrets.ghTokenWorkflow }}
 
       - name: Modify app.json files
-        shell: powershell
+        shell: pwsh
         run: .github/modifyFiles.ps1 
 
       - name: Commit changes
+        shell: pwsh
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          
           git add .
-          git diff --cached --quiet
-          git commit -m "Actualización automática de app.json"
-        shell: powershell
+          
+          if (!(git diff --cached --quiet)) {
+            git commit -m "Actualización automática de app.json"
+          } else {
+            Write-Host "No hay cambios para commitear"
+          }
 
       - name: Push changes
+        if: ${{ github.event.inputs.directCommit == 'true' || github.event_name == 'workflow_run' }}
+        shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.ghTokenWorkflow }}
         run: |
           git push origin HEAD:${{ matrix.branch }}
-        shell: powershell
