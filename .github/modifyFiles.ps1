@@ -19,7 +19,9 @@ $jsonText = Get-Content -Path $file.FullName -Raw -Encoding UTF8
 $data = $jsonText | ConvertFrom-Json
 
 # Inicializar campo contextSensitiveHelp
-$data.contextSensitiveHelp = $defaultUrl
+if (-not $data.contextSensitiveHelp) {
+    $data.contextSensitiveHelp = $defaultUrl
+}
 
 # Completar campos si están vacíos
 foreach ($field in $fieldsToCheck) {
