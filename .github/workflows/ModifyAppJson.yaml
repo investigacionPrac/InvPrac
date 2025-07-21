@@ -2,9 +2,14 @@ name: Modify app.json
 
 on:
   workflow_dispatch:
+    inputs:
+      includeBranches:
+        description: 'Branches to include'
+        required: false
+        default: 'main'
 
   workflow_run:
-    workflows: ["Create a new app"]
+    workflows: ["CreateApp"]
     types:
       - completed
 
@@ -27,12 +32,22 @@ jobs:
           shell: powershell
           get: templateUrl
 
+      - name: Set includeBranches
+        id: SetIncludeBranches
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            echo "includeBranches=${{ github.event.inputs.includeBranches }}" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "includeBranches=main" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
+
       - name: Get Workflow Multi-Run Branches
         id: GetBranches
         uses: microsoft/AL-Go-Actions/GetWorkflowMultiRunBranches@v7.2
         with:
           shell: powershell
-          includeBranches: ${{ github.event.inputs.includeBranches || 'main'}}
+          includeBranches: ${{ steps.SetIncludeBranches.outputs.includeBranches }}
 
       - name: Calculate Commit Options
         id: CalculateCommit
@@ -74,7 +89,7 @@ jobs:
           git add .
           
           if (!(git diff --cached --quiet)) {
-            git commit -m "Actualizar datos por defecto en el app.json más recientemente creado"
+            git commit -m "Actualización automática de app.json"
           } else {
             Write-Host "No hay cambios para commitear"
           }
