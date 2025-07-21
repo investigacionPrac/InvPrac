@@ -32,7 +32,7 @@ jobs:
         uses: microsoft/AL-Go-Actions/GetWorkflowMultiRunBranches@v7.2
         with:
           shell: powershell
-          includeBranches: ${{ github.event.inputs.includeBranches -eq 'main'}}
+          includeBranches: ${{ github.event.inputs.includeBranches || 'main'}}
 
       - name: Calculate Commit Options
         id: CalculateCommit
