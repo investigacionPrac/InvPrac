@@ -14,11 +14,10 @@ if (-not $files) {
 
 foreach ($file in $files) {
     Write-Host "Procesando archivo: $($file.FullName)"
-
     try {
         # Leer y convertir JSON a objeto PowerShell
         $data = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
-
+        Write-Host "Version actual: $($data.version)"
         # Asegurar campos necesarios
         foreach ($field in $fieldsToCheck) {
             if (-not $data.$field) {
@@ -37,6 +36,7 @@ foreach ($file in $files) {
         $data | ConvertTo-Json -Depth 10 | Set-Content -Path $file.FullName -Encoding utf8
 
         Write-Host "Archivo actualizado: $($file.FullName)"
+        Write-Host "Nueva versión: $($data.version)"
     }
     catch {
         Write-Warning "Error procesando $($file.FullName): $_"
