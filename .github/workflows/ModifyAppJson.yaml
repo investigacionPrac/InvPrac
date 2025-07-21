@@ -68,11 +68,11 @@ jobs:
           token: ${{ secrets.ghTokenWorkflow }}
 
       - name: Modify app.json files
-        shell: pwsh
+        shell: powershell
         run: .github/modifyFiles.ps1 
 
       - name: Commit changes
-        shell: pwsh
+        shell: powershell
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
@@ -87,7 +87,7 @@ jobs:
 
       - name: Push changes
         if: ${{ needs.Initialize.outputs.directCommit == 'true' }}
-        shell: pwsh
+        shell: powershell
         env:
           GH_TOKEN: ${{ secrets.ghTokenWorkflow }}
         run: |
