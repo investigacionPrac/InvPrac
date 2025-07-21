@@ -1,6 +1,6 @@
 name: Modify app.json
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       directCommit:
@@ -17,10 +17,9 @@ on:
 jobs:
   Initialize:
     runs-on: windows-latest
-    name: Initialize
     outputs:
       UpdateBranches: ${{ steps.GetBranches.outputs.Result }}
-      TemplateUrl: ${{ steps.ReadSettings.outputs.templateUrl }}
+      directCommit: ${{ steps.CalculateCommit.outputs.directCommit }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,11 +51,10 @@ jobs:
           echo "directCommit=$directCommit" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-
   ModifyAppJson:
     needs: Initialize
-    name: Modify app.json files
     runs-on: windows-latest
+    name: Modify app.json files
     strategy:
       matrix:
         branch: ${{ fromJson(needs.Initialize.outputs.UpdateBranches).branches }}
@@ -88,7 +86,7 @@ jobs:
           }
 
       - name: Push changes
-        if: ${{ github.event.inputs.directCommit == 'true' || github.event_name == 'workflow_run' }}
+        if: ${{ needs.Initialize.outputs.directCommit == 'true' }}
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.ghTokenWorkflow }}
