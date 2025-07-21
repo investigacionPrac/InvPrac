@@ -1,5 +1,5 @@
 # Import the necessary module
-Import-Module -Name 'PSScriptRoot'
+#Import-Module -Name 'PSScriptRoot'
 
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
