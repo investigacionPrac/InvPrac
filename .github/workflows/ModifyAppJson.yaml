@@ -39,8 +39,8 @@ jobs:
         env:
           directCommit: '${{ github.event.inputs.directCommit }}'
         run: |
-          $errorActionPreference = "Stop"; $ProgressPreference = "SilentlyContinue"; Set-StrictMode -Version 2.0
-          Add-Content -Encoding UTF8 -Path $env:GITHUB_ENV -Value "directCommit=$env:directCommit"
+          echo "directCommit=$env:directCommit" >> $GITHUB_OUTPUT
+
 
   ModifyAppJson:
     needs: Initialize
@@ -62,7 +62,7 @@ jobs:
         run: .github/modifyFiles.ps1
 
       - name: Commit changes
-        if: env.directCommit == 'true'
+        if: needs.Initialize.outputs.directCommit == 'true'
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -71,7 +71,7 @@ jobs:
         shell: powershell
 
       - name: Push changes
-        if: env.directCommit == 'true'
+        if: needs.Initialize.outputs.directCommit == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
