@@ -15,37 +15,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Modify app.json
         shell: powershell
         run: .github/modifyFiles.ps1
       
-      - name: Calculate Commit Options
-        env:
-          directCommit: '${{ github.event.inputs.directCommit }}'
-          downloadLatest: '${{ github.event.inputs.downloadLatest }}'
+      - name: Commit and push changes
+        if: ${{ env.directCommit == 'true' }}
         run: |
-          $errorActionPreference = "Stop"; $ProgressPreference = "SilentlyContinue"; Set-StrictMode -Version 2.0
-          if('${{ github.event_name }}' -eq 'workflow_dispatch') {
-            Write-Host "Using inputs from workflow_dispatch event"
-            $directCommit = $env:directCommit
-            $downloadLatest = $env:downloadLatest
-          }
-          else {
-            Write-Host "Using inputs from commitOptions setting"
-            $commitOptions = $env:commitOptions | ConvertFrom-Json # Available from ReadSettings step
-            $directCommit=$(-not $commitOptions.createPullRequest)
-            $downloadLatest=$true
-          }
-          Add-Content -Encoding UTF8 -Path $env:GITHUB_ENV -Value "directCommit=$directCommit"
-          Add-Content -Encoding UTF8 -Path $env:GITHUB_ENV -Value "downloadLatest=$downloadLatest"
-      
-      - name: Finalize the workflow
-        if: always()
-        uses: microsoft/AL-Go-Actions/WorkflowPostProcess@v7.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          shell: powershell
-          telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
-          currentJobContext: ${{ toJson(job) }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Update app.json from workflow"
+          git push origin HEAD:main
+        shell: bash
