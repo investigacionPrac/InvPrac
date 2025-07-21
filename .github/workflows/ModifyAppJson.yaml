@@ -1,6 +1,8 @@
 name: Modify app.json
 
 on: 
+  CreateApp:
+    types: [completed]
   workflow_dispatch:
     inputs:
       directCommit:
@@ -8,7 +10,7 @@ on:
         required: false
         default: 'false'
         type: boolean
-
+    
 jobs:
   Initialize:
     runs-on: windows-latest
@@ -59,7 +61,7 @@ jobs:
 
       - name: Modify app.json files
         shell: powershell
-        run: .github/modifyFiles.ps1
+        run: .github/modifyFiles.ps1 
 
       - name: Commit changes
         run: |
@@ -72,7 +74,7 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ghTokenWorkflow}}
         run: |
           git push origin HEAD:${{ matrix.branch }}
         shell: powershell
