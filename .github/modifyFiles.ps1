@@ -2,7 +2,7 @@
 
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
-$fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url', 'contextSensitiveHelpUrl')
+$fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $path= (ls | sort CreationTime)[-1].FullName
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
