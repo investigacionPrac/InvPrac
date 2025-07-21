@@ -9,7 +9,7 @@ on:
         default: 'main'
 
   workflow_run:
-    workflows: ["CreateApp"]
+    workflows: ["Create a new app"]
     types:
       - completed
 
