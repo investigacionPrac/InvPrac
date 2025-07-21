@@ -72,7 +72,7 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.ghTokenWorkflow}}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           git push origin HEAD:${{ matrix.branch }}
         shell: powershell
