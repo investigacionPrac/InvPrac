@@ -1,6 +1,6 @@
 name: Modify app.json
 
-on:
+#on:
   # workflow_run:
   #   workflows: ["Create a new app"]
   #   types:
