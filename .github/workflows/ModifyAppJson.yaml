@@ -19,6 +19,7 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
+          fetch-depth: 0
 
       - name: Modify app.json files
         shell: powershell
