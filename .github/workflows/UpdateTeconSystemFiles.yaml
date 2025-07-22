@@ -43,13 +43,6 @@ jobs:
           shell: powershell
           get: templateUrl
 
-      - name: Get Workflow Multi-Run Branches
-        id: GetBranches
-        uses: microsoft/AL-Go-Actions/GetWorkflowMultiRunBranches@v7.2
-        with:
-          shell: powershell
-          includeBranches: ${{ github.event.inputs.includeBranches }}
-
       - name: Determine Template URL
         id: DetermineTemplateUrl
         env:
