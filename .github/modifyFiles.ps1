@@ -14,7 +14,7 @@ $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $repoPath = $env:GITHUB_WORKSPACE
 $list = Get-ChildItem -Path $repoPath -Directory -ErrorAction SilentlyContinue
 $orderList = $list | Sort-Object CreationTime -Descending
-$aux = $orderList | Select-Object -First 1 -ExpandProperty CreationTime
+$aux = $orderList | Select-Object -ExpandProperty CreationTime
 $path = $orderList[0].FullName
 
 Write-Host "lista de carpetas: $orderList"
