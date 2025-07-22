@@ -30,7 +30,6 @@ jobs:
           token: ${{ secrets.ghTokenWorkflow }}
 
       - name: Modify app.json files
-        needs: Checkout
         shell: powershell
         run: .github/modifyFiles.ps1 
       
