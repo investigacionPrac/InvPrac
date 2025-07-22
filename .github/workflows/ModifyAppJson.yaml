@@ -42,13 +42,6 @@ jobs:
           }
         shell: pwsh
 
-      - name: Get Workflow Multi-Run Branches
-        id: GetBranches
-        uses: microsoft/AL-Go-Actions/GetWorkflowMultiRunBranches@v7.2
-        with:
-          shell: powershell
-          includeBranches: ${{ steps.SetIncludeBranches.outputs.includeBranches }}
-
       - name: Calculate Commit Options
         id: CalculateCommit
         run: |
