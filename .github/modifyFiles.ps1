@@ -22,6 +22,7 @@ foreach ($file in $appFiles) {
     $timestamp = git -C $RepoPath log -1 --format="%ct" -- "$relativePath"
     $message = git -C $RepoPath log -1 --format="%s" -- "$relativePath"
     Write-Host "mensaje: $message"
+    Write-Host "timestamp: $timestamp"
     if ($timestamp -and $message -match '^New PTE\s+\(.+\)$') {
         Write-Host "Archivo app.json encontrado: $($file.FullName) con mensaje: $message"
         $filesWithDates += [PSCustomObject]@{
