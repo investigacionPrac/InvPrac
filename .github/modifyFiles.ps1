@@ -6,6 +6,7 @@ $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $list= Get-ChildItem -Directory
 $orderList=($list| Sort-Object CreationTime -Descending)
 $path= $orderList[0].FullName
+Write-Host "lista de carpetas: $list"
 Write-Host "Ruta actual: $path"
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
