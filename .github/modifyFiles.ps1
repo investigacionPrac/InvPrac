@@ -21,8 +21,6 @@ foreach ($file in $appFiles) {
     $relativePath = $file.FullName.Substring($RepoPath.Length + 1).Replace('\', '/')
     $timestamp = git -C $RepoPath log -1 --format="%ct" -- "$relativePath"
     $message = git -C $RepoPath log -1 --format="%s" -- "$relativePath"
-    Write-Host "mensaje: $message"
-    Write-Host "timestamp: $timestamp"
     if ($timestamp -and $message -match '^New PTE\s+\(.+\)$') {
         Write-Host "Archivo app.json encontrado: $($file.FullName) con mensaje: $message"
         $filesWithDates += [PSCustomObject]@{
@@ -36,7 +34,6 @@ $latest = $filesWithDates | Sort-Object CommitTimestamp -Descending | Select-Obj
 
 if (-not $latest) {
     Write-Host "No se pudo determinar el archivo más reciente por Git"
-    exit 1
 }
 
 Write-Host "Archivo app.json más recientemente modificado en Git:"
