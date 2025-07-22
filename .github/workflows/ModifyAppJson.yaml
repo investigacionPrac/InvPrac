@@ -78,7 +78,7 @@ jobs:
           git add .
           
           if (!(git diff --cached --quiet)) {
-            git commit -m "Actualización automática de app.json"
+            git commit -m "Actualizar datos por defecto de app.json"
           } else {
             Write-Host "No hay cambios para commitear"
           }
