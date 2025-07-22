@@ -1,58 +1,47 @@
-
+param (
+    [string]$RepoPath = $env:GITHUB_WORKSPACE
+)
 
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 
+Write-Host "📁 Analizando repo en: $RepoPath"
 
-# $list= Get-ChildItem -Directory
-# $orderList=($list| Sort-Object CreationTime -Descending)
-# $aux= $orderList | Select-Object CreationTime
-# $path= $orderList[0].FullName
+$appFiles = Get-ChildItem -Path $RepoPath -Filter "app.json" -Recurse -File
 
-
-$repoPath = $env:GITHUB_WORKSPACE
-$list = Get-ChildItem -Path $repoPath -Directory -ErrorAction SilentlyContinue
-$orderList = $list | Sort-Object CreationTime -Descending
-$aux = $orderList | Select-Object -ExpandProperty CreationTime
-$path = $orderList[0].FullName
-
-Write-Host "lista de carpetas: $orderList"
-Write-Host "fecha de la carpeta: $aux"
-Write-Host "Ruta actual: $repoPath"
-
-# Buscar todos los archivos app.json recursivamente desde la carpeta actual
-$file = Get-ChildItem -Path $path -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
-
-if (-not $file) {
+if (-not $appFiles) {
     Write-Host "No se encontraron archivos app.json"
     exit 1
 }
 
-    Write-Host "Procesando archivo: $($file.FullName)"
-    try {
-        # Leer y convertir JSON a objeto PowerShell
-        $data = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
-        # Asegurar campos necesarios
-        foreach ($field in $fieldsToCheck) {
-            if (-not $data.$field) {
-                $data.$field = $defaultUrl
-            }
+$filesWithDates = @()
+
+foreach ($file in $appFiles) {
+    $relativePath = $file.FullName.Substring($RepoPath.Length + 1).Replace('\', '/')
+    $timestamp = git -C $RepoPath log -1 --format="%ct" -- "$relativePath"
+    if ($timestamp) {
+        $filesWithDates += [PSCustomObject]@{
+            Path = $file.FullName
+            CommitTimestamp = [int]$timestamp
         }
-
-        if (-not $data.logo) {
-            $data.logo = $defaultLogo
-        }
-
-        # Actualizar versión con formato "2.AAAAmmdd.0.0"
-        $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
-
-        # Convertir a JSON y sobrescribir el archivo
-        $data | ConvertTo-Json -Depth 10 | Set-Content -Path $file.FullName -Encoding utf8
-
-        Write-Host "Archivo actualizado: $($file.FullName)"
-        Write-Host "Nueva versión: $($data.version)"
     }
-    catch {
-        Write-Warning "Error procesando $($file.FullName): $_"
-    }
+}
+
+$latest = $filesWithDates | Sort-Object CommitTimestamp -Descending | Select-Object -First 1
+
+if (-not $latest) {
+    Write-Host "No se pudo determinar el archivo más reciente por Git"
+    exit 1
+}
+
+Write-Host "Archivo app.json más recientemente modificado en Git:"
+Write-Host $($latest.Path)
+
+# Leer y actualizar JSON
+$data = Get-Content -Path $latest.Path -Raw | ConvertFrom-Json
+$data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
+$data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.Path -Encoding utf8
+
+Write-Host "Archivo actualizado: $($latest.Path)"
+Write-Host "Nueva versión: $($data.version)"
