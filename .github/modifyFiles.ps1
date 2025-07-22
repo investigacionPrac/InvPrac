@@ -43,5 +43,7 @@ $data = Get-Content -Path $latest.Path -Raw | ConvertFrom-Json
 $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
 $data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.Path -Encoding utf8
 
-Write-Host "Archivo actualizado: $($latest.Path)"
-Write-Host "Nueva versión: $($data.version)"
+Write-Host "Archivo actualizado:" 
+Write-Host $($latest.Path)
+Write-Host "Nueva versión:"
+Write-Host $($data.version)
