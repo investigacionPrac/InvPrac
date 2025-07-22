@@ -40,6 +40,15 @@ Write-Host $($latest.Path)
 
 # Leer y actualizar JSON
 $data = Get-Content -Path $latest.Path -Raw | ConvertFrom-Json
+
+foreach ($field in $fieldsToCheck) {
+            if (-not $data.$field) {
+                $data.$field = $defaultUrl
+            }
+        }
+if (-not $data.logo) {
+    $data.logo = $defaultLogo
+}
 $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
 $data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.Path -Encoding utf8
 
