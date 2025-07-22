@@ -17,26 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Read settings
-        id: ReadSettings
-        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
-        with:
-          shell: powershell
-          get: templateUrl
-
-      - name: Determine Template URL
-        id: DetermineTemplateUrl
-        env:
-          TemplateUrlAsInput: '${{ github.event.inputs.templateUrl }}'
-        run: |
-            $templateUrl = $env:templateUrl # Available from ReadSettings step
-            if ($ENV:TemplateUrlAsInput) {
-              # Use the input value if it is provided
-              $templateUrl = $ENV:TemplateUrlAsInput
-            }
-            Write-Host "Using template URL: $templateUrl"
-            Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "TemplateUrl=$templateUrl"
-
   ModifyAppJson:
     needs: Initialize
     runs-on: windows-latest
