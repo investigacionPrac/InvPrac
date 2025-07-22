@@ -11,6 +11,20 @@ on:
     branches:
       - main
 
+permissions:
+  actions: read
+  contents: read
+  id-token: write
+
+defaults:
+  run:
+    shell: powershell
+
+env:
+  ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
+  ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
+
+
 jobs:
   UpdateTeconSystemFiles:
     runs-on: windows-latest
