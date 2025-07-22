@@ -1,5 +1,6 @@
 param (
-    [string]$RepoPath = $env:GITHUB_WORKSPACE
+    [string]$RepoPath = $env:GITHUB_WORKSPACE,
+    [int]$CommitsToCheck = 50
 )
 
 $defaultUrl = 'https://www.tecon.es/'
@@ -8,51 +9,68 @@ $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 
 Write-Host "Analizando repo en: $RepoPath"
 
-$appFiles = Get-ChildItem -Path $RepoPath -Filter "app.json" -Recurse -File
+# Obtener últimos N commits con mensaje y timestamp
+$commitsRaw = git -C $RepoPath log -n $CommitsToCheck --format="%H|%s|%ct"
 
-if (-not $appFiles) {
-    Write-Host "No se encontraron archivos app.json"
-    exit 1
+if (-not $commitsRaw) {
+    Write-Warning "No se pudieron obtener commits recientes"
+    return
 }
 
-$filesWithDates = @()
+$validCommits = @()
 
-foreach ($file in $appFiles) {
-    $relativePath = $file.FullName.Substring($RepoPath.Length + 1).Replace('\', '/')
-    $timestamp = git -C $RepoPath log -1 --format="%ct" -- "$relativePath"
-    $message = git -C $RepoPath log -1 --format="%s" -- "$relativePath"
-    if ($timestamp -and $message -match '^New PTE\s+\(.+\)$') {
-        Write-Host "Archivo app.json encontrado: $($file.FullName) con mensaje: $message"
-        $filesWithDates += [PSCustomObject]@{
-            Path = $file.FullName
-            CommitTimestamp = [int]$timestamp
+foreach ($line in $commitsRaw) {
+    $parts = $line -split '\|', 3
+    $commitHash = $parts[0]
+    $commitMessage = $parts[1]
+    $commitTimestamp = [int]$parts[2]
+
+    if ($commitMessage -match '^New PTE\s+\(.+\)$') {
+        # Obtener archivos modificados en ese commit
+        $filesChangedRaw = git -C $RepoPath diff-tree --no-commit-id --name-only -r $commitHash
+        foreach ($fileChanged in $filesChangedRaw) {
+            if ($fileChanged -like '*app.json') {
+                $validCommits += [PSCustomObject]@{
+                    CommitHash = $commitHash
+                    CommitTimestamp = $commitTimestamp
+                    CommitMessage = $commitMessage
+                    FilePath = Join-Path $RepoPath $fileChanged
+                }
+            }
         }
     }
 }
 
-$latest = $filesWithDates | Sort-Object CommitTimestamp -Descending | Select-Object -First 1
-
-if (-not $latest) {
-    Write-Warning "No hay archivos app.json a modificar"
+if (-not $validCommits) {
+    Write-Warning "No se encontró ningún commit reciente con mensaje tipo 'New PTE (...)' que modifique un app.json"
     return
 }
 
-Write-Host "Archivo app.json más recientemente modificado en Git:"
-Write-Host $($latest.Path)
+# Ordenar por timestamp descendente y tomar el más reciente
+$latest = $validCommits | Sort-Object CommitTimestamp -Descending | Select-Object -First 1
+
+Write-Host "Archivo app.json más recientemente modificado en un commit válido:"
+Write-Host $($latest.FilePath)
+Write-Host "Mensaje de commit: $($latest.CommitMessage)"
+Write-Host "Fecha commit: $(Get-Date ([DateTimeOffset]::FromUnixTimeSeconds($latest.CommitTimestamp).DateTime) -Format 'yyyy-MM-dd HH:mm:ss')"
 
 # Leer y actualizar JSON
-$data = Get-Content -Path $latest.Path -Raw | ConvertFrom-Json
+$data = Get-Content -Path $latest.FilePath -Raw | ConvertFrom-Json
 
 foreach ($field in $fieldsToCheck) {
-            if (-not $data.$field) {
-                $data.$field = $defaultUrl
-            }
-        }
+    if (-not $data.$field) {
+        $data.$field = $defaultUrl
+    }
+}
+
 if (-not $data.logo) {
     $data.logo = $defaultLogo
 }
-$data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
-$data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.Path -Encoding utf8
 
-Write-Host "Archivo actualizado: $($latest.Path)"
+$data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
+
+# Sobrescribir archivo
+$data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.FilePath -Encoding utf8
+
+Write-Host "Archivo actualizado: $($latest.FilePath)"
 Write-Host "Nueva versión: $($data.version)"
