@@ -14,22 +14,20 @@ $path= $orderList[0].FullName
 $repoPath = $env:GITHUB_WORKSPACE
 Write-Host "lista de carpetas: $orderList"
 Write-Host "fecha de la carpeta: $aux"
-Write-Host "Ruta actual: $path"
+Write-Host "Ruta actual: $repoPath"
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
-$files = Get-ChildItem -Path $repoPath -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
+$file = Get-ChildItem -Path $repoPath -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
 
-if (-not $files) {
+if (-not $file) {
     Write-Host "No se encontraron archivos app.json"
     exit 1
 }
 
-foreach ($file in $files) {
     Write-Host "Procesando archivo: $($file.FullName)"
     try {
         # Leer y convertir JSON a objeto PowerShell
         $data = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
-        Write-Host $path
         # Asegurar campos necesarios
         foreach ($field in $fieldsToCheck) {
             if (-not $data.$field) {
@@ -53,4 +51,3 @@ foreach ($file in $files) {
     catch {
         Write-Warning "Error procesando $($file.FullName): $_"
     }
-}
