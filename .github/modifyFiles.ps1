@@ -5,19 +5,24 @@ $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 
 
-$list= Get-ChildItem -Directory
-$orderList=($list| Sort-Object CreationTime -Descending)
-$aux= $orderList | Select-Object CreationTime
-$path= $orderList[0].FullName
+# $list= Get-ChildItem -Directory
+# $orderList=($list| Sort-Object CreationTime -Descending)
+# $aux= $orderList | Select-Object CreationTime
+# $path= $orderList[0].FullName
 
 
 $repoPath = $env:GITHUB_WORKSPACE
+$list = Get-ChildItem -Path $repoPath -Directory -ErrorAction SilentlyContinue
+$orderList = $list | Sort-Object CreationTime -Descending
+$aux = $orderList | Select-Object -First 1 -ExpandProperty CreationTime
+$path = $orderList[0].FullName
+
 Write-Host "lista de carpetas: $orderList"
 Write-Host "fecha de la carpeta: $aux"
 Write-Host "Ruta actual: $repoPath"
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
-$file = Get-ChildItem -Path $repoPath -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
+$file = Get-ChildItem -Path $path -Filter "app.json" -Recurse -ErrorAction SilentlyContinue
 
 if (-not $file) {
     Write-Host "No se encontraron archivos app.json"
