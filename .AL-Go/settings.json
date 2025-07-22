@@ -11,7 +11,8 @@
     "app7",
     "app8",
     "app2",
-    "appChulisima"
+    "appChulisima",
+    "appSinNombre"
   ],
   "testFolders": [
     "ALGOInv.Test"
