@@ -14,47 +14,7 @@ on:
       - completed
 
 jobs:
-  Initialize:
-    runs-on: windows-latest
-    outputs:
-      UpdateBranches: ${{ steps.GetBranches.outputs.Result }}
-      directCommit: ${{ steps.CalculateCommit.outputs.directCommit }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ghTokenWorkflow }}
-
-      - name: Read settings
-        id: ReadSettings
-        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
-        with:
-          shell: powershell
-          get: templateUrl
-
-      - name: Set includeBranches
-        id: SetIncludeBranches
-        run: |
-          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
-            echo "includeBranches=${{ github.event.inputs.includeBranches }}" >> $env:GITHUB_OUTPUT
-          } else {
-            echo "includeBranches=main" >> $env:GITHUB_OUTPUT
-          }
-        shell: pwsh
-
-      - name: Calculate Commit Options
-        id: CalculateCommit
-        run: |
-          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
-            $directCommit = "${{ github.event.inputs.directCommit }}"
-          } else {
-            $directCommit = "true"
-          }
-          echo "directCommit=$directCommit" >> $env:GITHUB_OUTPUT
-        shell: pwsh
-
   ModifyAppJson:
-    needs: Initialize
     runs-on: windows-latest
     name: Modify app.json files
 
