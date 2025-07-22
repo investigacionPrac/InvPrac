@@ -4,7 +4,7 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $list= Get-ChildItem -Directory
-$orderList=($list| Sort-Object CreationTime)
+$orderList=($list| Sort-Object CreationTime -Descending)
 $path= $orderList[0].FullName
 Write-Host "Ruta actual: $path"
 
