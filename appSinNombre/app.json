@@ -1,31 +1,35 @@
-{
-  "id": "da9fc10f-713b-4205-81fd-24f01cdcda01",
-  "name": "appSinNombre",
-  "publisher": "Alvaro",
-  "version": "1.0.0.0",
-  "brief": "",
-  "description": "",
-  "privacyStatement": "",
-  "EULA": "",
-  "help": "",
-  "url": "",
-  "logo": "",
-  "dependencies": [],
-  "screenshots": [],
-  "platform": "1.0.0.0",
-  "application": "22.0.0.0",
-  "idRanges": [
-    {
-      "from": 95613,
-      "to": 95614
-    }
-  ],
-  "features": [
-    "NoImplicitWith"
-  ],
-  "resourceExposurePolicy": {
-    "allowDebugging": true,
-    "allowDownloadingSource": false,
-    "includeSourceInSymbolFile": false
-  }
+﻿{
+    "id":  "da9fc10f-713b-4205-81fd-24f01cdcda01",
+    "name":  "appSinNombre",
+    "publisher":  "Alvaro",
+    "version":  "2.20250722.0.0",
+    "brief":  "",
+    "description":  "",
+    "privacyStatement":  "",
+    "EULA":  "",
+    "help":  "",
+    "url":  "",
+    "logo":  "",
+    "dependencies":  [
+
+                     ],
+    "screenshots":  [
+
+                    ],
+    "platform":  "1.0.0.0",
+    "application":  "22.0.0.0",
+    "idRanges":  [
+                     {
+                         "from":  95613,
+                         "to":  95614
+                     }
+                 ],
+    "features":  [
+                     "NoImplicitWith"
+                 ],
+    "resourceExposurePolicy":  {
+                                   "allowDebugging":  true,
+                                   "allowDownloadingSource":  false,
+                                   "includeSourceInSymbolFile":  false
+                               }
 }
