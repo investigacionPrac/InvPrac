@@ -33,7 +33,7 @@ foreach ($file in $appFiles) {
 $latest = $filesWithDates | Sort-Object CommitTimestamp -Descending | Select-Object -First 1
 
 if (-not $latest) {
-    Write-Warning "No se pudo determinar el archivo más reciente por Git"
+    Write-Warning "No hay archivos app.json a modificar"
     return
 }
 
