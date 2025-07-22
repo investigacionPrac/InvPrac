@@ -3,7 +3,8 @@
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
-$path= (Get-ChildItem | Sort-Object CreationTime)[-1].FullName
+$list= (Get-ChildItem | Sort-Object CreationTime)
+$path= $list[-1].FullName
 Write-Host "Ruta actual: $path"
 
 # Buscar todos los archivos app.json recursivamente desde la carpeta actual
