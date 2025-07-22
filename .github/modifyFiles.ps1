@@ -4,7 +4,7 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $list= Get-ChildItem -Directory
-$orderList=($list| Sort-Object CreationTime -Descending)
+$orderList=($list| Sort-Object CreationTime -Descending | Select-Object CreationTime, FullName)
 $path= $orderList[0].FullName
 Write-Host "lista de carpetas: $orderList"
 Write-Host "Ruta actual: $path"
