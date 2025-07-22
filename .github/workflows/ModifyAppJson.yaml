@@ -1,10 +1,11 @@
 name: Modify app.json
 
-#on:
-  # workflow_run:
-  #   workflows: ["Create a new app"]
-  #   types:
-  #     - completed
+on:
+  workflow_dispatch: # Para pruebas manuales
+  workflow_run:
+    workflows: ["Create a new app"]
+    types:
+      - completed
 
 jobs:
 

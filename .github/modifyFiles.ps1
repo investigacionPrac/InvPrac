@@ -20,7 +20,10 @@ $filesWithDates = @()
 foreach ($file in $appFiles) {
     $relativePath = $file.FullName.Substring($RepoPath.Length + 1).Replace('\', '/')
     $timestamp = git -C $RepoPath log -1 --format="%ct" -- "$relativePath"
-    if ($timestamp) {
+    $message = git -C $RepoPath log -1 --format="%s" -- "$relativePath"
+    Write-Host "mensaje: $message"
+    if ($timestamp && $message -match '^New PTE\s+\(.+\)$') {
+        Write-Host "Archivo app.json encontrado: $($file.FullName) con mensaje: $message"
         $filesWithDates += [PSCustomObject]@{
             Path = $file.FullName
             CommitTimestamp = [int]$timestamp
