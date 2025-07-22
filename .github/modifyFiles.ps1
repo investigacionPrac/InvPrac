@@ -34,6 +34,7 @@ $latest = $filesWithDates | Sort-Object CommitTimestamp -Descending | Select-Obj
 
 if (-not $latest) {
     Write-Host "No se pudo determinar el archivo más reciente por Git"
+    exit 1
 }
 
 Write-Host "Archivo app.json más recientemente modificado en Git:"
