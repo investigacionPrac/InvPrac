@@ -8,17 +8,8 @@ on:
       - completed
 
 jobs:
-  Initialize:
-    runs-on: windows-latest
-    name: Initialize
-    outputs:
-      UpdateBranches: ${{ steps.GetBranches.outputs.Result }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
   ModifyAppJson:
-    needs: Initialize
     runs-on: windows-latest
     name: Modify app.json files
 
