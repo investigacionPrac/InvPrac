@@ -90,7 +90,7 @@ jobs:
             
       - name: Update Tecon System Files
         shell: powershell
-        run: .github/updateTeconSystemFiles.ps1
+        run: .github/run-update.ps1
 
       - name: Finalize the workflow
         if: always()
