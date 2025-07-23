@@ -4,41 +4,32 @@ on:
   workflow_dispatch:
     inputs:
       templateUrl:
-        description: 'URL of the template to use for updating system files'
+        description: 'URL of the template to use for updating system files default is https://github.com/investigacionPrac/Actions'
         required: true
-        default: 'https://github.com/investigacionPrac/Actions'
+        default: ''
   schedule:
     - cron: '0 2 * * *' 
 
 jobs:
   CheckForUpdates:
-    runs-on: [ windows-latest ]
+    runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Read settings
-        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
-        with:
-          shell: powershell
-          get: templateUrl
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Read secrets
         id: ReadSecrets
-        uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
+        uses: investigacionPrac/Actions@main
         with:
-          shell: powershell
-          gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: 'ghTokenWorkflow'
+          action: 'ReadSecrets'
+          secretsFile: 'secrets.json'
 
-      - name: Check for updates to Tecon system files
-        uses: microsoft/AL-Go-Actions/CheckForUpdates@v7.2
+      - name: Update Tecon System Files
+        run: |
+          Write-Host "Updating Tecon System Files..."
+          .\UpdateTeconSystemFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }} -downloadLatest $true -update 'Y'
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        shell: powershell
         with:
-          shell: powershell
-          templateUrl: https://github.com/investigacionPrac/Actions
-          token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
-          downloadLatest: true
-          update: 'Y'
-  
+          templateUrl: 'https://github.com/investigacionPrac/Actions'
