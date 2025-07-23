@@ -19,10 +19,11 @@ jobs:
 
       - name: Read secrets
         id: ReadSecrets
-        uses: investigacionPrac/Actions@main
+        uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
         with:
-          action: 'ReadSecrets'
-          secretsFile: 'secrets.json'
+          shell: powershell
+          gitHubSecrets: ${{ toJson(secrets) }}
+          getSecrets: ${{ steps.DetermineDeliveryTargetSecrets.outputs.ContextSecrets }}
 
       - name: Update Tecon System Files
         run: |
