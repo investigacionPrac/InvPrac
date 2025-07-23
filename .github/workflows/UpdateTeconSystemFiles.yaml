@@ -5,7 +5,7 @@ on:
     inputs:
       templateUrl:
         description: 'URL of the template to use for updating system files default is https://github.com/investigacionPrac/Actions'
-        required: true
+        required: false
         default: ''
   schedule:
     - cron: '0 2 * * *' 
