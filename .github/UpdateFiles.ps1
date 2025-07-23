@@ -1,12 +1,29 @@
+# Obtener ruta absoluta del script
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
+
+# Definir origen (siempre es template dentro del repo)
+$templateRoot = Join-Path $scriptPath 'template'
+
+# Obtener nombre del repo (último folder del path del script)
+$repoName = Split-Path -Leaf $scriptPath
+
+# Usar el nombre del repo como destino
+$destinationRoot = Join-Path $scriptPath $repoName
+
+# Lista de archivos o carpetas a copiar
 $filesToBring = @('.alpackages/','settings.json','launch.json', 'helloworld.txt')
 
+Write-Output "Actualizando archivos para el repo: $repoName"
+Write-Output "Origen: $templateRoot"
+Write-Output "Destino: $destinationRoot"
+Write-Output ""
+
 foreach ($file in $filesToBring) {
-    $source = Join-Path -Path 'template' -ChildPath $file
-    $destination = Join-Path -Path 'InvPrac' -ChildPath $file
+    $source = Join-Path -Path $templateRoot -ChildPath $file
+    $destination = Join-Path -Path $destinationRoot -ChildPath $file
 
     if (Test-Path -Path $source) {
         if (Test-Path -Path $source -PathType Container) {
-            # Si es un directorio, comparar por existencia o cambios en archivos internos
             $copyNeeded = $true
             if (Test-Path -Path $destination) {
                 $sourceHash = Get-FileHash -Path (Get-ChildItem -Path $source -Recurse -File).FullName -Algorithm SHA256 | ForEach-Object Hash
@@ -41,4 +58,5 @@ foreach ($file in $filesToBring) {
     }
 }
 
-Write-Output "Verificación y actualización completadas."
+Write-Output ""
+Write-Output "Los archivos han sido actualizados en el repo: $repoName"
