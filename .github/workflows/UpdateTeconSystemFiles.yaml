@@ -31,5 +31,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: powershell
-        with:
-          templateUrl: 'https://github.com/investigacionPrac/Actions'
