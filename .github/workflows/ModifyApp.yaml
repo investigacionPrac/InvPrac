@@ -11,7 +11,7 @@ jobs:
 
   ModifyApp:
     runs-on: windows-latest
-    name: Modify app.json files
+    name: Modify app files
 
     steps:
       - name: Checkout

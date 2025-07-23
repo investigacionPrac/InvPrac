@@ -101,10 +101,6 @@ function Update-AppJson {
         }
     }
 
-    if (-not $data.contextSensitiveHelpUrl) {
-        $data.contextSensitiveHelpUrl = $defaultUrl
-    }
-
     if (-not $data.logo) {
         $data.logo = $defaultLogo
     }
