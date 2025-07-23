@@ -1,9 +1,10 @@
 param (
     [string]$RepoPath = $env:GITHUB_WORKSPACE,
     [int]$CommitsToCheck = 50,
-    [string]$Action = ""
+    [string]$Action = "full"
 )
 
+# --- Configuración global ---
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
@@ -44,56 +45,44 @@ $settings = @{
     "CRS.ObjectNameSuffix" = ""
 }
 
-function Update-AppJson {
+# --- Función: buscar el app.json más reciente en commits "New PTE (...)"
+function Get-LastAppJsonPath {
     param (
         [string]$RepoPath,
-        [int]$CommitsToCheck
+        [int]$CommitsToCheck = 50
     )
-
-    Write-Host "Buscando último app.json modificado por un commit tipo 'New PTE (...)'..."
 
     $commitsRaw = git -C $RepoPath log -n $CommitsToCheck --format="%H|%s|%ct"
     if (-not $commitsRaw) {
-        Write-Warning "No se pudieron obtener commits recientes"
-        return
+        return $null
     }
-
-    $validCommits = @()
 
     foreach ($line in $commitsRaw) {
         $parts = $line -split '\|', 3
         $commitHash = $parts[0]
         $commitMessage = $parts[1]
-        $commitTimestamp = [int]$parts[2]
 
         if ($commitMessage -match '^New PTE\s+\(.+\)$') {
             $filesChangedRaw = git -C $RepoPath diff-tree --no-commit-id --name-only -r $commitHash
             foreach ($fileChanged in $filesChangedRaw) {
                 if ($fileChanged -like '*app.json') {
-                    $validCommits += [PSCustomObject]@{
-                        CommitHash = $commitHash
-                        CommitTimestamp = $commitTimestamp
-                        CommitMessage = $commitMessage
-                        FilePath = Join-Path $RepoPath $fileChanged
-                    }
+                    return (Join-Path $RepoPath $fileChanged)
                 }
             }
         }
     }
 
-    if (-not $validCommits) {
-        Write-Warning "No se encontró ningún commit tipo 'New PTE (...)' que modifique un app.json"
-        return
-    }
+    return $null
+}
 
-    $latest = $validCommits | Sort-Object CommitTimestamp -Descending | Select-Object -First 1
+# --- Función: actualizar app.json ---
+function Update-AppJson {
+    param (
+        [string]$FilePath
+    )
 
-    Write-Host "Último app.json modificado:"
-    Write-Host "Ruta     : $($latest.FilePath)"
-    Write-Host "Mensaje  : $($latest.CommitMessage)"
-    Write-Host "Fecha    : $(Get-Date ([DateTimeOffset]::FromUnixTimeSeconds($latest.CommitTimestamp).DateTime) -Format 'yyyy-MM-dd HH:mm:ss')"
-
-    $data = Get-Content -Path $latest.FilePath -Raw | ConvertFrom-Json
+    Write-Host "🔧 Actualizando: $FilePath"
+    $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
 
     foreach ($field in $fieldsToCheck) {
         if (-not $data.$field) {
@@ -101,18 +90,25 @@ function Update-AppJson {
         }
     }
 
+    if (-not $data.contextSensitiveHelpUrl) {
+        $data.contextSensitiveHelpUrl = $defaultUrl
+    }
+
     if (-not $data.logo) {
         $data.logo = $defaultLogo
     }
 
     $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
-    $data | ConvertTo-Json -Depth 10 | Set-Content -Path $latest.FilePath -Encoding utf8
 
-    Write-Host "app.json actualizado con versión: $($data.version)"
+    $data | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding utf8
+    Write-Host "app.json actualizado con nueva versión: $($data.version)"
 }
 
+# --- Función: crear/modificar launch.json ---
 function Update-LaunchJson {
-    param ([string]$RepoPath)
+    param (
+        [string]$RepoPath
+    )
 
     $vscodePath = Join-Path $RepoPath '.vscode'
     if (-not (Test-Path $vscodePath)) {
@@ -124,8 +120,11 @@ function Update-LaunchJson {
     Write-Host "launch.json actualizado en $launchPath"
 }
 
+# --- Función: crear/modificar settings.json ---
 function Update-SettingsJson {
-    param ([string]$RepoPath)
+    param (
+        [string]$RepoPath
+    )
 
     $vscodePath = Join-Path $RepoPath '.vscode'
     if (-not (Test-Path $vscodePath)) {
@@ -137,17 +136,24 @@ function Update-SettingsJson {
     Write-Host "settings.json actualizado en $settingsPath"
 }
 
+# --- Controlador principal según la acción ---
 switch ($Action.ToLower()) {
     'appjson' {
-        Update-AppJson -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
+        if ($null -ne $targetAppJson) {
+            Update-AppJson -FilePath $targetAppJson
+        } else {
+            Write-Warning "No se encontró app.json válido para modificar."
+        }
     }
+
     'launch' {
         $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
         if ($null -ne $targetAppJson) {
             $appFolder = Split-Path -Path $targetAppJson -Parent
             Update-LaunchJson -RepoPath $appFolder
         } else {
-            Write-Warning "No se encontró un app.json válido para generar launch.json"
+            Write-Warning "No se encontró app.json para generar launch.json."
         }
     }
 
@@ -157,7 +163,23 @@ switch ($Action.ToLower()) {
             $appFolder = Split-Path -Path $targetAppJson -Parent
             Update-SettingsJson -RepoPath $appFolder
         } else {
-            Write-Warning "No se encontró un app.json válido para generar settings.json"
+            Write-Warning "No se encontró app.json para generar settings.json."
         }
+    }
+
+    'full' {
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
+        if ($null -ne $targetAppJson) {
+            $appFolder = Split-Path -Path $targetAppJson -Parent
+            Update-AppJson -FilePath $targetAppJson
+            Update-LaunchJson -RepoPath $appFolder
+            Update-SettingsJson -RepoPath $appFolder
+        } else {
+            Write-Warning "No se encontró app.json para ejecutar acción completa."
+        }
+    }
+
+    default {
+        Write-Warning "'$Action' no reconocida. Usa: appjson, launch, settings, full"
     }
 }
