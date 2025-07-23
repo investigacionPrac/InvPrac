@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh auth login --with-token < $Env:GITHUB_TOKEN
+          $Env:GITHUB_TOKEN | gh auth login --with-token
           .\.github\UpdateFiles.ps1 `
             -templateUrl "https://github.com/investigacionPrac/Actions" `
             -branch "main" `
