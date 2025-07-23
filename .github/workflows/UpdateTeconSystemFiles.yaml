@@ -1,0 +1,44 @@
+name: Update Tecon System Files
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' 
+  inputs:
+    templateUrl:
+      description: 'URL of the template to use for updating system files'
+      required: true
+      default: 'https://github.com/investigacionPrac/Actions'
+
+jobs:
+  CheckForUpdates:
+    runs-on: [ windows-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Read settings
+        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
+        with:
+          shell: powershell
+          get: templateUrl
+
+      - name: Read secrets
+        id: ReadSecrets
+        uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
+        with:
+          shell: powershell
+          gitHubSecrets: ${{ toJson(secrets) }}
+          getSecrets: 'ghTokenWorkflow'
+
+      - name: Check for updates to Tecon system files
+        uses: microsoft/AL-Go-Actions/CheckForUpdates@v7.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          shell: powershell
+          templateUrl: ${{ env.templateUrl }}
+          token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
+          downloadLatest: true
+          $update: 'Y'
+  
