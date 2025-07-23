@@ -2,13 +2,13 @@ name: Update Tecon System Files
 
 on:
   workflow_dispatch:
+    inputs:
+      templateUrl:
+        description: 'URL of the template to use for updating system files'
+        required: true
+        default: 'https://github.com/investigacionPrac/Actions'
   schedule:
     - cron: '0 2 * * *' 
-  inputs:
-    templateUrl:
-      description: 'URL of the template to use for updating system files'
-      required: true
-      default: 'https://github.com/investigacionPrac/Actions'
 
 jobs:
   CheckForUpdates:
