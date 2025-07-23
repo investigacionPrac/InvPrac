@@ -1,37 +1,82 @@
 param(
-    [string]$templatePath = "",
+    [string]$templateUrl = "",
+    [string]$token = "",
+    [bool]$downloadLatest = $true,
     [string]$update = "Y"
 )
 
-# Obtener el path base (donde se ejecuta el script)
+function Download-TemplateFromRepo {
+    param (
+        [string]$repoUrl,
+        [string]$token,
+        [string]$targetFolder
+    )
+
+    Write-Output "Descargando plantilla desde: $repoUrl"
+    
+    if ($repoUrl -match "github.com[/:](.+)/(.+?)(\.git)?$") {
+        $org = $Matches[1]
+        $repo = $Matches[2]
+    } else {
+        Write-Error "URL inválida: $repoUrl"
+        exit 1
+    }
+
+    $headers = @{
+        Authorization = "token $token"
+        Accept        = "application/vnd.github.v3+json"
+        "User-Agent"  = "ps-script"
+    }
+
+    $releaseUrl = "https://api.github.com/repos/$org/$repo/releases/latest"
+    try {
+        $releaseInfo = Invoke-RestMethod -Uri $releaseUrl -Headers $headers
+    } catch {
+        Write-Error "No se pudo obtener la release del repositorio $repoUrl"
+        exit 1
+    }
+
+    $zipUrl = $releaseInfo.zipball_url
+    $zipPath = "$env:TEMP\$repo.zip"
+    $extractPath = $targetFolder
+
+    Invoke-WebRequest -Uri $zipUrl -Headers $headers -OutFile $zipPath
+    Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+
+    $templateFolder = Get-ChildItem -Path $extractPath -Directory | Select-Object -First 1
+    return $templateFolder.FullName
+}
+
 $basePath = Get-Location
-
-# Buscar app.json (asume que está en la raíz del proyecto AL)
 $appJsonPath = Get-ChildItem -Path $basePath -Recurse -Filter 'app.json' -ErrorAction SilentlyContinue | Select-Object -First 1
-
 if (-not $appJsonPath) {
     Write-Error "No se encontró app.json en el repositorio. No se puede determinar el destino."
     exit 1
 }
-
 $destinationRoot = Split-Path -Path $appJsonPath.FullName -Parent
 
-# Usar templatePath proporcionado o asumir que está en ./template/
-if ([string]::IsNullOrEmpty($templatePath)) {
-    $templateRoot = Join-Path -Path $basePath -ChildPath "template"
+if ($downloadLatest -and $templateUrl) {
+    $tempTemplateFolder = Join-Path -Path $env:TEMP -ChildPath "template-download"
+    if (Test-Path $tempTemplateFolder) {
+        Remove-Item -Path $tempTemplateFolder -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $tempTemplateFolder | Out-Null
+
+    $templateRoot = Download-TemplateFromRepo -repoUrl $templateUrl -token $token -targetFolder $tempTemplateFolder
 } else {
-    $templateRoot = $templatePath
+    Write-Error "No se especificó templateUrl o -downloadLatest está en false. No hay plantilla que aplicar."
+    exit 1
 }
 
-Write-Output "app.json encontrado en: $destinationRoot"
-Write-Output "Usando plantilla desde: $templateRoot"
-Write-Output ""
-
-# Archivos a copiar
 $filesToBring = @('.alpackages/','settings.json','launch.json', 'helloworld.txt')
 
+Write-Output ""
+Write-Output "Origen de plantilla: $templateRoot\template"
+Write-Output "Destino del proyecto: $destinationRoot"
+Write-Output ""
+
 foreach ($file in $filesToBring) {
-    $source = Join-Path -Path $templateRoot -ChildPath $file
+    $source = Join-Path -Path "$templateRoot\template" -ChildPath $file
     $destination = Join-Path -Path $destinationRoot -ChildPath $file
 
     if (Test-Path -Path $source) {

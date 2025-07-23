@@ -16,7 +16,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Updating Tecon System Files...
-        shell: pwsh
+
+      - name: Update Tecon System Files
+        shell: powershell
         run: |
-          .\.github\UpdateFiles.ps1 -templatePath "./.github/template" -update "Y"
+          .\.github\UpdateFiles.ps1 `
+            -templateUrl "https://github.com/investigacionPrac/Actions" `
+            -token "${{ secrets.GITHUB_TOKEN }}" `
+            -downloadLatest $true `
+            -update "Y"
