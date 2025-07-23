@@ -11,7 +11,12 @@
     "url":  "https://www.tecon.es/",
     "logo":  "./Logo/Tecon.png",
     "dependencies":  [
-
+                         {
+                             "publisher":  "",
+                             "name":  "",
+                             "id":  "",
+                             "version":  ""
+                         }
                      ],
     "screenshots":  [
 
