@@ -1,4 +1,4 @@
-$filesToBring = @('.alpackages/','settings.json','launch.json')
+$filesToBring = @('.alpackages/','settings.json','launch.json', 'helloworld.txt')
 
 function Update-Files {
     foreach ($file in $filesToBring) {
