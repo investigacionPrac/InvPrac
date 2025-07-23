@@ -17,18 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Read secrets
-        id: ReadSecrets
-        uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
-        with:
-          shell: powershell
-          gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: 'ghTokenWorkflow'
-
       - name: Update Tecon System Files
         run: |
           Write-Host "Updating Tecon System Files..."
-          .\UpdateTeconSystemFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }} -downloadLatest $true -update 'Y'
+          .\UpdateTeconSystemFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token 'ghTokenWorkflow' -downloadLatest $true -update 'Y'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: powershell
