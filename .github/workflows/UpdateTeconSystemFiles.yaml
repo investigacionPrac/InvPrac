@@ -18,8 +18,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update Tecon System Files
-        shell: pwsh
+        shell: powershell
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gh auth login --with-token < $Env:GITHUB_TOKEN
           .\.github\UpdateFiles.ps1 `
             -templateUrl "https://github.com/investigacionPrac/Actions" `
             -branch "main" `
