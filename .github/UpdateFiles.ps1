@@ -40,8 +40,6 @@ function Clone-RepoWithGH {
 }
 
 
-Write-Output "Contenido del repositorio clonado:"
-Get-ChildItem -Path $tempTemplateFolder -Recurse | ForEach-Object { $_.FullName }
 
 
 # Busca carpeta con app.json para saber destino
@@ -86,4 +84,6 @@ foreach ($file in $filesToBring) {
     }
 }
 
+Write-Output "Contenido del repositorio clonado:"
+Get-ChildItem -Path $tempTemplateFolder -Recurse | ForEach-Object { $_.FullName }
 Write-Output "Archivos actualizados correctamente."
