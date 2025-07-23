@@ -81,7 +81,7 @@ function Update-AppJson {
         [string]$FilePath
     )
 
-    Write-Host "🔧 Actualizando: $FilePath"
+    Write-Host "Actualizando: $FilePath"
     $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
 
     foreach ($field in $fieldsToCheck) {
@@ -166,8 +166,8 @@ switch ($Action.ToLower()) {
             Write-Warning "No se encontró app.json para generar settings.json."
         }
     }
-    
+
     default {
-        Write-Warning "'$Action' no reconocida. Usa: appjson, launch, settings, full"
+        Write-Warning "'$Action' no reconocida. Usa: appjson, launch, settings"
     }
 }
