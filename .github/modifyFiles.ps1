@@ -1,7 +1,7 @@
 param (
     [string]$RepoPath = $env:GITHUB_WORKSPACE,
     [int]$CommitsToCheck = 50,
-    [string]$Action = "full"
+    [string]$Action = ""
 )
 
 # --- Configuración global ---
@@ -166,19 +166,7 @@ switch ($Action.ToLower()) {
             Write-Warning "No se encontró app.json para generar settings.json."
         }
     }
-
-    'full' {
-        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
-        if ($null -ne $targetAppJson) {
-            $appFolder = Split-Path -Path $targetAppJson -Parent
-            Update-AppJson -FilePath $targetAppJson
-            Update-LaunchJson -RepoPath $appFolder
-            Update-SettingsJson -RepoPath $appFolder
-        } else {
-            Write-Warning "No se encontró app.json para ejecutar acción completa."
-        }
-    }
-
+    
     default {
         Write-Warning "'$Action' no reconocida. Usa: appjson, launch, settings, full"
     }
