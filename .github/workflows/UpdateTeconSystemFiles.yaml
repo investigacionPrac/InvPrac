@@ -20,7 +20,7 @@ jobs:
       - name: Update Tecon System Files
         run: |
           Write-Host "Updating Tecon System Files..."
-          .\UpdateTeconSystemFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token 'ghTokenWorkflow' -downloadLatest $true -update 'Y'
+          .github\UpdateFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token 'ghTokenWorkflow' -downloadLatest $true -update 'Y'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: powershell
