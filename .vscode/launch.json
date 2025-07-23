@@ -1,0 +1,30 @@
+﻿{
+    "version":  "0.2.0",
+    "configurations":  [
+                           {
+                               "tenant":  "",
+                               "environmentType":  "Sandbox",
+                               "type":  "al",
+                               "environmentName":  "",
+                               "name":  "Sandbox",
+                               "enableSqlInformationDebugger":  true,
+                               "launchBrowser":  true,
+                               "breakOnError":  true,
+                               "enableLongRunningSqlStatements":  true,
+                               "request":  "launch"
+                           },
+                           {
+                               "tenant":  "",
+                               "environmentType":  "Sandbox",
+                               "type":  "al",
+                               "environmentName":  "",
+                               "schemaUpdateMode":  "ForceSync",
+                               "name":  "âŒâŒâŒFORCE - Sandbox âŒâŒâŒ",
+                               "enableSqlInformationDebugger":  true,
+                               "launchBrowser":  true,
+                               "breakOnError":  true,
+                               "enableLongRunningSqlStatements":  true,
+                               "request":  "launch"
+                           }
+                       ]
+}
