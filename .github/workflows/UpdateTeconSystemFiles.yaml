@@ -16,11 +16,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Update Tecon System Files
+      - name: Updating Tecon System Files...
+        shell: pwsh
         run: |
-          Write-Host "Updating Tecon System Files..."
-          .github\UpdateFiles.ps1 -templateUrl ${{ inputs.templateUrl }} -token 'ghTokenWorkflow' -downloadLatest $true -update 'Y'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        shell: powershell
+          .\.github\UpdateFiles.ps1 -templatePath "./.github/template" -update "Y"

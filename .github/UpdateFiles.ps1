@@ -1,22 +1,34 @@
-# Obtener ruta absoluta del script
-$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
+param(
+    [string]$templatePath = "",
+    [string]$update = "Y"
+)
 
-# Definir origen (siempre es template dentro del repo)
-$templateRoot = Join-Path $scriptPath 'template'
+# Obtener el path base (donde se ejecuta el script)
+$basePath = Get-Location
 
-# Obtener nombre del repo (último folder del path del script)
-$repoName = Split-Path -Leaf $scriptPath
+# Buscar app.json (asume que está en la raíz del proyecto AL)
+$appJsonPath = Get-ChildItem -Path $basePath -Recurse -Filter 'app.json' -ErrorAction SilentlyContinue | Select-Object -First 1
 
-# Usar el nombre del repo como destino
-$destinationRoot = Join-Path $scriptPath $repoName
+if (-not $appJsonPath) {
+    Write-Error "No se encontró app.json en el repositorio. No se puede determinar el destino."
+    exit 1
+}
 
-# Lista de archivos o carpetas a copiar
-$filesToBring = @('.alpackages/','settings.json','launch.json', 'helloworld.txt')
+$destinationRoot = Split-Path -Path $appJsonPath.FullName -Parent
 
-Write-Output "Actualizando archivos para el repo: $repoName"
-Write-Output "Origen: $templateRoot"
-Write-Output "Destino: $destinationRoot"
+# Usar templatePath proporcionado o asumir que está en ./template/
+if ([string]::IsNullOrEmpty($templatePath)) {
+    $templateRoot = Join-Path -Path $basePath -ChildPath "template"
+} else {
+    $templateRoot = $templatePath
+}
+
+Write-Output "app.json encontrado en: $destinationRoot"
+Write-Output "Usando plantilla desde: $templateRoot"
 Write-Output ""
+
+# Archivos a copiar
+$filesToBring = @('.alpackages/','settings.json','launch.json', 'helloworld.txt')
 
 foreach ($file in $filesToBring) {
     $source = Join-Path -Path $templateRoot -ChildPath $file
@@ -30,7 +42,7 @@ foreach ($file in $filesToBring) {
                 $destHash = Get-FileHash -Path (Get-ChildItem -Path $destination -Recurse -File).FullName -Algorithm SHA256 | ForEach-Object Hash
                 $copyNeeded = ($sourceHash -ne $destHash)
             }
-            if ($copyNeeded) {
+            if ($copyNeeded -and $update -eq "Y") {
                 if (Test-Path -Path $destination) {
                     Remove-Item -Path $destination -Recurse -Force
                 }
@@ -46,7 +58,7 @@ foreach ($file in $filesToBring) {
                 $dstHash = (Get-FileHash -Path $destination -Algorithm SHA256).Hash
                 $copyNeeded = ($srcHash -ne $dstHash)
             }
-            if ($copyNeeded) {
+            if ($copyNeeded -and $update -eq "Y") {
                 Copy-Item -Path $source -Destination $destination -Force
                 Write-Output "Archivo actualizado: $file"
             } else {
@@ -59,4 +71,4 @@ foreach ($file in $filesToBring) {
 }
 
 Write-Output ""
-Write-Output "Los archivos han sido actualizados en el repo: $repoName"
+Write-Output "Archivos actualizados correctamente en: $destinationRoot"
