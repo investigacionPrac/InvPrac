@@ -23,7 +23,6 @@ jobs:
         with:
           shell: powershell
           gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: ${{ steps.DetermineDeliveryTargetSecrets.outputs.ContextSecrets }}
 
       - name: Update Tecon System Files
         run: |
