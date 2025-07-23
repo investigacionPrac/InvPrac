@@ -37,8 +37,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           shell: powershell
-          templateUrl: ${{ env.templateUrl }}
+          templateUrl: https://github.com/investigacionPrac/Actions
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
           downloadLatest: true
-          $update: 'Y'
+          update: 'Y'
   
