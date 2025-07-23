@@ -23,7 +23,15 @@ jobs:
 
       - name: Modify app.json files
         shell: powershell
-        run: .github/modifyFiles.ps1 
+        run: .github/modifyFiles.ps1 -Action "app.json"
+
+      - name: Modify or add launch.json
+        shell: powershell
+        run: .github/modifyFiles.ps1 -Action "launch.json"
+      
+      - name: Modify or add settings.json
+        shell: powershell
+        run: .github/modifyFiles.ps1 -Action "settings.json"
       
       - name: Set up Git
         run: |
