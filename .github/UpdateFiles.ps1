@@ -30,7 +30,7 @@ function Clone-RepoWithGH {
 
     # Ejecuta git clone con la rama indicada y solo profundidad 1
     $cloneUrl = "https://github.com/$org/$repo.git"
-    $args = @("repo", "clone", $cloneUrl, "--branch", $branch, "--depth", "1", $targetFolder)
+    $args = @("repo", "clone", $cloneUrl, $targetFolder, "--", "--branch", $branch, "--depth", "1")
 
     $process = Start-Process -FilePath "gh" -ArgumentList $args -NoNewWindow -Wait -PassThru
     if ($process.ExitCode -ne 0) {
