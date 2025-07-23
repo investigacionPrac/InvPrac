@@ -14,8 +14,12 @@ jobs:
   CheckForUpdates:
     runs-on: windows-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ matrix.branch }}
+          token: ${{ secrets.ghTokenWorkflow }}
+          fetch-depth: 0
 
       - name: Update Tecon System Files
         shell: powershell
@@ -27,6 +31,7 @@ jobs:
             -branch "main" `
             -downloadLatest $true `
             -update "Y"
+      
       - name: Set up Git
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -36,5 +41,5 @@ jobs:
         shell: powershell
         run: |
           git add .
-          git commit -m "añadir datos por defecto de app.json"
+          git commit -m "Actualizar archivos del sistema de TECON"
           git push origin main
