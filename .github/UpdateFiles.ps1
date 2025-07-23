@@ -1,18 +1,20 @@
 param(
     [string]$templateUrl = "",
+    [string]$branch = "main",
     [string]$token = "",
     [bool]$downloadLatest = $true,
     [string]$update = "Y"
 )
 
-function Download-TemplateFromRepo {
+function Download-TemplateFromBranch {
     param (
         [string]$repoUrl,
+        [string]$branch,
         [string]$token,
         [string]$targetFolder
     )
 
-    Write-Output "Descargando plantilla desde: $repoUrl"
+    Write-Output "Descargando plantilla desde rama '$branch' en: $repoUrl"
     
     if ($repoUrl -match "github.com[/:](.+)/(.+?)(\.git)?$") {
         $org = $Matches[1]
@@ -22,31 +24,24 @@ function Download-TemplateFromRepo {
         exit 1
     }
 
-    $headers = @{
-        Authorization = "token $token"
-        Accept        = "application/vnd.github.v3+json"
-        "User-Agent"  = "ps-script"
-    }
+    $zipUrl = "https://github.com/$org/$repo/archive/refs/heads/$branch.zip"
+    $zipPath = "$env:TEMP\$repo-$branch.zip"
+    $extractPath = $targetFolder
 
-    $releaseUrl = "https://api.github.com/repos/$org/$repo/releases/latest"
     try {
-        $releaseInfo = Invoke-RestMethod -Uri $releaseUrl -Headers $headers
+        Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
     } catch {
-        Write-Error "No se pudo obtener la release del repositorio $repoUrl"
+        Write-Error "No se pudo descargar el ZIP desde la rama '$branch'. Verifica que exista."
         exit 1
     }
 
-    $zipUrl = $releaseInfo.zipball_url
-    $zipPath = "$env:TEMP\$repo.zip"
-    $extractPath = $targetFolder
-
-    Invoke-WebRequest -Uri $zipUrl -Headers $headers -OutFile $zipPath
     Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
 
     $templateFolder = Get-ChildItem -Path $extractPath -Directory | Select-Object -First 1
     return $templateFolder.FullName
 }
 
+# Buscar carpeta que contiene app.json
 $basePath = Get-Location
 $appJsonPath = Get-ChildItem -Path $basePath -Recurse -Filter 'app.json' -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $appJsonPath) {
@@ -55,6 +50,7 @@ if (-not $appJsonPath) {
 }
 $destinationRoot = Split-Path -Path $appJsonPath.FullName -Parent
 
+# Descargar plantilla si se especifica
 if ($downloadLatest -and $templateUrl) {
     $tempTemplateFolder = Join-Path -Path $env:TEMP -ChildPath "template-download"
     if (Test-Path $tempTemplateFolder) {
@@ -62,7 +58,7 @@ if ($downloadLatest -and $templateUrl) {
     }
     New-Item -ItemType Directory -Path $tempTemplateFolder | Out-Null
 
-    $templateRoot = Download-TemplateFromRepo -repoUrl $templateUrl -token $token -targetFolder $tempTemplateFolder
+    $templateRoot = Download-TemplateFromBranch -repoUrl $templateUrl -branch $branch -token $token -targetFolder $tempTemplateFolder
 } else {
     Write-Error "No se especificó templateUrl o -downloadLatest está en false. No hay plantilla que aplicar."
     exit 1
