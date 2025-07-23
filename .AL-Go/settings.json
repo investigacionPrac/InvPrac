@@ -9,7 +9,9 @@
   "testFolders": [
     "ALGOInv.Test"
   ],
-  "bcptTestFolders": [],
+  "bcptTestFolders": [
+    "app1.PerformanceTest"
+  ],
   "generateDependencyArtifact": true,
   "versioningStrategy": 3
 }
