@@ -39,6 +39,11 @@ function Clone-RepoWithGH {
     }
 }
 
+
+Write-Output "Contenido del repositorio clonado:"
+Get-ChildItem -Path $tempTemplateFolder -Recurse | ForEach-Object { $_.FullName }
+
+
 # Busca carpeta con app.json para saber destino
 $basePath = Get-Location
 $appJsonPath = Get-ChildItem -Path $basePath -Recurse -Filter 'app.json' -ErrorAction SilentlyContinue | Select-Object -First 1
