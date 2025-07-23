@@ -8,6 +8,14 @@ param (
 $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
+$commonDependency = @(
+    @{
+        id = ""
+        name = ""
+        publisher = ""
+        version = ""
+    }
+)
 
 $launch = @{
     "version" = "0.2.0"
@@ -94,6 +102,7 @@ function Update-AppJson {
         $data.logo = $defaultLogo
     }
 
+    $data.dependencies = $commonDependency
     $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
 
     $data | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding utf8
