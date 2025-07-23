@@ -142,12 +142,22 @@ switch ($Action.ToLower()) {
         Update-AppJson -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
     }
     'launch' {
-        Update-LaunchJson -RepoPath $RepoPath
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
+        if ($null -ne $targetAppJson) {
+            $appFolder = Split-Path -Path $targetAppJson -Parent
+            Update-LaunchJson -RepoPath $appFolder
+        } else {
+            Write-Warning "No se encontró un app.json válido para generar launch.json"
+        }
     }
+
     'settings' {
-        Update-SettingsJson -RepoPath $RepoPath
-    }
-    default {
-        Write-Warning "'$Action' no reconocida. Usa: appjson, launch, settings, full"
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
+        if ($null -ne $targetAppJson) {
+            $appFolder = Split-Path -Path $targetAppJson -Parent
+            Update-SettingsJson -RepoPath $appFolder
+        } else {
+            Write-Warning "No se encontró un app.json válido para generar settings.json"
+        }
     }
 }
