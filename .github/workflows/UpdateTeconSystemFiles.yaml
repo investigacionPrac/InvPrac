@@ -27,3 +27,14 @@ jobs:
             -branch "main" `
             -downloadLatest $true `
             -update "Y"
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Commit and push changes
+        shell: powershell
+        run: |
+          git add .
+          git commit -m "añadir datos por defecto de app.json"
+          git push origin main
