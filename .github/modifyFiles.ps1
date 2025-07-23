@@ -110,7 +110,7 @@ function Update-AppJson {
 
     Write-Host "app.json actualizado con versión: $($data.version)"
 }
-$latestParent = $latest.FilePath | Split-Path -Parent
+
 function Update-LaunchJson {
     param ([string]$RepoPath)
 
@@ -142,7 +142,7 @@ switch ($Action.ToLower()) {
         Update-AppJson -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
     }
     'launch' {
-        $targetAppJson = $latestParent
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
         if ($null -ne $targetAppJson) {
             $appFolder = Split-Path -Path $targetAppJson -Parent
             Update-LaunchJson -RepoPath $appFolder
@@ -152,7 +152,7 @@ switch ($Action.ToLower()) {
     }
 
     'settings' {
-        $targetAppJson = $latestParent
+        $targetAppJson = Get-LastAppJsonPath -RepoPath $RepoPath -CommitsToCheck $CommitsToCheck
         if ($null -ne $targetAppJson) {
             $appFolder = Split-Path -Path $targetAppJson -Parent
             Update-SettingsJson -RepoPath $appFolder
