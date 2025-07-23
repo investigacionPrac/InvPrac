@@ -5,7 +5,7 @@ param(
     [bool]$downloadLatest = $true,
     [string]$update = "Y"
 )
-
+try{
 function Clone-RepoWithGH {
     param(
         [string]$repoUrl,
@@ -65,7 +65,7 @@ Write-Output "Origen plantilla: $tempTemplateFolder"
 Write-Output "Destino proyecto: $destinationRoot"
 
 foreach ($file in $filesToBring) {
-    $source = Join-Path -Path $tempTemplateFolder -ChildPath $file
+    $source = Join-Path -Path (Join-Path $tempTemplateFolder "template") -ChildPath $file
     $destination = Join-Path -Path $destinationRoot -ChildPath $file
 
     if (Test-Path -Path $source) {
@@ -83,7 +83,10 @@ foreach ($file in $filesToBring) {
         Write-Output "El archivo $source no existe."
     }
 }
-
+}catch {
+    Write-Error "Error al actualizar archivos: $_"
+    exit 1
+}
 Write-Output "Contenido del repositorio clonado:"
 Get-ChildItem -Path $tempTemplateFolder -Recurse | ForEach-Object { $_.FullName }
 Write-Output "Archivos actualizados correctamente."
