@@ -25,7 +25,7 @@ $launch = @{
             "enableSqlInformationDebugger" = $true
         },
         @{
-            "name" = "❌❌❌FORCE - Sandbox ❌❌❌"
+            "name" = "**************FORCE - Sandbox**************"
             "request" = "launch"
             "type" = "al"
             "environmentType" = "Sandbox"
