@@ -3,9 +3,7 @@
   "country": "es",
   "appFolders": [
     "ALGOInv",
-    "app1",
-    "app2",
-    "app3"
+    "app1"
   ],
   "testFolders": [
     "ALGOInv.Test"
