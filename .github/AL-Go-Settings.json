@@ -6,9 +6,11 @@
   "DeliverToStorage": {
     "CreateContainerIfNotExists": true
   },
+  "DeployToBC-SANDBOX-DEV":{
+    "Scope": "PTE"
+  },
   "environments": [
-    "BC-SANDBOX-DEV",
-    "BC-SANDBOX-DEMOS"
+    "BC-SANDBOX-DEV"
   ],
   "useProjectDependencies": true,
   "versioningStrategy": 3
