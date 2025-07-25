@@ -6,9 +6,9 @@
   "DeliverToStorage": {
     "CreateContainerIfNotExists": true
   },
-  "DeployToBC-SANDBOX-DEV":{
+  "DeployToBC-SANDBOX-DEV": {
     "Scope": "PTE",
-    "SyncMode":"ForceSync"
+    "SyncMode": "ForceSync"
   },
   "environments": [
     "BC-SANDBOX-DEV"
