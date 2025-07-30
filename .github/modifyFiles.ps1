@@ -89,36 +89,21 @@ function Update-AppJson {
         [string]$FilePath
     )
     Write-Host "Repo: $RepoPath"
-    #$parent= (Get-Item $FilePath).Parent.FullName
+    $parent= Split-Path -Path $FilePath -Parent
     Write-Host "Actualizando: $FilePath"
     $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
-
-    Write-Host "###############DEBUG#############"
-    Write-Host "FilePath: $FilePath"
-
-    $item = Get-Item $FilePath -ErrorAction SilentlyContinue
-    if ($null -eq $item) {
-        Write-Host "No existe el archivo o carpeta: $FilePath"
-    } else {
-        $parentPath = Split-Path -Path $FilePath -Parent
-        Write-Host "Objeto encontrado: $($item.FullName)"
-        Write-Host "Parent: $($item.Parent.FullName)"
-        Write-Host "Parent object: $($item.Parent)"
-        Write-Host "Parent using split: $parentPath"
-        Write-Host "#############Fin Debug############"
-    }
 
     foreach ($field in $fieldsToCheck) {
         if (-not $data.$field) {
             $data.$field = $defaultUrl
         }
     }
-    #$logoPath = Join-Path $FilePath 'Logo'
+    $logoPath = Join-Path $parent 'Logo'
     $origen = Join-Path $RepoPath 'Logo'
     $imagen = Join-Path $origen 'Tecon.png'
     
     # New-Item -Path $logoPath -ItemType Directory -Force | Out-Null
-    # Write-Host "LogoPath: $($logoPath)"
+    Write-Host "LogoPath: $($logoPath)"
     Write-Host "origenPath: $($origen), imagen: $($imagen)"
     # Copy-Item -Path $imagen -Destination $logoPath
     
