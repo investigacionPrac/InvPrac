@@ -98,10 +98,11 @@ function Update-AppJson {
         }
     }
     $logoPath = Join-Path $RepoPath 'Logo'
-    $imagen = Join-Path $RepoPath "Logo\Tecon.png"
+    # $origen = Join-Path $RepoPath 'Logo'
+    # $imagen = Join-Path $origen 'Tecon.png'
     
     New-Item -Path $logoPath -ItemType Directory -Force | Out-Null
-    Copy-Item -Path $imagen -Destination $logoPath
+    # Copy-Item -Path $imagen -Destination $logoPath
     
     if (-not $data.logo) {
         $data.logo = $defaultLogo
