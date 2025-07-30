@@ -10,7 +10,7 @@ $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $commonDependency = @(
     @{
-        id = ""
+        #id = ""
         name = ""
         publisher = ""
         version = ""
@@ -97,7 +97,14 @@ function Update-AppJson {
             $data.$field = $defaultUrl
         }
     }
+    $logoPath = Join-Path $RepoPath 'Logo'
+    $imagen = Join-Path $RepoPath "Logo\Tecon.png"
 
+    if (-not(Test-Path $logoPath)){
+        New-Item -Path $logoPath -ItemType Directory -Force | Out-Null
+        Copy-Item -Path $imagen -Destination $logoPath
+    }
+    
     if (-not $data.logo) {
         $data.logo = $defaultLogo
     }
