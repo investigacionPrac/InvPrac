@@ -89,7 +89,9 @@ function Update-AppJson {
         [string]$FilePath
     )
     Write-Host "Repo: $RepoPath"
+    $parent= (Get-Item $FilePath).Parent.FullName
     Write-Host "Actualizando: $FilePath"
+    Write-Host "parent: $parent"
     $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
 
     foreach ($field in $fieldsToCheck) {
@@ -98,12 +100,12 @@ function Update-AppJson {
         }
     }
     #$logoPath = Join-Path $FilePath 'Logo'
-    # $origen = Join-Path $RepoPath 'Logo'
-    # $imagen = Join-Path $origen 'Tecon.png'
+    $origen = Join-Path $RepoPath 'Logo'
+    $imagen = Join-Path $origen 'Tecon.png'
     
     # New-Item -Path $logoPath -ItemType Directory -Force | Out-Null
     # Write-Host "LogoPath: $($logoPath)"
-    # Write-Host "logoPath: $($logoPath), origenPath: $($origen), imagen: $($imagen)"
+    Write-Host "origenPath: $($origen), imagen: $($imagen)"
     # Copy-Item -Path $imagen -Destination $logoPath
     
     if (-not $data.logo) {
