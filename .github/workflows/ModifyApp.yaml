@@ -42,5 +42,5 @@ jobs:
         shell: powershell
         run: |
           git add .
-          git commit -m "añadir datos por defecto de app.json"
+          git commit -m "adding default data of app.json, settings, launch, logo and dependencies to the common app"
           git push origin main
