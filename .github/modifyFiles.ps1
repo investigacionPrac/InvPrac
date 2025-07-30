@@ -99,11 +99,12 @@ function Update-AppJson {
         }
     }
     $logoPath = Join-Path $FilePath 'Logo'
-    $origen = Join-Path $RepoPath 'Logo'
-    $imagen = Join-Path $origen 'Tecon.png'
+    # $origen = Join-Path $RepoPath 'Logo'
+    # $imagen = Join-Path $origen 'Tecon.png'
     
     New-Item -Path $logoPath -ItemType Directory -Force | Out-Null
-    Write-Host "logoPath: $($logoPath), origenPath: $($origen), imagen: $($imagen)"
+    Write-Host "LogoPath: $($logoPath)"
+    # Write-Host "logoPath: $($logoPath), origenPath: $($origen), imagen: $($imagen)"
     # Copy-Item -Path $imagen -Destination $logoPath
     
     if (-not $data.logo) {
