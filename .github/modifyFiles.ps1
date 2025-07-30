@@ -11,9 +11,9 @@ $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $commonDependency = @(
     @{
         #id = ""
-        name = ""
-        publisher = ""
-        version = ""
+        #name = ""
+        #publisher = ""
+        #version = ""
     }
 )
 
