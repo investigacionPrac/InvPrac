@@ -125,6 +125,9 @@ function Update-LaunchJson {
     )
 
     $vscodePath = Join-Path $RepoPath '.vscode'
+
+    Write-Host "Repo: $RepoPath"
+    Write-Host "vscode: $vscodePath"
     if (-not (Test-Path $vscodePath)) {
         New-Item -Path $vscodePath -ItemType Directory -Force | Out-Null
     }
@@ -141,6 +144,8 @@ function Update-SettingsJson {
     )
 
     $vscodePath = Join-Path $RepoPath '.vscode'
+    Write-Host "Repo: $RepoPath"
+    Write-Host "vscode: $vscodePath"
     if (-not (Test-Path $vscodePath)) {
         New-Item -Path $vscodePath -ItemType Directory -Force | Out-Null
     }
