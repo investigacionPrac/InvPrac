@@ -1,31 +1,40 @@
-{
-  "id": "2a5ca270-e9d3-4a9d-9455-d64ba5bfc3e5",
-  "name": "app3",
-  "publisher": "Alvaro",
-  "version": "1.0.0.0",
-  "brief": "",
-  "description": "",
-  "privacyStatement": "",
-  "EULA": "",
-  "help": "",
-  "url": "",
-  "logo": "",
-  "dependencies": [],
-  "screenshots": [],
-  "platform": "1.0.0.0",
-  "application": "22.0.0.0",
-  "idRanges": [
-    {
-      "from": 95604,
-      "to": 95605
-    }
-  ],
-  "features": [
-    "NoImplicitWith"
-  ],
-  "resourceExposurePolicy": {
-    "allowDebugging": true,
-    "allowDownloadingSource": false,
-    "includeSourceInSymbolFile": false
-  }
+﻿{
+    "id":  "2a5ca270-e9d3-4a9d-9455-d64ba5bfc3e5",
+    "name":  "app3",
+    "publisher":  "Alvaro",
+    "version":  "2.250730.0.0",
+    "brief":  "",
+    "description":  "",
+    "privacyStatement":  "https://www.tecon.es/",
+    "EULA":  "https://www.tecon.es/",
+    "help":  "https://www.tecon.es/",
+    "url":  "https://www.tecon.es/",
+    "logo":  "./Logo/Tecon.png",
+    "dependencies":  [
+                         {
+                             "publisher":  "Tecon",
+                             "name":  "Comun",
+                             "id":  "09e8e853-9a52-43c6-a954-1a4a69cd7cbc",
+                             "version":  "2.250708.0.0"
+                         }
+                     ],
+    "screenshots":  [
+
+                    ],
+    "platform":  "1.0.0.0",
+    "application":  "22.0.0.0",
+    "idRanges":  [
+                     {
+                         "from":  95604,
+                         "to":  95605
+                     }
+                 ],
+    "features":  [
+                     "NoImplicitWith"
+                 ],
+    "resourceExposurePolicy":  {
+                                   "allowDebugging":  true,
+                                   "allowDownloadingSource":  false,
+                                   "includeSourceInSymbolFile":  false
+                               }
 }
