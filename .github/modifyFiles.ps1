@@ -93,7 +93,7 @@ function Update-AppJson {
     Write-Host "Actualizando: $FilePath"
     $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
 
-##################DEBUG##########################
+    Write-Host "###############DEBUG#############"
     Write-Host "FilePath: $FilePath"
 
     $item = Get-Item $FilePath -ErrorAction SilentlyContinue
@@ -102,9 +102,9 @@ function Update-AppJson {
     } else {
         Write-Host "Objeto encontrado: $($item.FullName)"
         Write-Host "Parent: $($item.Parent.FullName)"
+        Write-Host "Parent object: $($item.Parent)"
+        Write-Host "#############Fin Debug############"
     }
-
-##############FIN DEBUG############################
 
     foreach ($field in $fieldsToCheck) {
         if (-not $data.$field) {
