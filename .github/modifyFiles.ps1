@@ -89,10 +89,22 @@ function Update-AppJson {
         [string]$FilePath
     )
     Write-Host "Repo: $RepoPath"
-    $parent= (Get-Item $FilePath).Parent.FullName
+    #$parent= (Get-Item $FilePath).Parent.FullName
     Write-Host "Actualizando: $FilePath"
-    Write-Host "parent: $parent"
     $data = Get-Content -Path $FilePath -Raw | ConvertFrom-Json
+
+##################DEBUG##########################
+    Write-Host "FilePath: $FilePath"
+
+    $item = Get-Item $FilePath -ErrorAction SilentlyContinue
+    if ($null -eq $item) {
+        Write-Host "No existe el archivo o carpeta: $FilePath"
+    } else {
+        Write-Host "Objeto encontrado: $($item.FullName)"
+        Write-Host "Parent: $($item.Parent.FullName)"
+    }
+
+##############FIN DEBUG############################
 
     foreach ($field in $fieldsToCheck) {
         if (-not $data.$field) {
