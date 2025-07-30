@@ -100,9 +100,11 @@ function Update-AppJson {
     if ($null -eq $item) {
         Write-Host "No existe el archivo o carpeta: $FilePath"
     } else {
+        $parentPath = Split-Path -Path $FilePath -Parent
         Write-Host "Objeto encontrado: $($item.FullName)"
         Write-Host "Parent: $($item.Parent.FullName)"
         Write-Host "Parent object: $($item.Parent)"
+        Write-Host "Parent using split: $parentPath"
         Write-Host "#############Fin Debug############"
     }
 
