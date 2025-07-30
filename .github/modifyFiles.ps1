@@ -86,7 +86,8 @@ function Get-LastAppJsonPath {
 # --- Función: actualizar app.json ---
 function Update-AppJson {
     param (
-        [string]$FilePath
+        [string]$FilePath,
+        [string]$RepoPath
     )
 
     Write-Host "Actualizando: $FilePath"
