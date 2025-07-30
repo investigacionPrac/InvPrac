@@ -7,8 +7,7 @@
     "CreateContainerIfNotExists": true
   },
   "DeployToBC-SANDBOX-DEV": {
-    "Scope": "PTE",
-    "SyncMode": "ForceSync"
+    "Scope": "PTE"
   },
   "environments": [
     "BC-SANDBOX-DEV"
