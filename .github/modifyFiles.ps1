@@ -9,12 +9,12 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $commonDependency = @(
-    @{
-        #id = ""
-        #name = ""
-        #publisher = ""
-        #version = ""
-    }
+    #@{
+    #    id = ""
+    #    name = ""
+    #    publisher = ""
+    #    version = ""
+    #}
 )
 
 $launch = @{
