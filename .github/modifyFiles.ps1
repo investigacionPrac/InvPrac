@@ -9,12 +9,12 @@ $defaultUrl = 'https://www.tecon.es/'
 $defaultLogo = './Logo/Tecon.png'
 $fieldsToCheck = @('privacyStatement', 'EULA', 'help', 'url')
 $commonDependency = @(
-    #@{
-    #    id = ""
-    #    name = ""
-    #    publisher = ""
-    #    version = ""
-    #}
+    @{
+        id = "09e8e853-9a52-43c6-a954-1a4a69cd7cbc"
+        name = "Comun"
+        publisher = "Tecon"
+        version = "2.250708.0.0"
+    }
 )
 
 $launch = @{
@@ -112,7 +112,7 @@ function Update-AppJson {
     }
 
     $data.dependencies = $commonDependency
-    $data.version = "2.$((Get-Date).ToString('yyyyMMdd')).0.0"
+    $data.version = "2.$((Get-Date).ToString('yyMMdd')).0.0"
 
     $data | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding utf8
     Write-Host "app.json actualizado con nueva versión: $($data.version)"
