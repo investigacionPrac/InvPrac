@@ -5,6 +5,11 @@ on:
   #schedule:
   #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno
 
+env:
+  workflowDepth: 1
+  ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
+  ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
+
 jobs:
 
   Initialization:
@@ -36,7 +41,12 @@ jobs:
           lfs: true
           submodules: ${{ env.useGitSubmodules }}
           token: '${{ fromJson(steps.ReadSubmodulesToken.outputs.Secrets).gitSubmodulesToken }}'
-      
+
+      - name: Determine Workflow Depth
+        id: DetermineWorkflowDepth
+        run: |
+          Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "WorkflowDepth=$($env:workflowDepth)"
+
       - name: Determine Projects To Build
         id: determineProjectsToBuild
         uses: microsoft/AL-Go-Actions/DetermineProjectsToBuild@v7.2
