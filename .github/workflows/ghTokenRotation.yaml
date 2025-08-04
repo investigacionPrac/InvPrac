@@ -143,8 +143,8 @@ jobs:
           $envName = '${{ matrix.environment }}'.split(' ')[0]
           $envrionmentMatrix =  $env:ENVIRONMENTS_MATRIX
           $environmentJson = $env:ENVJSON
-          Write-Host '----------------------------Matrix:' $environmentsMatrixJson
-          Write-Host '------------------------------json:' $deploymentEnvironmentsJson
+          Write-Host '----------------------------Matrix:' $env:ENVIRONMENTS_MATRIX
+          Write-Host '------------------------------json:' $env:ENVJSON
           Write-Host '------------------------------name:' $envName
         env:
           ENVIRONMENTS_MATRIX: ${{steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}}
