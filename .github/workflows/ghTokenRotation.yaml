@@ -1,0 +1,32 @@
+name: GH Token rotation
+
+on: 
+  workflow_dispatch:
+  #schedule:
+  #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno
+
+jobs:
+  rotate-secret:
+    runs-on: windows-latest
+
+ # env: 
+ #   vaultName: ${{secrets.VaultName}}
+
+  steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ matrix.branch }}
+          token: ${{ secrets.ghTokenWorkflow }}
+
+      - name: Comprobar fecha y actualizar secrets de repositorio
+        shell: powershell
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'Workflow' -metadataPath 'repo-secrets-metadata.json'
+  
+      - name: Comprobar fecha y actualizar secrets de organización
+        shell: powershell
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-org-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath 'org-secrets-metadata.json'
+      
+      - name: Comprobar fecha y actualizar secrets de entorno (clientes)
+        shell: powershell
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
