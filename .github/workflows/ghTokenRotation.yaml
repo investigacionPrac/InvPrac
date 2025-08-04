@@ -19,9 +19,6 @@ jobs:
         with:
           shell: powershell
           get: type,powerPlatformSolutionFolder,useGitSubmodules
-      
-      - name: debug
-        run: echo env.useGitSubmodules
 
       - name: Read submodules token
         id: ReadSubmodulesToken
@@ -39,6 +36,21 @@ jobs:
           lfs: true
           submodules: ${{ env.useGitSubmodules }}
           token: '${{ fromJson(steps.ReadSubmodulesToken.outputs.Secrets).gitSubmodulesToken }}'
+      
+      - name: Determine Projects To Build
+        id: determineProjectsToBuild
+        uses: microsoft/AL-Go-Actions/DetermineProjectsToBuild@v7.2
+        with:
+          shell: powershell
+          maxBuildDepth: ${{ env.workflowDepth }}
+      
+      - name: Determine Delivery Target Secrets
+        id: DetermineDeliveryTargetSecrets
+        uses: microsoft/AL-Go-Actions/DetermineDeliveryTargets@v7.2
+        with:
+          shell: powershell
+          projectsJson: '${{ steps.determineProjectsToBuild.outputs.ProjectsJson }}'
+          checkContextSecrets: 'false'
 
       - name: Read secrets
         id: ReadSecrets
