@@ -36,6 +36,25 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
+function GetHeaders {
+    param (
+        [string] $token,
+        [string] $accept = "application/vnd.github+json",
+        [string] $apiVersion = "2022-11-28",
+        [string] $api_url = $ENV:GITHUB_API_URL,
+        [string] $repository = $ENV:GITHUB_REPOSITORY
+    )
+    $headers = @{
+        "Accept" = $accept
+        "X-GitHub-Api-Version" = $apiVersion
+    }
+    if (![string]::IsNullOrEmpty($token)) {
+        $accessToken = GetAccessToken -token $token -api_url $api_url -repository $repository -permissions @{"contents"="read";"metadata"="read";"actions"="read"}
+        $headers["Authorization"] = "token $accessToken"
+    }
+    return $headers
+}
+
 function GetGitHubEnvironments() {
     $headers = GetHeaders -token $env:GITHUB_TOKEN
     $url = "$($ENV:GITHUB_API_URL)/repos/$($ENV:GITHUB_REPOSITORY)/environments"
