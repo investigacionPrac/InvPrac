@@ -18,26 +18,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ matrix.branch }}
-          token: ${{ secrets.ghTokenWorkflow }}
-      
-      - name: Determine Deployment Environments
-        id: DetermineDeploymentEnvironments
-        uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          shell: powershell
-          getEnvironments: '*'
-          type: 'CD'
-
-      - name: Prueba de echo
-        shell: powershell
-        run: |
-          $environments = deploymentEnvironmentsJson
-          Write-Host $environments
-          foreach($env in $environments){
-            Write-Host $env.EnvironmentName
-          }        
+          token: ${{ secrets.ghTokenWorkflow }}   
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell

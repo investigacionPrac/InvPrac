@@ -36,6 +36,21 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
+function GetGitHubEnvironments() {
+    $headers = GetHeaders -token $env:GITHUB_TOKEN
+    $url = "$($ENV:GITHUB_API_URL)/repos/$($ENV:GITHUB_REPOSITORY)/environments"
+    try {
+        Write-Host "Requesting environments from GitHub"
+        $ghEnvironments = @(((InvokeWebRequest -Headers $headers -Uri $url).Content | ConvertFrom-Json).environments)
+    }
+    catch {
+        $ghEnvironments = @()
+        Write-Host "Failed to get environments from GitHub API - Environments are not supported in this repository"
+    }
+    $ghEnvironments
+}
+
+
 switch ($action) {
     'Workflow' { 
         #$value
@@ -48,7 +63,7 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
-        foreach($env in ${$env:GITHUB_ENVIRONMENTS}){
+        foreach($env in GetGitHubEnvironments){
             Write-Host $env.name
         }
      }
