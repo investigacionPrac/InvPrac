@@ -17,15 +17,22 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
-  
+      
+      - name: Prueba de echo
+        shell: powershell
+        run: |
+          foreach($env in ${$env:GITHUB_ENVIRONMENTS}){
+            Write-Host $env.name
+          }
+
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'Workflow' -metadataPath 'repo-secrets-metadata.json'
-  
+
       - name: Comprobar fecha y actualizar secrets de organización
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-org-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath 'org-secrets-metadata.json'
-      
+
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
