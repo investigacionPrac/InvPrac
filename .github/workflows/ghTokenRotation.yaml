@@ -144,7 +144,7 @@ jobs:
           Write-Host '----------------------------Matrix:' $env:ENVIRONMENTS_MATRIX
           Write-Host '------------------------------json:' $env:ENVJSON
           $count=0
-          foreach($env in $env:ENVIRONMENTS_MATRIX){
+          foreach($env in $env:ENVJSON){
             $envName= $env.EnvironmentName
             $count += 1
             Write-Host '-------------------count:' $count
