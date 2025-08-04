@@ -8,6 +8,7 @@ on:
 jobs:
   rotate-secret:
     runs-on: windows-latest
+    name: Rotate Secret
 
  # env: 
  #   vaultName: ${{secrets.VaultName}}
