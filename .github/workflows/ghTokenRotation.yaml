@@ -16,7 +16,8 @@ jobs:
     runs-on: windows-latest
     outputs:
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
-
+      workflowDepth: ${{ steps.DetermineWorkflowDepth.outputs.WorkflowDepth }}
+    
     steps:
       - name: Read settings
         id: ReadSettings
