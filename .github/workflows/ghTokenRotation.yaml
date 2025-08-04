@@ -142,11 +142,10 @@ jobs:
 
       - name: debug
         run: |
+          $environments: ${ steps.DetermineDeploymentEnvironments.outputs.Environments}
+          $envrionmentMatrix: ${ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}
           Write-Host $environments
           Write-Host $envrionmentMatrix
-        with:
-          environments: ${ steps.DetermineDeploymentEnvironments.outputs.Environments}
-          envrionmentMatrix: ${ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
