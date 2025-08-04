@@ -19,7 +19,9 @@ jobs:
         with:
           shell: powershell
           get: type,powerPlatformSolutionFolder,useGitSubmodules
-        run: echo $useGitSubmodules
+      
+      - name: debug
+        run: echo env.useGitSubmodules
 
       - name: Read submodules token
         id: ReadSubmodulesToken
