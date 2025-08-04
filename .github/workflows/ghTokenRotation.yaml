@@ -15,7 +15,21 @@ jobs:
   Initialization:
     runs-on: windows-latest
     outputs:
+      telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
+      environmentsMatrixJson: ${{ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson }}
+      environmentCount: ${{ steps.DetermineDeploymentEnvironments.outputs.EnvironmentCount }}
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
+      generateALDocArtifact: ${{ steps.DetermineDeploymentEnvironments.outputs.GenerateALDocArtifact }}
+      deployALDocArtifact: ${{ steps.DetermineDeploymentEnvironments.outputs.DeployALDocArtifact }}
+      deliveryTargetsJson: ${{ steps.DetermineDeliveryTargets.outputs.DeliveryTargetsJson }}
+      githubRunner: ${{ steps.ReadSettings.outputs.GitHubRunnerJson }}
+      githubRunnerShell: ${{ steps.ReadSettings.outputs.GitHubRunnerShell }}
+      projects: ${{ steps.determineProjectsToBuild.outputs.ProjectsJson }}
+      skippedProjects: ${{ steps.determineProjectsToBuild.outputs.SkippedProjectsJson }}
+      projectDependenciesJson: ${{ steps.determineProjectsToBuild.outputs.ProjectDependenciesJson }}
+      buildOrderJson: ${{ steps.determineProjectsToBuild.outputs.BuildOrderJson }}
+      baselineWorkflowRunId: ${{ steps.determineProjectsToBuild.outputs.BaselineWorkflowRunId }}
+      baselineWorkflowSHA: ${{ steps.determineProjectsToBuild.outputs.BaselineWorkflowSHA }}
       workflowDepth: ${{ steps.DetermineWorkflowDepth.outputs.WorkflowDepth }}
     
     steps:
