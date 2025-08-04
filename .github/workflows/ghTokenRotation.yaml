@@ -145,6 +145,8 @@ jobs:
           Write-Host '------------------------------json:' $env:ENVJSON
           foreach($env in $env:ENVJSON){
             $envName= $env.EnvironmentName
+            $count += 1
+            Write-Host '-------------------count:' $count
             Write-Host '------------------------------name:' $envName
           }
 
