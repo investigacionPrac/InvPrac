@@ -22,7 +22,7 @@ jobs:
         shell: powershell
         run: |
           foreach($env in ${$env:GITHUB_ENVIRONMENTS}){
-            Write-Host $env.name
+            echo $env.name
           }
 
       - name: Comprobar fecha y actualizar secrets de repositorio
