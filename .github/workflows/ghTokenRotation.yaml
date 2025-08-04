@@ -18,7 +18,13 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ matrix.branch }}
-          token: ${{ secrets.ghTokenWorkflow }}   
+          token: ${{ secrets.ghTokenWorkflow }}
+
+      - name: Debug environment
+        run: |
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_API_URL: $GITHUB_API_URL"
+          echo "GITHUB_TOKEN is set: ${{ secrets.GITHUB_TOKEN != '' }}"
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
