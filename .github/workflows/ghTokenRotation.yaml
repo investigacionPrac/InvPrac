@@ -9,6 +9,8 @@ jobs:
 
   Initialization:
     runs-on: windows-latest
+    outputs:
+      deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
 
   steps:
     - name: Read settings
@@ -42,7 +44,7 @@ jobs:
         shell: powershell
         gitHubSecrets: ${{ toJson(secrets) }}
         getSecrets: ${{ steps.DetermineDeliveryTargetSecrets.outputs.ContextSecrets }}
-        
+
     - name: Determine Deployment Environments
       id: DetermineDeploymentEnvironments
       uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
@@ -65,6 +67,9 @@ jobs:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
 
+      - name: debug
+        run: Write-Host $DetermineDeploymentEnvironments
+        
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'Workflow' -metadataPath 'repo-secrets-metadata.json'
