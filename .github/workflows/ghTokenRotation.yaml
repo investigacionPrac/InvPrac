@@ -55,7 +55,7 @@ jobs:
               if ($envName -clike 'test'){
                 $pswd = "contraseña de prueba"
                 gh secret set $env:SECRETTEST --env $envName --body $pswd
-                Write-Host '------ secreto cambiado correctamente a:" $pswd
+                Write-Host '------ secreto cambiado correctamente a:' $pswd
               }
             }
           }
