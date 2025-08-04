@@ -6,10 +6,57 @@ on:
   #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno
 
 jobs:
+
+  Initialization:
+    runs-on: windows-latest
+
+  steps:
+    - name: Read settings
+      id: ReadSettings
+      uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
+      with:
+        shell: powershell
+        get: type,powerPlatformSolutionFolder,useGitSubmodules
+      
+    - name: Read submodules token
+      id: ReadSubmodulesToken
+      if: env.useGitSubmodules != 'false' && env.useGitSubmodules != ''
+      uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
+      with:
+        shell: powershell
+        gitHubSecrets: ${{ toJson(secrets) }}
+        getSecrets: '-gitSubmodulesToken'
+
+    - name: Checkout Submodules
+      if: env.useGitSubmodules != 'false' && env.useGitSubmodules != ''
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        lfs: true
+        submodules: ${{ env.useGitSubmodules }}
+        token: '${{ fromJson(steps.ReadSubmodulesToken.outputs.Secrets).gitSubmodulesToken }}'
+    
+    - name: Read secrets
+      id: ReadSecrets
+      uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
+      with:
+        shell: powershell
+        gitHubSecrets: ${{ toJson(secrets) }}
+        getSecrets: ${{ steps.DetermineDeliveryTargetSecrets.outputs.ContextSecrets }}
+        
+    - name: Determine Deployment Environments
+      id: DetermineDeploymentEnvironments
+      uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        shell: powershell
+        getEnvironments: '*'
+        type: 'CD'
+
   rotate-secret:
+    needs: Initialization
     runs-on: windows-latest
     name: Rotate Secret
-
 
     steps:
       - name: Checkout
@@ -17,16 +64,6 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
-
-      - name: Determine Deployment Environments
-        id: DetermineDeploymentEnvironments
-        uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          shell: powershell
-          getEnvironments: '*'
-          type: 'CD'
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
