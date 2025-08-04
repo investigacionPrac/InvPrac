@@ -127,6 +127,16 @@ jobs:
           shell: powershell
           getEnvironments: '*'
           type: 'CD'
+      
+      - name: EnvName
+        id: envName
+        run: |
+          $errorActionPreference = "Stop"; $ProgressPreference = "SilentlyContinue"; Set-StrictMode -Version 2.0
+          $envName = '${{ matrix.environment }}'.split(' ')[0]
+          Write-Host '-------------------matrix:' ${{matrix.environment}}
+          Write-Host '-------------------name:' $envName
+          Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "envName=$envName"
+          Write-Host '---------------------ghname:' $env:GITHUB_OUTPUT
 
   rotate-secret:
     needs: Initialization
