@@ -141,11 +141,13 @@ jobs:
       - name: debug
         run: |
           $envName = '${{ matrix.environment }}'.split(' ')[0]
-          $envrionmentMatrix =  $env:ENVIRONMENTS_MATRIX
-          $environmentJson = $env:ENVJSON
           Write-Host '----------------------------Matrix:' $env:ENVIRONMENTS_MATRIX
           Write-Host '------------------------------json:' $env:ENVJSON
-          Write-Host '------------------------------name:' $envName
+          foreach($env in $env:ENVJSON){
+            $envName= $env.EnvironmentName
+            Write-Host '------------------------------name:' $envName
+          }
+
         env:
           ENVIRONMENTS_MATRIX: ${{steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}}
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
