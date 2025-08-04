@@ -5,6 +5,10 @@ on:
   #schedule:
   #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno
 
+env:
+  ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
+  ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
+
 jobs:
    
   rotate-secret:
@@ -12,8 +16,6 @@ jobs:
     name: Rotate Secret
     outputs:
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
-
-
 
     steps:
       - name: Checkout
