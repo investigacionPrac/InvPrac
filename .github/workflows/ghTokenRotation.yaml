@@ -9,6 +9,9 @@ jobs:
   rotate-secret:
     runs-on: windows-latest
     name: Rotate Secret
+    outputs:
+      deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
+
 
     steps:
       - name: Checkout
@@ -26,8 +29,6 @@ jobs:
           shell: powershell
           getEnvironments: '*'
           type: 'CD'
-        outputs:
-          deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
 
       - name: Prueba de echo
         shell: powershell
