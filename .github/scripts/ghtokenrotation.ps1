@@ -50,6 +50,10 @@ function GetGitHubEnvironments() {
     $ghEnvironments
 }
 
+$ghEnvironments = @(GetGitHubEnvironments)
+
+$environments = @($ghEnvironments | ForEach-Object { $_.name }) + @($settings.environments) | Select-Object -unique | Where-Object { $settings.excludeEnvironments -notcontains $_.Split(' ')[0] -and $_.Split(' ')[0] -like $getEnvironments.Split(' ')[0] }
+
 
 switch ($action) {
     'Workflow' { 
@@ -63,8 +67,8 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
-        foreach($env in GetGitHubEnvironments){
-            Write-Host $env.name
+        foreach($env in $environments){
+            Write-Host $env.EnvironmentName
         }
      }
     Default {
