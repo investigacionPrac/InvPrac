@@ -150,11 +150,13 @@ jobs:
             Write-Host '-------------------count:' $count
             Write-Host '------------------------------name:' $envName
             Write-Host '------------------------ env:' $env
+            Write-Host '------------------------ COUNT:' $env:COUNT
           }
 
         env:
           ENVIRONMENTS_MATRIX: ${{steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}}
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+          COUNT: ${{steps.DetermineDeploymentEnvironments.outputs.EnvironmentCount}}
 
   rotate-secret:
     needs: Initialization
