@@ -43,15 +43,16 @@ jobs:
       - name: debug
         run: |
           $count=0
-          foreach($env in $env:ENVJSON){
+          $environments = ConvertFrom-Json $env:ENVJSON
+          foreach($env in $environments){
             foreach($key in $env.PSObject.Properties.Name){
-            $obj = $item.$key
-            $envName= $obj.EnvironmentName
-            $count += 1
-            Write-Host '-------------------count:' $count
-            Write-Host '------------------------------name:' $envName
-            Write-Host '------------------------ env:' $env
-            Write-Host '------------------------ COUNT:' $env:COUNT
+              $obj = $item.$key
+              $envName= $obj.EnvironmentName
+              $count += 1
+              Write-Host '-------------------count:' $count
+              Write-Host '------------------------------name:' $envName
+              Write-Host '------------------------ env:' $env
+              Write-Host '------------------------ COUNT:' $env:COUNT
             }
           }
 
