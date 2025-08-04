@@ -141,13 +141,14 @@ jobs:
       - name: debug
         run: |
           $envName = '${{ matrix.environment }}'.split(' ')[0]
-          $envrionmentMatrix =  ${ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}
-          $environmentJson = ${steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}
+          $envrionmentMatrix =  $env:ENVIRONMENTS_MATRIX
+          $environmentJson = $env:ENVJSON
           Write-Host '----------------------------Matrix:' environmentsMatrixJson
           Write-Host '------------------------------json:' deploymentEnvironmentsJson
           Write-Host '------------------------------name:' $envName
-          Write-Host '-------------------------------ghname:' $env:GITHUB_OUTPUT
-          Write-Host '------------------------------wfd: ' $workflowDepth
+        env:
+          ENVIRONMENTS_MATRIX: ${{steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}}
+          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
 
   rotate-secret:
     needs: Initialization
