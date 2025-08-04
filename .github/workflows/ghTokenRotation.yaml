@@ -23,7 +23,13 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
-
+      
+      - name: Read settings
+        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
+        with:
+          shell: ${{ matrix.shell }}
+          get: type,powerPlatformSolutionFolder
+      
       - name: Determine Deployment Environments
         id: DetermineDeploymentEnvironments
         uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
