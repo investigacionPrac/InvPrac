@@ -36,43 +36,6 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
-function GetHeaders {
-    param (
-        [string] $token,
-        [string] $accept = "application/vnd.github+json",
-        [string] $apiVersion = "2022-11-28",
-        [string] $api_url = $ENV:GITHUB_API_URL,
-        [string] $repository = $ENV:GITHUB_REPOSITORY
-    )
-    $headers = @{
-        "Accept" = $accept
-        "X-GitHub-Api-Version" = $apiVersion
-    }
-    if (![string]::IsNullOrEmpty($token)) {
-        $accessToken = GetAccessToken -token $token -api_url $api_url -repository $repository -permissions @{"contents"="read";"metadata"="read";"actions"="read"}
-        $headers["Authorization"] = "token $accessToken"
-    }
-    return $headers
-}
-
-function GetGitHubEnvironments() {
-    $headers = GetHeaders -token $env:GITHUB_TOKEN
-    $url = "$($ENV:GITHUB_API_URL)/repos/$($ENV:GITHUB_REPOSITORY)/environments"
-    try {
-        Write-Host "Requesting environments from GitHub"
-        $ghEnvironments = @(((InvokeWebRequest -Headers $headers -Uri $url).Content | ConvertFrom-Json).environments)
-    }
-    catch {
-        $ghEnvironments = @()
-        Write-Host "Failed to get environments from GitHub API - Environments are not supported in this repository"
-    }
-    $ghEnvironments
-}
-
-$ghEnvironments = @(GetGitHubEnvironments)
-
-$environments = @($ghEnvironments | ForEach-Object { $_.name }) + @($settings.environments) | Select-Object -unique | Where-Object { $settings.excludeEnvironments -notcontains $_.Split(' ')[0] -and $_.Split(' ')[0] -like $getEnvironments.Split(' ')[0] }
-
 
 switch ($action) {
     'Workflow' { 

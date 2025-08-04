@@ -9,8 +9,6 @@ jobs:
   rotate-secret:
     runs-on: windows-latest
     name: Rotate Secret
-    outputs:
-      deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
 
 
     steps:
@@ -20,11 +18,15 @@ jobs:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
 
-      - name: Debug environment
-        run: |
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo "GITHUB_API_URL: $GITHUB_API_URL"
-          echo "GITHUB_TOKEN is set: ${{ secrets.GITHUB_TOKEN != '' }}"
+      - name: Determine Deployment Environments
+        id: DetermineDeploymentEnvironments
+        uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          shell: powershell
+          getEnvironments: '*'
+          type: 'CD'
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
