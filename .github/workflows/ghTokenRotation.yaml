@@ -53,8 +53,6 @@ jobs:
               Write-Host '------------------------------name:' $envName
             }
           }
-
-}
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
 
