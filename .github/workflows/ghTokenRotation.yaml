@@ -141,7 +141,7 @@ jobs:
           token: ${{ secrets.ghTokenWorkflow }}
 
       - name: debug
-        run: Write-Host $EnvironmentsMatrixJson
+        run: Write-Host $deploymentEnvironmentsJson
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
