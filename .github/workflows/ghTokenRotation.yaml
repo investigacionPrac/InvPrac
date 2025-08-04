@@ -138,14 +138,20 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "envName=$envName"
           Write-Host '---------------------ghname:' $env:GITHUB_OUTPUT
 
+      - name: debug
+        run: |
+          $envName = '${{ matrix.environment }}'.split(' ')[0]
+          $envrionmentMatrix =  ${ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}
+          $environmentJson = ${steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}
+          Write-Host '----------------------------Matrix:' $environmentsMatrixJson
+          Write-Host '------------------------------json:' $deploymentEnvironmentsJson
+          Write-Host '------------------------------name:' $envName
+          Write-Host '-------------------------------ghname:' $env:GITHUB_OUTPUT
+
   rotate-secret:
     needs: Initialization
     runs-on: windows-latest
     name: Rotate Secret
-    strategy:
-     matrix:
-       include: ${{ fromJson(needs.Initialization.outputs.buildOrderJson)[0].buildDimensions }}
-     fail-fast: false
 
     steps:
       - name: Checkout
