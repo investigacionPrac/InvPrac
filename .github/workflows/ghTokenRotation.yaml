@@ -21,12 +21,11 @@ jobs:
       - name: Prueba de echo
         shell: powershell
         run: |
+          $environments = $env:GITHUB_ENVIRONMENTS | ConvertFrom-Json
           Write-Host $environments
           foreach($env in $environments){
             Write-Host $env.name
-          }
-        with:
-          $environments = $env:GITHUB_ENVIRONMENTS | ConvertFrom-Json
+          }        
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
