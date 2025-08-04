@@ -51,10 +51,15 @@ jobs:
               $count += 1
               Write-Host '-------------------count:' $count
               Write-Host '------------------------------name:' $envName
+
+              if ($envName -clike test){
+                gh secret set $env:SECRETTEST --env $envName --body "contraseñadeprueba"
+              }
             }
           }
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+          SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
