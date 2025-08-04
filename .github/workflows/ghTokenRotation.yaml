@@ -132,6 +132,10 @@ jobs:
     needs: Initialization
     runs-on: windows-latest
     name: Rotate Secret
+    strategy:
+     matrix:
+       include: ${{ fromJson(needs.Initialization.outputs.buildOrderJson)[0].buildDimensions }}
+     fail-fast: false
 
     steps:
       - name: Checkout
@@ -142,10 +146,12 @@ jobs:
 
       - name: debug
         run: |
+          $envName = '${{ matrix.environment }}'.split(' ')[0]
           $envrionmentMatrix =  ${ steps.DetermineDeploymentEnvironments.outputs.EnvironmentsMatrixJson}
           $environmentJson = ${steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}
           Write-Host '----------------------------Matrix:' $environmentsMatrixJson
           Write-Host '------------------------------json:' $deploymentEnvironmentsJson
+          Write-Host '------------------------------name:' $envName
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
