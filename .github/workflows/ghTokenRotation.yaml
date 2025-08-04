@@ -143,11 +143,13 @@ jobs:
           $envName = '${{ matrix.environment }}'.split(' ')[0]
           Write-Host '----------------------------Matrix:' $env:ENVIRONMENTS_MATRIX
           Write-Host '------------------------------json:' $env:ENVJSON
+          $count=0
           foreach($env in $env:ENVJSON){
             $envName= $env.EnvironmentName
             $count += 1
             Write-Host '-------------------count:' $count
             Write-Host '------------------------------name:' $envName
+            Write-Host '------------------------ env:' $env
           }
 
         env:
