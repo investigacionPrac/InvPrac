@@ -147,6 +147,7 @@ jobs:
           Write-Host '------------------------------json:' deploymentEnvironmentsJson
           Write-Host '------------------------------name:' $envName
           Write-Host '-------------------------------ghname:' $env:GITHUB_OUTPUT
+          Write-Host '------------------------------wfd: ' $workflowDepth
 
   rotate-secret:
     needs: Initialization
