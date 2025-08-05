@@ -36,10 +36,6 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
-
-$secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
-$secretName = $secret.name
-Write-Host '--------------secret name previo a la funcion:' $secretName
 $value='testing'
 switch ($action) {
     'Workflow' { 
@@ -54,6 +50,8 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
+          $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
+          $secretName = $secret.name
           $environments = ConvertFrom-Json $env:ENVJSON
           foreach($env in $environments){
             foreach($key in $env.PSObject.Properties.Name){
