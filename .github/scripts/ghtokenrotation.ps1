@@ -36,7 +36,7 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
-$value='test'
+$value='testing'
 switch ($action) {
     'Workflow' { 
         #$value
@@ -50,14 +50,17 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
+        param(
+          [String]$secretName
+        )
           $environments = ConvertFrom-Json $env:ENVJSON
           foreach($env in $environments){
             foreach($key in $env.PSObject.Properties.Name){
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 if ($envName -like 'test'){
-                  gh secret set $env:SECRETTEST -e $envName -b $value
-                  Write-Host '------------nombre del secreto:' $env:SECRETTEST
+                  gh secret set $secretName -e $envName -b $value
+                  Write-Host '------------nombre del secreto:' $secretName
                   Write-Host '------------nombre del entorno:' $envName
                   Write-Host '-------------------------valor:' $value
                 }

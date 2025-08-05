@@ -50,7 +50,7 @@ jobs:
 
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json' -secretName $env:SECRETTEST
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
           SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
