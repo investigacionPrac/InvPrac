@@ -2,8 +2,7 @@ param (
         [String] $keyvaultname,
         [String] $matchPattern,
         [String] $action,
-        [String] $metadataPath,
-        [String] $secretName
+        [String] $metadataPath
     )
 #     $tokenData = az keyvault secret list --vault-name $keyvaultname  | ConvertFrom-Json
 #     $data= Get-Content $metadataPath | ConvertFrom-Json
@@ -37,6 +36,9 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
+
+$secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
+$secretName = $secret.name
 Write-Host '--------------secret name previo a la funcion:' $secretName
 $value='testing'
 switch ($action) {

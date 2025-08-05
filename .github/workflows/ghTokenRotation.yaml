@@ -40,35 +40,35 @@ jobs:
           getEnvironments: '*'
           type: 'CD'
       
-      - name: debug
-        run: |
-          $count=0
-          $environments = ConvertFrom-Json $env:ENVJSON
-          foreach($env in $environments){
-            foreach($key in $env.PSObject.Properties.Name){
-              $obj = $env.$key
-              $envName= $obj.EnvironmentName
-              $count += 1
-              Write-Host '-------------------count:' $count
-              Write-Host '------------------------------name:' $envName
-              $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
-              $secretName = $secret.name
-              if ($envName -like 'test'){
-                $pswd = "contraseña de prueba"
-                Write-Host '-----------entorno:'
-                gh secret set $env:SECRETTEST --env $envName --body $pswd
-                Write-Host '-----------repositorio:'
-                gh secret set $env:SECRETTEST -b $pswd
-                Write-Host '------------organización:'
-                gh secret set $env:SecretName -o 'investigacionPrac'
-                Write-Host '------ secreto cambiado correctamente a:' $pswd
-                Write-Host '-------------------SecretName en el yaml:' $secretName            
-              }
-            }
-          }
-        env:
-          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-          GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
+      # - name: debug
+      #   run: |
+      #     $count=0
+      #     $environments = ConvertFrom-Json $env:ENVJSON
+      #     foreach($env in $environments){
+      #       foreach($key in $env.PSObject.Properties.Name){
+      #         $obj = $env.$key
+      #         $envName= $obj.EnvironmentName
+      #         $count += 1
+      #         Write-Host '-------------------count:' $count
+      #         Write-Host '------------------------------name:' $envName
+      #         $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
+      #         $secretName = $secret.name
+      #         if ($envName -like 'test'){
+      #           $pswd = "contraseña de prueba"
+      #           Write-Host '-----------entorno:'
+      #           gh secret set $env:SECRETTEST --env $envName --body $pswd
+      #           Write-Host '-----------repositorio:'
+      #           gh secret set $env:SECRETTEST -b $pswd
+      #           Write-Host '------------organización:'
+      #           gh secret set $env:SecretName -o 'investigacionPrac'
+      #           Write-Host '------ secreto cambiado correctamente a:' $pswd
+      #           Write-Host '-------------------SecretName en el yaml:' $secretName            
+      #         }
+      #       }
+      #     }
+      #   env:
+      #     ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+      #     GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
@@ -80,11 +80,7 @@ jobs:
 
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
-        run: |
-          Write-Host '-------------------SecretName en el yaml:' $env:SECRETTEST
-          Write-Host '-------------------SecretTest:' ${{secrets.TEST_AUTCONTEXT}}
-          .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json' -secretName $env:SECRETTEST
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-          SECRETTEST: ${{secrets.TEST_AUTCONTEXT}}
           GITHUB_TOKEN: ${{github.token}}
