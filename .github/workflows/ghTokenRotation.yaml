@@ -55,5 +55,5 @@ jobs:
          Write-Host '-------------------SecretName en el yaml:' $env:SECRETTEST
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-          SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
+          SECRETTEST: ${{secrets.TEST_AUTCONTEXT}}
           GITHUB_TOKEN: ${{github.token}}
