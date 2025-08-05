@@ -36,11 +36,12 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
-
+$value='test'
 switch ($action) {
     'Workflow' { 
         #$value
         $matchPattern
+        #gh secret set -o $organization GHTOKENWORKFLOW
      }
      'StorageAccountDelivery'{
         $matchPattern
@@ -49,10 +50,17 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
-        foreach($env in $environments){
-            Write-Host $env.EnvironmentName
-        }
-     }
+          $environments = ConvertFrom-Json $env:ENVJSON
+          foreach($env in $environments){
+            foreach($key in $env.PSObject.Properties.Name){
+                $obj = $env.$key
+                $envName= $obj.EnvironmentName
+                if ($envName -like 'test'){
+                  gh secret set $env:SECRETTEST --env $envName --body $value
+                }
+              }
+            }
+          }
     Default {
         Write-Error "No es una opción válida"
     }

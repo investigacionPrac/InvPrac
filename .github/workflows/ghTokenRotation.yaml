@@ -3,7 +3,7 @@ name: GH Token rotation
 on: 
   workflow_dispatch:
   #schedule:
-  #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno
+  #  - cron: '0 1 * * 1' # Se ejecuta cada lunes a la 1:00 AM UTC es decir, 3:00 AM en verano y 2:00 AM en invierno (MIN (0-59), HORA (0-23), DIA DEL MES (1-31), MES (1-12), DIA DE LA SEMANA(0-6, siendo 0 el domingo y 6 el sábado))
 
 env:
   ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
@@ -40,32 +40,6 @@ jobs:
           getEnvironments: '*'
           type: 'CD'
 
-      - name: debug
-        run: |
-          $count=0
-          $environments = ConvertFrom-Json $env:ENVJSON
-          foreach($env in $environments){
-            foreach($key in $env.PSObject.Properties.Name){
-              $obj = $env.$key
-              $envName= $obj.EnvironmentName
-              $count += 1
-              Write-Host '-------------------count:' $count
-              Write-Host '------------------------------name:' $envName
-
-              if ($envName -clike 'test'){
-                $pswd = "contraseña de prueba"
-                gh secret set $env:SECRETTEST --env $envName --body $pswd
-                Write-Host '------------ token:' 
-                gh auth token
-                Write-Host '------ secreto cambiado correctamente a:' $pswd
-              }
-            }
-          }
-        env:
-          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-          SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
-          GITHUB_TOKEN: ${{github.token}}
-
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'Workflow' -metadataPath 'repo-secrets-metadata.json'
@@ -77,3 +51,7 @@ jobs:
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
+        env:
+          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+          SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
+          GITHUB_TOKEN: ${{github.token}}
