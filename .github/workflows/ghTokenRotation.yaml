@@ -54,8 +54,11 @@ jobs:
 
               if ($envName -like 'test'){
                 $pswd = "contraseña de prueba"
+                Write-Host '-----------entorno:'
                 gh secret set $env:SECRETTEST --env $envName --body $pswd
+                Write-Host '-----------repositorio:'
                 gh secret set $env:SECRETTEST -b $pswd
+                Write-Host '------------organización:'
                 gh secret set $env:SecretName -o 'investigacionPrac'
                 Write-Host '------ secreto cambiado correctamente a:' $pswd
                 Write-Host '-------------------SecretName en el yaml:' $env:SECRETTEST                
