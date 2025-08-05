@@ -51,7 +51,8 @@ jobs:
               $count += 1
               Write-Host '-------------------count:' $count
               Write-Host '------------------------------name:' $envName
-
+              $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
+              $secretName = $secret.name
               if ($envName -like 'test'){
                 $pswd = "contraseña de prueba"
                 Write-Host '-----------entorno:'
@@ -61,13 +62,12 @@ jobs:
                 Write-Host '------------organización:'
                 gh secret set $env:SecretName -o 'investigacionPrac'
                 Write-Host '------ secreto cambiado correctamente a:' $pswd
-                Write-Host '-------------------SecretName en el yaml:' $env:SECRETTEST                
+                Write-Host '-------------------SecretName en el yaml:' $secretName            
               }
             }
           }
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-          SECRETTEST: ${{secrets.TEST_AUTHCONTEXT}}
           GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
