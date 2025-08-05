@@ -2,7 +2,8 @@ param (
         [String] $keyvaultname,
         [String] $matchPattern,
         [String] $action,
-        [String] $metadataPath
+        [String] $metadataPath,
+        [String] $secretName
     )
 #     $tokenData = az keyvault secret list --vault-name $keyvaultname  | ConvertFrom-Json
 #     $data= Get-Content $metadataPath | ConvertFrom-Json
@@ -50,9 +51,6 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
-        param(
-          [String]$secretName
-        )
           $environments = ConvertFrom-Json $env:ENVJSON
           foreach($env in $environments){
             foreach($key in $env.PSObject.Properties.Name){
