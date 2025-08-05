@@ -55,50 +55,22 @@ jobs:
           shell: powershell
           getEnvironments: '*'
           type: 'CD'
-      
-      # - name: debug
-      #   run: |
-      #     $count=0
-      #     $environments = ConvertFrom-Json $env:ENVJSON
-      #     foreach($env in $environments){
-      #       foreach($key in $env.PSObject.Properties.Name){
-      #         $obj = $env.$key
-      #         $envName= $obj.EnvironmentName
-      #         $count += 1
-      #         Write-Host '-------------------count:' $count
-      #         Write-Host '------------------------------name:' $envName
-      #         $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
-      #         $secretName = $secret.name
-      #         if ($envName -like 'test'){
-      #           $pswd = "contraseña de prueba"
-      #           Write-Host '-----------entorno:'
-      #           gh secret set $env:SECRETTEST --env $envName --body $pswd
-      #           Write-Host '-----------repositorio:'
-      #           gh secret set $env:SECRETTEST -b $pswd
-      #           Write-Host '------------organización:'
-      #           gh secret set $env:SecretName -o 'investigacionPrac'
-      #           Write-Host '------ secreto cambiado correctamente a:' $pswd
-      #           Write-Host '-------------------SecretName en el yaml:' $secretName            
-      #         }
-      #       }
-      #     }
-      #   env:
-      #     ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
-      #     GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
 
-      - name: Comprobar fecha y actualizar secrets de repositorio
+      - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'Workflow' -metadataPath 'repo-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-wkt-pool-\d{3}$' -action 'Workflow' -metadataPath 'workflow-secrets-metadata.json' -organization $env:ORG
 
-      - name: Comprobar fecha y actualizar secrets de organización
+      - name: Comprobar fecha y actualizar secret del delivery a StorageAccount
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-org-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath 'org-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-repo-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath 'SA-secrets-metadata.json'
 
+      - name: Comprobar fecha y actualizar secret del delivery a github gitHubPackages
+        shell: powershell
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath 'GHP-secrets-metadata.json' -organization $env:ORG
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
-        run: |
-          gh auth status
-          .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^[cC]lient.*-AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
           GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
+          ORG: ${{github.repository_owner}}
