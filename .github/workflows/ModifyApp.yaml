@@ -38,9 +38,8 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Commit and push changes
+      - name: Commit changes
         shell: powershell
         run: |
           git add .
           git commit -m "adding default data of app.json, settings, launch, logo and dependencies to the common app"
-          git push origin main

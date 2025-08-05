@@ -13,7 +13,7 @@ $commonDependency = @(
         id = "09e8e853-9a52-43c6-a954-1a4a69cd7cbc"
         name = "Comun"
         publisher = "Tecon"
-        version = "2.250708.0.0"
+        version = "2.0.0.0"
     }
 )
 
