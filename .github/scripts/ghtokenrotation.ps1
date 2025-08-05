@@ -37,6 +37,7 @@ param (
 #         Write-Host "No quedan tokens en el pool tienes que crear mas"
 #     }
 
+Write-Host '--------------secret name previo a la funcion:' $secretName
 $value='testing'
 switch ($action) {
     'Workflow' { 
