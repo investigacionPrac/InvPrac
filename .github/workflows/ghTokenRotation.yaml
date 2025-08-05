@@ -96,7 +96,9 @@ jobs:
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
         run: |
-          Write-Host 'Son iguales:' $env:GITHUB_TOKEN -like $env:WORKFLOWTOKEN
+          $token = gh auth token
+          Write-Host 'Son iguales con el workflow:' ($env:GITHUB_TOKEN -like $env:WORKFLOWTOKEN)
+          Write-Host 'Son iguales con el auth:' ($env:GITHUB_TOKEN -like $token)
           .github/scripts/ghtokenrotation.ps1 -keyvaultname $vaultName -matchPattern '^client.*_AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
