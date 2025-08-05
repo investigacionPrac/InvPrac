@@ -56,6 +56,7 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
+                Write-Host '------------nombre del secreto:' $secretName
                 if ($envName -like 'test'){
                   gh secret set $secretName -e $envName -b $value
                   Write-Host '------------nombre del secreto:' $secretName
