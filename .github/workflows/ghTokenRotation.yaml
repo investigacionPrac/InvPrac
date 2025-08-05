@@ -58,18 +58,18 @@ jobs:
 
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-wkt-pool-\d{3}$' -action 'Workflow' -metadataPath 'workflow-secrets-metadata.json' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-wkt-pool-\d{3}$' -action 'Workflow' -metadataPath '.\workflow-secrets-metadata.json' -organization $env:ORG
 
       - name: Comprobar fecha y actualizar secret del delivery a StorageAccount
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-repo-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath 'SA-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-repo-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath '.\SA-secrets-metadata.json'
 
       - name: Comprobar fecha y actualizar secret del delivery a github gitHubPackages
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath 'GHP-secrets-metadata.json' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath '.\GHP-secrets-metadata.json' -organization $env:ORG
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^[cC]lient.*-AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath 'client-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^[cC]lient.*-AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath '.\client-secrets-metadata.json'
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
           GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
