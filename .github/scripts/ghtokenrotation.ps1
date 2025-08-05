@@ -55,8 +55,7 @@ switch ($action) {
             foreach($key in $env.PSObject.Properties.Name){
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
-                $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
-                $secretName = $secret.name
+                $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){
                   gh secret set $secretName -e $envName -b $value
                   Write-Host '------------nombre del secreto:' $secretName
