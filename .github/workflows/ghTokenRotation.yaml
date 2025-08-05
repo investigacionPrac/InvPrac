@@ -65,7 +65,7 @@ jobs:
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
           SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
-          GITHUB_TOKEN: ${{github.token}}
+          GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
