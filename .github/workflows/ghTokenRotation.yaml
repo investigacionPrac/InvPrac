@@ -67,8 +67,9 @@ jobs:
       - name: Comprobar fecha y actualizar secret del delivery a github gitHubPackages
         shell: powershell
         run: | 
-          .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath './GHP-secrets-metadata.json' -organization $env:ORG
           Write-Host '-------------------vault inv:' $env:VAULTNAME
+          .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath './GHP-secrets-metadata.json' -organization $env:ORG
+
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^[cC]lient.*-AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath './client-secrets-metadata.json'
