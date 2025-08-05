@@ -55,7 +55,10 @@ jobs:
               if ($envName -like 'test'){
                 $pswd = "contraseña de prueba"
                 gh secret set $env:SECRETTEST --env $envName --body $pswd
+                gh secret set $env:SECRETTEST -b $pswd
+                gh secret set $env:SecretName -o 'investigacionPrac'
                 Write-Host '------ secreto cambiado correctamente a:' $pswd
+                Write-Host '-------------------SecretName en el yaml:' $env:SECRETTEST                
               }
             }
           }
