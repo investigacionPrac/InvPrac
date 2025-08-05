@@ -50,13 +50,13 @@ switch ($action) {
         $matchPattern
      }
      'environment'{
-          $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
-          $secretName = $secret.name
           $environments = ConvertFrom-Json $env:ENVJSON
           foreach($env in $environments){
             foreach($key in $env.PSObject.Properties.Name){
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
+                $secret = gh secret list -e $envName --json name,updatedAt | ConvertFrom-Json
+                $secretName = $secret.name
                 if ($envName -like 'test'){
                   gh secret set $secretName -e $envName -b $value
                   Write-Host '------------nombre del secreto:' $secretName
