@@ -16,6 +16,7 @@ jobs:
     name: Rotate Secret
     outputs:
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
+      ghTokenWorkflow: ${{steps.ReadSecrets.outputs.Secrets}}
 
     steps:
       - name: Checkout
