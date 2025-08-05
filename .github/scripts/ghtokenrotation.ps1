@@ -56,7 +56,10 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 if ($envName -like 'test'){
-                  gh secret set $env:SECRETTEST --env $envName --body $value
+                  gh secret set $env:SECRETTEST -e $envName -b $value
+                  Write-Host '------------nombre del secreto:' $env:SECRETTEST
+                  Write-Host '------------nombre del entorno:' $envName
+                  Write-Host '-------------------------valor:' $value
                 }
               }
             }
