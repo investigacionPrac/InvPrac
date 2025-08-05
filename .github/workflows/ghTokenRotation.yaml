@@ -39,6 +39,30 @@ jobs:
           shell: powershell
           getEnvironments: '*'
           type: 'CD'
+      
+      - name: debug
+        run: |
+          $count=0
+          $environments = ConvertFrom-Json $env:ENVJSON
+          foreach($env in $environments){
+            foreach($key in $env.PSObject.Properties.Name){
+              $obj = $env.$key
+              $envName= $obj.EnvironmentName
+              $count += 1
+              Write-Host '-------------------count:' $count
+              Write-Host '------------------------------name:' $envName
+
+              if ($envName -like 'test'){
+                $pswd = "contraseña de prueba"
+                gh secret set $env:SECRETTEST --env $envName --body $pswd
+                Write-Host '------ secreto cambiado correctamente a:' $pswd
+              }
+            }
+          }
+        env:
+          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+          SECRETTEST: ${{secrets.Test_AUTCONTEXT}}
+          GITHUB_TOKEN: ${{github.token}}
 
       - name: Comprobar fecha y actualizar secrets de repositorio
         shell: powershell
