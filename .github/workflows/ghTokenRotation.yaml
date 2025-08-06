@@ -66,20 +66,29 @@ jobs:
       
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
-        run: | 
-          Write-Host '-------------------vault inv:' $env:VAULTNAME
-          .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-wkt-pool-\d{3}$' -action 'Workflow' -metadataPath './.github/metadata/workflow-secrets-metadata.json' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'Workflow' -organization $env:ORG
 
       - name: Comprobar fecha y actualizar secret del delivery a StorageAccount
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-repo-pool-\d{3}$' -action 'StorageAccountDelivery' -metadataPath './.github/metadata/SA-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'StorageAccountDelivery'
 
       - name: Comprobar fecha y actualizar secret del delivery a github gitHubPackages
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^gh-ghp-pool-\d{3}$' -action 'ghPackagesDeliver' -metadataPath './.github/metadata/GHP-secrets-metadata.json' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'ghPackagesDeliver' -organization $env:ORG
 
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -matchPattern '^[cC]lient.*-AUTHCONTEXT-pool-\d{3}$' -action 'environment' -metadataPath './.github/metadata/client-secrets-metadata.json'
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
         env:
           ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Commit changes
+        shell: powershell
+        run: |
+          git add .
+          git commit -m "Actualizar tokens que han caducado o van a caducar"
