@@ -40,17 +40,23 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Commit changes
+      - name: Commit changes y push a nueva rama
         shell: powershell
         run: |
+          $branch = "issue$env:APPNAME"
+          git fetch origin
+          $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
+          if (-not $exists) {
+              git switch -c $branch
+          } else {
+              git switch $branch
+          }
           git add .
-          git commit -m "adding default data of app.json, settings, launch, logo and dependencies to the common app"
-
-      - name: Crear y hacer push a una nueva rama
-        shell: powershell
-        run: |
-          Write-Host "nombre de la app mediante output: $env:APPNAME"
-          git switch -c "issue$env:APPNAME"
-          git push origin "issue$env:APPNAME"
+          if (-not (git diff --cached --quiet)) {
+              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+          } else {
+              Write-Host "No hay cambios para commitear."
+          }
+          git push origin $branch
         env: 
           APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
