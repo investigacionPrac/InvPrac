@@ -13,7 +13,9 @@ function getToken{
         )
         $tokenData = az keyvault secret list --vault-name $keyvaultname  | ConvertFrom-Json
         $now = Get-Date
-        
+        if (-not (Test-Path $commonPath)){
+            mkdir metadata
+        }
         if(-not (Test-Path $metadataPath)){
             Write-Host "no existe el path $metadataPath se procederá a crear"
             New-Item -Path $metadataPath
