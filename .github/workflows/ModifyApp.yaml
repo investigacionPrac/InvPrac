@@ -72,5 +72,3 @@ jobs:
       #         Write-Host "No hay cambios para commitear."
       #     }
       #     git push origin $branch
-      #   env: 
-      #     APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
