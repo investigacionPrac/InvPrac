@@ -62,10 +62,7 @@ jobs:
       
       - name: Iniciar sesion en azure 
         shell: powershell
-        run: |
-          az account clear
-          az config set core.enable_broker_on_windows=false
-          az login
+        run: az login --use-device-code
       
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
