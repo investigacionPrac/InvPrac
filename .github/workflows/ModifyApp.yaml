@@ -12,7 +12,8 @@ jobs:
   ModifyApp:
     runs-on: windows-latest
     name: Modify app files
-
+    outputs: 
+      appName: ${{steps.ModifyAppJson.outputs.appName}}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -22,6 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Modify app.json files
+        id: ModifyAppJson
         shell: powershell
         run: .github/scripts/modifyFiles.ps1 -Action "appjson"
 
@@ -43,3 +45,9 @@ jobs:
         run: |
           git add .
           git commit -m "adding default data of app.json, settings, launch, logo and dependencies to the common app"
+
+      - name: Crear y hacer push a una nueva rama
+        shell: powershell
+        run: |
+          git switch -c "issue${{needs.ModifyAppJson.outputs.appName}}"
+          git push origin "issue${{needs.ModifyAppJson.outputs.appName}}"

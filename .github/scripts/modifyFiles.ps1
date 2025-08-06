@@ -114,6 +114,8 @@ function Update-AppJson {
     $data.dependencies = $commonDependency
     $data.version = "2.$((Get-Date).ToString('yyMMdd')).0.0"
 
+    $appName = $data.name
+    "`nappName=$appName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
     $data | ConvertTo-Json -Depth 10 | Set-Content -Path $FilePath -Encoding utf8
     Write-Host "app.json actualizado con nueva versión: $($data.version)"
 }
