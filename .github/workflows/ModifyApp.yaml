@@ -60,7 +60,8 @@ jobs:
 
           git fetch origin
           
-          $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
+          $output = git ls-remote --heads origin $branch
+          $exists = -not [String]::IsNullOrEmpty($output)
 
           if (-not $exists) {
               git switch -c $branch
@@ -76,3 +77,6 @@ jobs:
               Write-Host "No hay cambios para commitear."
           }
           git push origin $branch
+        
+        env:
+          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
