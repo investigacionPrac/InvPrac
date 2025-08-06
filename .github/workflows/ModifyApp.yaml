@@ -35,10 +35,10 @@ jobs:
         shell: powershell
         run: .github/scripts/modifyFiles.ps1 -Action "settings"
       
-      - name: Set up Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      # - name: Set up Git
+      #   run: |
+      #     git config --global user.name 'github-actions[bot]'
+      #     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: debug
         run: |
