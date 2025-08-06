@@ -44,31 +44,35 @@ jobs:
       - name: debug
         run: |
           $userName = git config --get user.name
-          Write-Host "---------------- $userName"
           $now = Get-Date
           $fechaString = $now.ToString("yyyyMMdd_HHmmss")
-          $branch = "$fechaString" + "_$userName" +"_$env:APPNAME" 
-          Write-Host "-------------- $branch"    
+          $branch = "$fechaString" + "_$userName" +"_$env:APPNAME"   
         env:
           APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
 
-      # - name: Commit changes y push a nueva rama
-      #   shell: powershell
-      #   run: |
-      #     $now = Get-Date
-      #     #yyyyMMdd_HHmm_BotGh
-      #     $branch = "issue$env:APPNAME"
-      #     git fetch origin
-      #     $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
-      #     if (-not $exists) {
-      #         git switch -c $branch
-      #     } else {
-      #         git switch $branch
-      #     }
-      #     git add .
-      #     if (-not (git diff --cached --quiet)) {
-      #         git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
-      #     } else {
-      #         Write-Host "No hay cambios para commitear."
-      #     }
-      #     git push origin $branch
+      - name: Commit changes y push a nueva rama
+        shell: powershell
+        run: |
+          $userName = git config --get user.name
+          $now = Get-Date
+          $fechaString = $now.ToString("yyyyMMdd_HHmmss")
+          $branch = "$fechaString" + "_$userName" +"_$env:APPNAME"   
+
+          git fetch origin
+          
+          $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
+
+          if (-not $exists) {
+              git switch -c $branch
+          } else {
+              git switch $branch
+          }
+
+          git add .
+          
+          if (-not (git diff --cached --quiet)) {
+              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+          } else {
+              Write-Host "No hay cambios para commitear."
+          }
+          git push origin $branch
