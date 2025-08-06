@@ -62,9 +62,7 @@ jobs:
       
       - name: Iniciar sesion en azure 
         shell: powershell
-        run: |
-          az config set core.login_experience_v2=off
-          az login --tenant 241b673b-002e-4a9e-9240-d83727e26576
+        run: az login --use-device-code
       
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
