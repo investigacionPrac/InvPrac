@@ -4,7 +4,7 @@ param (
     [String] $organization
 )
 
-$commonPath = './.github/'
+$commonPath = './.github/metadata'
 
 function getToken{   
     param (
@@ -15,7 +15,7 @@ function getToken{
         $now = Get-Date
         
         if(-not (Test-Path $metadataPath)){
-
+            Write-Host "no existe el path $metadataPath se procederá a crear"
             New-Item -Path $metadataPath
             $content = @{ 
                'token_name' = "nombre del token"
@@ -57,18 +57,18 @@ function getToken{
 switch ($action) {
     'Workflow' { 
         $value = 'test'
-        $metaPath = Join-Path $commonPath "metadata/workflow-secrets-metadata.json"
+        $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
         getToken -matchPatten '^gh-wkt-pool-\d{3}$' -metadataPath $metaPath
         #gh secret set -o $organization ghTokenWorkflow -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set -o $organization testWorkflow -b $value
      }
      'StorageAccountDelivery'{
-        $metaPath = Join-Path $commonPath "metadata/SA-secrets-metadata.json"
+        $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
         getToken -matchPatten '^gh-SA-pool-\d{3}$' -metadataPath $metaPath
         #gh secret set StorageContext -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
      }
      'ghPackagesDeliver'{
-        $metaPath = Join-Path $commonPath "metadata/GHP-secrets-metadata.json"
+        $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
         getToken -matchPatten '^gh-ghp-pool-\d{3}$' -metadataPath $metaPath
         #gh secret set -o $organization GitHubPackageContext -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
      }
@@ -78,7 +78,7 @@ switch ($action) {
             foreach($key in $env.PSObject.Properties.Name){
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
-                $metaPath = Join-Path $commonPath "metadata/${envName}-secrets-metadata.json"
+                $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
                 getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){ #esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
