@@ -49,5 +49,8 @@ jobs:
       - name: Crear y hacer push a una nueva rama
         shell: powershell
         run: |
-          git switch -c "issue${{needs.ModifyAppJson.outputs.appName}}"
-          git push origin "issue${{needs.ModifyAppJson.outputs.appName}}"
+          Write-Host "nombre de la app mediante output: $env:APPNAME"
+          git switch -c "issue$env:APPNAME"
+          git push origin "issue$env:APPNAME"
+        env: 
+          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
