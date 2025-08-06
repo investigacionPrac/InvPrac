@@ -54,6 +54,8 @@ jobs:
         shell: powershell
         run: |
           $userName = git config --get user.name
+          $userName = $userName -replace '[\[,\]]','_'
+          $userName 
           $now = Get-Date
           $fechaString = $now.ToString("yyyyMMdd_HHmmss")
           $branch = "$fechaString" + "_$userName" +"_$env:APPNAME"   
