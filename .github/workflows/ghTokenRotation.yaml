@@ -62,7 +62,7 @@ jobs:
       
       - name: Iniciar sesion en azure 
         shell: powershell
-        run: az login --identity --resource-id /subscriptions/a95ef600-80c1-49ca-ab4b-7507afadb784/resourceGroups/AzureInvestigation/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyIdentity
+        run: az login
       
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
