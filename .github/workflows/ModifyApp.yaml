@@ -40,23 +40,30 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Commit changes y push a nueva rama
-        shell: powershell
+      - name: debug
         run: |
-          $branch = "issue$env:APPNAME"
-          git fetch origin
-          $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
-          if (-not $exists) {
-              git switch -c $branch
-          } else {
-              git switch $branch
-          }
-          git add .
-          if (-not (git diff --cached --quiet)) {
-              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
-          } else {
-              Write-Host "No hay cambios para commitear."
-          }
-          git push origin $branch
-        env: 
-          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
+          $userName = git config --get user.name
+          Write-Host "---------------- $userName"
+
+      # - name: Commit changes y push a nueva rama
+      #   shell: powershell
+      #   run: |
+      #     $now = Get-Date
+      #     #yyyyMMdd_HHmm_BotGh
+      #     $branch = "issue$env:APPNAME"
+      #     git fetch origin
+      #     $exists = (git ls-remote --heads origin $branch).Trim() -ne ""
+      #     if (-not $exists) {
+      #         git switch -c $branch
+      #     } else {
+      #         git switch $branch
+      #     }
+      #     git add .
+      #     if (-not (git diff --cached --quiet)) {
+      #         git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+      #     } else {
+      #         Write-Host "No hay cambios para commitear."
+      #     }
+      #     git push origin $branch
+      #   env: 
+      #     APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
