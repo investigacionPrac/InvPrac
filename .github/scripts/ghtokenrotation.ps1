@@ -39,8 +39,9 @@ function getToken{
                 Write-Host "Hay que rotar (faltan $diff días)"
                 $nextToken = $tokenData | Where-Object {$_.name -match $matchPattern}| Sort-Object { [datetime]::Parse($_.attributes.expires)} | Select-Object -First 1
                 Write-Host '-------------------- fecha de expiracion:' $nextToken.attributes.expires
-                $fechaString = $nextToken.attributes.expires.ToString("yyyy-MM-ddTHH:mm:ssZ")
-                $fechaUTC = $nextToken.attributes.expires.ToUniversalTime()
+                $fecha = $nextToken.attributes.expires
+                $fechaString = $fecha.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                $fechaUTC = $fecha.ToUniversalTime()
                 Write-Host "--------------------- fecha con el formato necesario: $fechaString"
                 Write-Host "--------------------- fecha en UTC: $fechaUTC"
                 $newexpiring = [datetime]::Parse($nextToken.attributes.expires).ToUniversalTime()
@@ -68,18 +69,18 @@ switch ($action) {
     'Workflow' { 
         $value = 'esto es una contraseña de prueba'
         $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
-        getToken -matchPatten "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
+        getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set -o $organization ghTokenWorkflow -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set -o $organization testWorkflow -b $value
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
-        getToken -matchPatten "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
+        getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set StorageContext -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
      }
      'ghPackagesDeliver'{
         $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
-        getToken -matchPatten "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
+        getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set -o $organization GitHubPackageContext -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
      }
      'environment'{
