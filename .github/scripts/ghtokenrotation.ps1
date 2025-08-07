@@ -30,7 +30,9 @@ function getToken{
 
         $expiring = [datetime]::Parse($data.expires).ToUniversalTime()
         $diff = ($expiring - $now).Days
-
+        Write-Host '----------------------- todos los tokens:' $tokenData.name
+        Write-Host "----------------- tokens que cumplen el patron: $tokens"
+        Write-Host '----------------- cantidad de tokens:' $tokens.Count
         if ($tokens.Count -le 1){
             if ($diff -le 7) {
                 Write-Host "Hay que rotar (faltan $diff días)"
