@@ -72,13 +72,15 @@ switch ($action) {
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set TESTWORKFLOW  -o $organization --body "$value"
-        gh secret list -o $organization
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
         # $value=
         getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set STORAGECONTEXT -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
+        $value = 'esto es una contrasena de prueba'
+        gh secret set TESTWORKFLOW --body "$value"
+
      }
      'ghPackagesDeliver'{
         $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
