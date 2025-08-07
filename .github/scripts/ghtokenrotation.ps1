@@ -63,9 +63,9 @@ switch ($action) {
     'Workflow' { 
         $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
         $value=getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
-        Write-Host "---------------valor: $value"
-        $value = 'esto es una contraseña de prueba'
-        Write-Host "---------------valor: $value"
+        Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+        $value = 'esto es una contrasena de prueba' #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+        Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set -o $organization TESTWORKFLOW -b $value
      }
