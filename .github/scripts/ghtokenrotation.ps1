@@ -42,14 +42,14 @@ function getToken{
                     $data.token_name = $tokenName
                     $data | ConvertTo-Json -Depth 2 | Set-Content $metadataPath -Encoding UTF8
                     Write-Host "actualizado el token a $tokenName (expira el $($newexpiring.ToString("dd/MM/yyyy HH:mm:ss")))"
-                    $value = (az keyvault secret show --name $tokenName --vault $keyvaultname | ConvertFrom-Json)
+                    $tokenJson = (az keyvault secret show --name $tokenName --vault $keyvaultname | ConvertFrom-Json)
                     
                     #Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     #az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname #<<<<<<<<<<<<<<<<<<<<< eliminar esto, ya que no queremos un nuevo token simplemente está para pruebas
                     #Write-Host "---------------valor despues de crear un nuevo token : $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
                     #Write-Host "---------------valor despues de eliminar el token en el pool: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    return $value
+                    return $tokenJson
                 }else {
                     Write-Warning "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
