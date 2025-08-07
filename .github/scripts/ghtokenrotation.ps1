@@ -46,9 +46,11 @@ function getToken{
                     $value = $valueRaw.value
                     
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
+                    az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname #<<<<<<<<<<<<<<<<<<<<< eliminar esto, ya que no queremos un nuevo token simplemente está para pruebas
+                    Write-Host "---------------valor despues de crear un nuevo token : $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
-                    return $value
+                    Write-Host "---------------valor despues de eliminar el token en el pool: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                    #return $value
                 }else {
                     Write-Host "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
@@ -64,21 +66,24 @@ function getToken{
 switch ($action) {
     'Workflow' { 
         $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
-        $value=getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
+        # $value=
+        getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         $value = 'esto es una contrasena de prueba' #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-        Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+        Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set -o $organization TESTWORKFLOW -b $value
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
-        $value=getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
+        # $value=
+        getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set STORAGECONTEXT -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
      }
      'ghPackagesDeliver'{
         $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
-        $value=getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
+        # $value=
+        getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
         #gh secret set -o $organization GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
      }
      'environment'{
@@ -88,12 +93,13 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
-                $value=getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
+                #$value=
+                getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
-                if ($envName -like 'test'){ #esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
-                    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    gh secret set $secretName -e $envName -b $value
-                }
+                # if ($envName -like 'test'){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
+                #     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                #     gh secret set $secretName -e $envName -b $value
+                # }
             }
           }
     }
