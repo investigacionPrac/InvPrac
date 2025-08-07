@@ -30,20 +30,10 @@ function getToken{
 
         $expiring = [datetime]::Parse($data.expires).ToUniversalTime()
         $diff = ($expiring - $now).Days
-        Write-Host '----------------------- todos los tokens:' $tokenData.name
-        Write-Host "------------------------ patron: $matchPattern"
-        Write-Host "----------------- tokens que cumplen el patron: $tokens"
-        Write-Host '----------------- cantidad de tokens:' $tokens.Count
         if ($tokens.Count -ge 1){
             if ($diff -le 7) {
                 Write-Host "Hay que rotar (faltan $diff días)"
                 $nextToken = $tokenData | Where-Object {$_.name -match $matchPattern}| Sort-Object { [datetime]::Parse($_.attributes.expires)} | Select-Object -First 1
-                Write-Host '-------------------- fecha de expiracion:' $nextToken.attributes.expires
-                #$fecha = $nextToken.attributes.expires
-                # $fechaString = $fecha.ToString("yyyy-MM-ddTHH:mm:ssZ")
-                # $fechaUTC = $fecha.ToUniversalTime()
-                # Write-Host "--------------------- fecha con el formato necesario: $fechaString"
-                # Write-Host "--------------------- fecha en UTC: $fechaUTC"
                 $newexpiring = [datetime]::Parse($nextToken.attributes.expires).ToUniversalTime()
                 $tokenName = $nextToken.Name
                 if ($newexpiring -gt $expiring){
@@ -53,7 +43,10 @@ function getToken{
                     $data | ConvertTo-Json -Depth 2 | Set-Content $metadataPath -Encoding UTF8
                     Write-Host "actualizado el token a $tokenName (expira el $($newexpiring.ToString("dd/MM/yyyy HH:mm:ss")))"
                     $value = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json).value
-                      az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
+                    
+                    az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
+                    
+                    return $value
                 }else {
                     Write-Host "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
                 }
@@ -90,7 +83,7 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
-                getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
+                $value=getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){ #esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     gh secret set $secretName -e $envName -b $value
