@@ -72,7 +72,7 @@ switch ($action) {
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
         gh secret set TESTWORKFLOW  -o $organization --body "$value"
-        gh secret list -o $organization --visibility all
+        gh secret list -o $organization
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
