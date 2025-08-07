@@ -12,7 +12,7 @@ env:
 jobs:
    
   rotate-secret:
-    runs-on: self-hosted
+    runs-on: windows-latest   #se puede usar self-hosted, pero hay que crear un runner en tu propia maquina no se pueden ejecutar scripts por defecto y no funcionará a no ser que sea un runner en azure
     name: Rotate Secret
     outputs:
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}

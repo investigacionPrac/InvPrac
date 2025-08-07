@@ -42,7 +42,7 @@ function getToken{
                     $data.token_name = $tokenName
                     $data | ConvertTo-Json -Depth 2 | Set-Content $metadataPath -Encoding UTF8
                     Write-Host "actualizado el token a $tokenName (expira el $($newexpiring.ToString("dd/MM/yyyy HH:mm:ss")))"
-                    $value = (az keyvault secret show --name $tokenName --vault $keyvaultname | ConvertFrom-Json).value
+                    $value = (az keyvault secret show --name $tokenName --vault $keyvaultname | ConvertFrom-Json)
                     
                     #Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     #az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname #<<<<<<<<<<<<<<<<<<<<< eliminar esto, ya que no queremos un nuevo token simplemente está para pruebas
@@ -92,7 +92,8 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
-                $value= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
+                $token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
+                $value=$token.value
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
