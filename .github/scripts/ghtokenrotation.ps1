@@ -89,7 +89,8 @@ switch ($action) {
                 $value=getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){ #esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
-                    gh secret set $secretName -e $envName -b $value
+                    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                    gh secret set $secretName -e $envName -b "$value"
                 }
             }
           }
