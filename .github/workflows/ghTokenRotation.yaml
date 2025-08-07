@@ -12,7 +12,7 @@ env:
 jobs:
    
   rotate-secret:
-    runs-on: windows-latest
+    runs-on: self-hosted
     name: Rotate Secret
     outputs:
       deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}

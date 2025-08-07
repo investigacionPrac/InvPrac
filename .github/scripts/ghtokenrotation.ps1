@@ -42,13 +42,13 @@ function getToken{
                     $data.token_name = $tokenName
                     $data | ConvertTo-Json -Depth 2 | Set-Content $metadataPath -Encoding UTF8
                     Write-Host "actualizado el token a $tokenName (expira el $($newexpiring.ToString("dd/MM/yyyy HH:mm:ss")))"
-                    $value = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json).value
+                    $value = (az keyvault secret show --name $tokenName --vault $keyvaultname | ConvertFrom-Json).value
                     
-                    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname #<<<<<<<<<<<<<<<<<<<<< eliminar esto, ya que no queremos un nuevo token simplemente está para pruebas
-                    Write-Host "---------------valor despues de crear un nuevo token : $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                    #Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                    #az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname #<<<<<<<<<<<<<<<<<<<<< eliminar esto, ya que no queremos un nuevo token simplemente está para pruebas
+                    #Write-Host "---------------valor despues de crear un nuevo token : $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
-                    Write-Host "---------------valor despues de eliminar el token en el pool: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                    #Write-Host "---------------valor despues de eliminar el token en el pool: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     return $value
                 }else {
                     Write-Host "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
@@ -92,8 +92,7 @@ switch ($action) {
                 $obj = $env.$key
                 $envName= $obj.EnvironmentName
                 $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
-                $valueRaw= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
-                $value= $valueRaw.value
+                $value= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
