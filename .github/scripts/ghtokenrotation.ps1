@@ -42,7 +42,8 @@ function getToken{
                     $data.token_name = $tokenName
                     $data | ConvertTo-Json -Depth 2 | Set-Content $metadataPath -Encoding UTF8
                     Write-Host "actualizado el token a $tokenName (expira el $($newexpiring.ToString("dd/MM/yyyy HH:mm:ss")))"
-                    $value = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json).value
+                    $valueRaw = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json)
+                    $value = $valueRaw.value
                     
                     az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
@@ -90,7 +91,7 @@ switch ($action) {
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){ #esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    gh secret set $secretName -e $envName -b "$value"
+                    gh secret set $secretName -e $envName -b $value
                 }
             }
           }
