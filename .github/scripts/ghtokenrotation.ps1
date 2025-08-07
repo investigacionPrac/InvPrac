@@ -45,6 +45,7 @@ function getToken{
                     $valueRaw = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json)
                     $value = $valueRaw.value
                     
+                    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
                     return $value
