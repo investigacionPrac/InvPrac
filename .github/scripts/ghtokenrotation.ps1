@@ -51,14 +51,14 @@ function getToken{
                     #Write-Host "---------------valor despues de eliminar el token en el pool: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     return $value
                 }else {
-                    Write-Host "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
+                    Write-Warning "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
                     az keyvault secret delete --vault-name $keyvaultname --name $tokenName
                 }
             } else {
                 Write-Host "Por el momento no hay que rotar (faltan $diff días)"
             }           
         } else{
-            Write-Host "No quedan tokens en el pool tienes que crear mas con el patron $matchPattern"
+            Write-Warning "No quedan tokens en el pool tienes que crear mas con el patron $matchPattern"
         }
         return $null
 }
@@ -71,7 +71,8 @@ switch ($action) {
         $value = 'esto es una contrasena de prueba' #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
-        $value | gh secret set TESTWORKFLOW  -o $organization
+        gh secret set TESTWORKFLOW  -o $organization --body "$value"
+        gh secret list -o $organization --visibility all
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
@@ -95,11 +96,8 @@ switch ($action) {
                 $token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $value=$token.value
                 Write-Host "---------------- token: $token"     #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                if ($null -eq $value){
-                    Write-Warning "No hay tokens para este patron por favor crea más o comprueba que el valor no sea nulo"
-                }
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
-                if ($envName -like 'test'){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
+                if (($envName -like 'test') -and ($null -ne $value) ){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     gh secret set $secretName -e $envName -b $value
                 }
