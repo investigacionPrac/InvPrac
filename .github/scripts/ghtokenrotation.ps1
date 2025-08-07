@@ -57,7 +57,7 @@ function getToken{
         } else{
             Write-Host "No quedan tokens en el pool tienes que crear mas con el patron $matchPattern"
         }
-        return null
+        return $null
 }
 switch ($action) {
     'Workflow' { 
