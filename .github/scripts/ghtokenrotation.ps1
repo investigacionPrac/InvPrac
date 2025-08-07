@@ -71,7 +71,7 @@ switch ($action) {
         $value = 'esto es una contrasena de prueba' #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
-        gh secret set TESTWORKFLOW  -o $organization -b $value
+        $value | gh secret set TESTWORKFLOW  -o $organization
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
@@ -95,6 +95,9 @@ switch ($action) {
                 $token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $value=$token.value
                 Write-Host "---------------- token: $token"     #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                if ($null -eq $value){
+                    Write-Warning "No hay tokens para este patron por favor crea más o comprueba que el valor no sea nulo"
+                }
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
                 if ($envName -like 'test'){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
