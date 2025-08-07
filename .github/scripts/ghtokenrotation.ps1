@@ -31,12 +31,14 @@ function getToken{
         $expiring = [datetime]::Parse($data.expires).ToUniversalTime()
         $diff = ($expiring - $now).Days
         Write-Host '----------------------- todos los tokens:' $tokenData.name
+        Write-Host "------------------------ patron: $matchPattern"
         Write-Host "----------------- tokens que cumplen el patron: $tokens"
         Write-Host '----------------- cantidad de tokens:' $tokens.Count
-        if ($tokens.Count -le 1){
+        if ($tokens.Count -ge 1){
             if ($diff -le 7) {
                 Write-Host "Hay que rotar (faltan $diff días)"
                 $nextToken = $tokenData | Where-Object {$_.name -match $matchPattern}| Sort-Object { [datetime]::Parse($_.attributes.expires)} | Select-Object -First 1
+                Write-Host '-------------------- fecha de expiracion:' $nextToken.attributes.expires
                 $newexpiring = [datetime]::Parse($nextToken.attributes.expires).ToUniversalTime()
                 $tokenName = $nextToken.Name
                 if ($newexpiring -gt $expiring){
