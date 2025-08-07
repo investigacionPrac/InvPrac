@@ -65,28 +65,37 @@ function getToken{
 switch ($action) {
     'Workflow' { 
         $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
-        # $value=
-        getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
+        $token= getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
+        $value = $token.value
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         $value = 'esto es una contrasena de prueba' #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
-        #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
-        gh secret set TESTWORKFLOW  -o $organization --body "$value"
+        if ($null -ne $value){
+            #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
+            gh secret set TESTWORKFLOW  -o $organization --body "$value"
+        }
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
-        # $value=
-        getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
-        #gh secret set STORAGECONTEXT -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
+        
+        $token= getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
+        $value= $token.value
+
+        if ($null -ne $value){
+            #gh secret set STORAGECONTEXT -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
+        }
+        
         $value = 'esto es una contrasena de prueba'
         gh secret set TESTWORKFLOW --body "$value"
 
      }
      'ghPackagesDeliver'{
         $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
-        # $value=
-        getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
-        #gh secret set -o $organization GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
+        $token = getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
+        $value= $token.value
+        if ($null -ne $value){
+            #gh secret set -o $organization GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
+        }
      }
      'environment'{
         $environments = ConvertFrom-Json $env:ENVJSON
