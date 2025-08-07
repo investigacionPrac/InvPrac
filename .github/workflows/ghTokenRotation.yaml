@@ -87,8 +87,9 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Commit changes
+      - name: Commit changes y push
         shell: powershell
         run: |
           git add .
           git commit -m "Actualizar tokens que han caducado o van a caducar"
+          git push origin main

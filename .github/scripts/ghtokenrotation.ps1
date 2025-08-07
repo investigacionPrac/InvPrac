@@ -45,36 +45,36 @@ function getToken{
                     $value = (az keyvault secret show --name $nextToken.name --vault $keyvaultname | ConvertFrom-Json).value
                     
                     az keyvault secret set --name 'testing' --value $value --expires $data.expires --vault-name $keyvaultname
-                    
+                    az keyvault secret delete --vault-name $keyvaultname --name $tokenName
                     return $value
                 }else {
                     Write-Host "La fecha a la que se va a cambiar es anterior o igual a la que hay actualmente por lo que se eliminará el token más antiguo"
+                    az keyvault secret delete --vault-name $keyvaultname --name $tokenName
                 }
-                az keyvault secret delete --vault-name $keyvaultname --name $tokenName
             } else {
                 Write-Host "Por el momento no hay que rotar (faltan $diff días)"
             }           
         } else{
-            Write-Host "No quedan tokens en el pool tienes que crear mas"
+            Write-Host "No quedan tokens en el pool tienes que crear mas con el patron $matchPattern"
         }
 }
 switch ($action) {
     'Workflow' { 
         $value = 'esto es una contraseña de prueba'
         $metaPath = Join-Path $commonPath "workflow-secrets-metadata.json"
-        getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
-        #gh secret set -o $organization ghTokenWorkflow -b $value <<<<< está comentado para no modificar el valor token de workflow
-        gh secret set -o $organization testWorkflow -b $value
+        $value=getToken -matchPattern "^gh-wkt-pool-\d{3}$" -metadataPath $metaPath
+        #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
+        gh secret set -o $organization TESTWORKFLOW -b $value
      }
      'StorageAccountDelivery'{
         $metaPath = Join-Path $commonPath "SA-secrets-metadata.json"
-        getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
-        #gh secret set StorageContext -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
+        $value=getToken -matchPattern "^gh-SA-pool-\d{3}$" -metadataPath $metaPath
+        #gh secret set STORAGECONTEXT -b $value <<<<<<<< está comentado para no modificar el valor del token del deliver a Azure Storage Account
      }
      'ghPackagesDeliver'{
         $metaPath = Join-Path $commonPath "GHP-secrets-metadata.json"
-        getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
-        #gh secret set -o $organization GitHubPackageContext -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
+        $value=getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
+        #gh secret set -o $organization GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
      }
      'environment'{
         $environments = ConvertFrom-Json $env:ENVJSON
