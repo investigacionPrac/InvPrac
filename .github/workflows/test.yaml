@@ -8,7 +8,9 @@ jobs:
 
     steps:
       - name: Run a one-line script
-        run: Write-Host "-------------- $env:GITHUB_ENV
+        run: | 
+          Write-Host "-------------- OWNER: ${{github.repository_owner}}"
+          Write-Host "-------------- NAME: ${{github.repository}}"
         
       - name: Run a multi-line script
         run: |
