@@ -1,4 +1,3 @@
-function crearEntornoDeApp{
     param (
         [String] $repoPath
     )
@@ -26,4 +25,3 @@ function crearEntornoDeApp{
     }
 
     Write-Host "Los clientes que tienen la app buscada son: $clientes"
-}
