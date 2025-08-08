@@ -2,7 +2,7 @@ function crearEntornoDeApp{
     param (
         [String] $repoPath
     )
-    $data = Get-Content 'Get-NAVAppInfo' | ConvertFrom-Json
+    $data = Get-Content '.\.github\metadata\clientes-de-testing.json' | ConvertFrom-Json
     
     $appRepo = Split-Path $repoPath -Leaf
 
