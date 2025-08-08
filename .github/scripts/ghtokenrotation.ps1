@@ -98,11 +98,9 @@ switch ($action) {
         }
      }
      'environment'{
-        $environments = ConvertFrom-Json $env:ENVJSON
-        foreach($env in $environments){
-            foreach($key in $env.PSObject.Properties.Name){
-                $obj = $env.$key
-                $envName= $obj.EnvironmentName
+        $environments = (gh api repos/investigacionPrac/InvPrac/environments) | ConvertFrom-Json
+        $names = $environments.environments.Name
+        foreach($envName in $names){
                 $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
                 $token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
                 $value=$token.value
@@ -114,7 +112,6 @@ switch ($action) {
                 }
             }
           }
-    }
     Default {
         Write-Error "No es una opción válida"
     }

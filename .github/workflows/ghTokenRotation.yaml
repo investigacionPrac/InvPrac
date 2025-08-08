@@ -14,9 +14,6 @@ jobs:
   rotate-secret:
     runs-on: windows-latest   #se puede usar self-hosted, pero hay que crear un runner en tu propia maquina no se pueden ejecutar scripts por defecto y no funcionará a no ser que sea un runner en azure
     name: Rotate Secret
-    outputs:
-      deploymentEnvironmentsJson: ${{ steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson }}
-      ghTokenWorkflow: ${{steps.ReadSecrets.outputs.Secrets}}
     env:
       VAULTNAME: 'KeyVaultInv'
       ORG: ${{github.repository_owner}}
@@ -28,37 +25,6 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
-      
-      - name: Read settings
-        uses: microsoft/AL-Go-Actions/ReadSettings@v7.2
-        with:
-          shell: ${{ matrix.shell }}
-          get: type,powerPlatformSolutionFolder
-      
-      - name: EnvName
-        id: envName
-        run: |
-          $errorActionPreference = "Stop"; $ProgressPreference = "SilentlyContinue"; Set-StrictMode -Version 2.0
-          $envName = '${{ matrix.environment }}'.split(' ')[0]
-          Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "envName=$envName"
-      
-      - name: Read secrets
-        id: ReadSecrets
-        uses: microsoft/AL-Go-Actions/ReadSecrets@v7.2
-        with:
-          shell: ${{ matrix.shell }}
-          gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext'
-      
-      - name: Determine Deployment Environments
-        id: DetermineDeploymentEnvironments
-        uses: microsoft/AL-Go-Actions/DetermineDeploymentEnvironments@v7.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          shell: powershell
-          getEnvironments: '*'
-          type: 'CD'
       
       - name: Iniciar sesion en azure 
         shell: powershell
@@ -79,8 +45,6 @@ jobs:
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
         run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
-        env:
-          ENVJSON: ${{steps.DetermineDeploymentEnvironments.outputs.DeploymentEnvironmentsJson}}
 
       - name: Set up Git
         run: |
