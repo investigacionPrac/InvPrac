@@ -105,6 +105,9 @@ switch ($action) {
                 $value=$token.value
                 Write-Host "---------------- token: $token"     #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                 $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
+                if ($null -eq $secretName){
+                    $secretName = $envName +"_AUTHCONTEXT"
+                }
                 if (($envName -match '^test$')-or ($envName -match '^cliente\d{1}$') -and ($null -ne $value) ){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
                     gh secret set $secretName -e $envName -b $value
