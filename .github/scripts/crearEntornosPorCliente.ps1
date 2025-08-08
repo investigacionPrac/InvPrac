@@ -1,0 +1,27 @@
+function crearEntornoDeApp{
+    param (
+        [String] $repoPath
+    )
+    $data = Get-Content 'Get-NAVAppInfo' | ConvertFrom-Json
+    
+    $appRepo = Split-Path $repoPath -Leaf
+
+    $environments = (gh api repos/investigacionPrac/InvPrac/environments) | ConvertFrom-Json
+    $names = $environments.environments.Name
+
+    foreach ($client in $data.PSObject.Properties.Name){
+        Write-Host "Evaluando al cliente $client"
+        if ($data.$client.Contains($appRepo)){
+            $clientes += $client + " "
+            if ($names.Contains($client)){
+                Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
+            } else{
+                gh api --method PUT -H "Accept: application/vnd.github+json" repos/investigacionPrac/InvPrac/environments/$client
+                Write-Host "Entorno $client creado correctamente"
+            }
+            
+        }
+    }
+
+    Write-Host "Los clientes que tienen la app buscada son: $clientes"
+}

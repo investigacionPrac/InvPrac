@@ -1,0 +1,26 @@
+name: Crear entornos por cada cliente que tenga esta app
+
+on: 
+    workflow_dispatch:
+
+jobs:
+    
+    crearEntorno:
+        runs-on: windows-latest
+        name: Crear Entorno
+        env:
+            ORG: ${{github.repository_owner}}
+            GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+              with:
+                ref: ${{ matrix.branch }}
+                token: $env:GITHUB_TOKEN
+            
+            - name: Crear Entornos
+              shell: powershell
+              run: .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
+              env:
+                REPOPATH: ${{github.repository}}
