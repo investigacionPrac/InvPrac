@@ -1,7 +1,6 @@
 param (
     [String] $action,
-    [String] $keyvaultname,
-    [String] $organization
+    [String] $keyvaultname
 )
 
 $commonPath = './.github/metadata'
@@ -72,7 +71,7 @@ switch ($action) {
         Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemenpoerte estan para debug
         if ($null -ne $value){
             #gh secret set -o $organization GHTOKENWORKFLOW -b $value <<<<< está comentado para no modificar el valor token de workflow
-            gh secret set TESTWORKFLOW  -o $organization --body "$value"
+            gh secret set TESTWORKFLOW  -o $env:ORG --body "$value"
         }
      }
      'StorageAccountDelivery'{
@@ -94,7 +93,7 @@ switch ($action) {
         $token = getToken -matchPattern "^gh-ghp-pool-\d{3}$" -metadataPath $metaPath
         $value= $token.value
         if ($null -ne $value){
-            #gh secret set -o $organization GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
+            #gh secret set -o $env:ORG GITHUBPACKAGESCONTEXT -b $value <<<<<<< está comentado para no modificar el valor del token del deliver a GHPackages
         }
      }
      'environment'{

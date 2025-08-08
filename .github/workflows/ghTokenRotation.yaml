@@ -27,7 +27,7 @@ jobs:
       
       - name: Comprobar fecha y actualizar el token del workflow
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'Workflow' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'Workflow'
 
       - name: Comprobar fecha y actualizar secret del delivery a StorageAccount
         shell: powershell
@@ -35,7 +35,7 @@ jobs:
 
       - name: Comprobar fecha y actualizar secret del delivery a github gitHubPackages
         shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'ghPackagesDeliver' -organization $env:ORG
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'ghPackagesDeliver'
 
       - name: Comprobar fecha y actualizar secrets de entorno (clientes)
         shell: powershell
