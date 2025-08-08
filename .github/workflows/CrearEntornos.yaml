@@ -6,7 +6,9 @@ on:
 jobs:
     crearEntorno:
       runs-on: windows-latest
-      name: Crear Entorno  
+      name: Crear Entorno
+      env:
+        OWNER: ${{github.repository_owner}}
       
       steps:
         - name: Checkout
@@ -25,9 +27,6 @@ jobs:
 
         - name: Crear Entornos
           shell: powershell
-          run: |
-            Write-Host "Antes de Entrar"
-            .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
-            Write-Host "Tras Entrar"
+          run: .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
           env:
             REPOPATH: ${{github.repository}}

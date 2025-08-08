@@ -3,10 +3,11 @@
     )
     Write-Host "estoy dentro de la funcion"
     $data = Get-Content '.\.github\metadata\clientes-de-testing.json' | ConvertFrom-Json
+    $data
     
     $appRepo = Split-Path $repoPath -Leaf
 
-    $environments = (gh api repos/$repoPath/environments) | ConvertFrom-Json
+    $environments = (gh api repos/$env:OWNER/$appRepo/environments) | ConvertFrom-Json
     Write-Host "Entornos en el repo: $environments"
     $names = $environments.environments.Name
     Write-Host "Nombres de los entornos: $names"
