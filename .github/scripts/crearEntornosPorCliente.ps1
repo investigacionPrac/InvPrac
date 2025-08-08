@@ -16,7 +16,7 @@
             if ($names.Contains($client)){
                 Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
             } else{
-                gh api --method PUT -H "Accept: application/vnd.github+json" repos/investigacionPrac/InvPrac/environments/$client
+                gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appRepo/environments/$client
                 Write-Host "Entorno $client creado correctamente"
             }
             
