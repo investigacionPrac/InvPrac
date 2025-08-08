@@ -18,6 +18,8 @@ jobs:
             
             - name: Crear Entornos
               shell: powershell
-              run: .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
+              run: |
+                gh auth status
+                .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
               env:
                 REPOPATH: ${{github.repository}}
