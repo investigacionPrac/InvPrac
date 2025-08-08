@@ -9,6 +9,7 @@ jobs:
       name: Crear Entorno
       env:
         OWNER: ${{github.repository_owner}}
+        GH_TOKEN: ${{secrets.ghTokenWorkflow}}
       
       steps:
         - name: Checkout

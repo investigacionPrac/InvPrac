@@ -1,7 +1,7 @@
     param (
         [String] $repoPath
     )
-    Write-Host "estoy dentro de la funcion"
+
     $data = Get-Content '.\.github\metadata\clientes-de-testing.json' | ConvertFrom-Json
     $data
     
