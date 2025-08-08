@@ -8,8 +8,6 @@ jobs:
     crearEntorno:
         runs-on: windows-latest
         name: Crear Entorno
-        env:
-            ORG: ${{github.repository_owner}}
 
         steps:
             - name: Checkout
