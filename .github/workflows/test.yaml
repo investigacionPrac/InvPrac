@@ -7,10 +7,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Run a one-line script
+      - name: Obtener appName
         run: | 
-          Write-Host "-------------- OWNER: ${{github.repository_owner}}"
-          Write-Host "-------------- NAME: ${{github.repository}}"
+          $appName= Split-Path ${{github.repository}} -Leaf
+          Write-Host "-------------- NAME: $appName"
         
       - name: Run a multi-line script
         run: |
