@@ -10,6 +10,8 @@ jobs:
       - name: Obtener appName
         run: | 
           $appName= Split-Path ${{github.repository}} -Leaf
+          $workspace = $env:GITHUB_WORKSPACE
+          Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
         
       - name: Run a multi-line script
