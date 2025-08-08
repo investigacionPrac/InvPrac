@@ -19,7 +19,7 @@ jobs:
               shell: powershell
               run: |
                 Write-Host "Antes de Entrar"
-                .github\scripts\crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
+                .github/scripts/crearEntornosPorCliente.ps1 -repoPath $env:REPOPATH
                 Write-Host "Tras Entrar"
               env:
                 REPOPATH: ${{github.repository}}
