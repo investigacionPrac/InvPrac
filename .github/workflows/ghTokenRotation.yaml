@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest   #se puede usar self-hosted, pero hay que crear un runner en tu propia maquina no se pueden ejecutar scripts por defecto y no funcionará a no ser que sea un runner en azure
     name: Rotate Secret
     env:
-      VAULTNAME: 'KeyVaultInv'
+      VAULTNAME: ${{secrets.KEYVAULTNAME}}
       ORG: ${{github.repository_owner}}
       GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
 
