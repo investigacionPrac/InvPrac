@@ -28,9 +28,7 @@ if ($action -eq 'crear') {
 
 }
 elseif ($action -eq 'actualizarPTE') {
-    param(
-        [string] $client
-    )
+    [String] $client = $env:client
     $settings = Get-Content '.github\AL-Go-Settings.json' -Raw | ConvertFrom-Json
     $PTE = @{
         "scope" = "PTE"
