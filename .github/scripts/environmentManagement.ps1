@@ -1,6 +1,7 @@
 param (
     [String] $repoPath,
-    [String] $action
+    [String] $action,
+    [String] $client
 )
 
 $data = Get-Content '.\.github\metadata\clientes-de-testing.json' | ConvertFrom-Json
@@ -28,7 +29,6 @@ if ($action -eq 'crear') {
 
 }
 elseif ($action -eq 'actualizarPTE') {
-    [String] $client = $env:client
     $settings = Get-Content '.github\AL-Go-Settings.json' -Raw | ConvertFrom-Json
     $PTE = @{
         "scope" = "PTE"
