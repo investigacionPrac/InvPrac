@@ -1,6 +1,11 @@
 name: Test
 on:
   workflow_dispatch:
+    inputs:
+      entorno:
+        description: Nombre del entorno a crear
+        required: true
+        default: 'test'
 
 jobs:
   build:
@@ -31,3 +36,10 @@ jobs:
           . $ALGoHelperPath
           DownloadAndImportBcContainerHelper
           .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
+      
+      - name: Ejecutar test
+        shell: powershell
+        run: |
+          $envName = ${{ github.event.inputs.entorno }}
+          Write-Host "Entorno: $envName"
+          .github/scripts/test.ps1 -envName $envName
