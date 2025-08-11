@@ -3,15 +3,7 @@
   "type": "PTE",
   "templateUrl": "https://github.com/microsoft/AL-Go-PTE@main",
   "templateSha": "e2478819f6dda468d6716036ccdd2dc89dd458b6",
-  "DeliverToStorage": {
-    "CreateContainerIfNotExists": true
-  },
-  "DeployToBC-SANDBOX-DEV": {
-    "Scope": "PTE"
-  },
-  "environments": [
-    "BC-SANDBOX-DEV"
-  ],
+
   "useProjectDependencies": true,
   "versioningStrategy": 3
 }
