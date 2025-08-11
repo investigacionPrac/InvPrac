@@ -38,3 +38,13 @@ jobs:
       #   shell: powershell
       #   run: |
       #     .github/scripts/test.ps1
+
+      - name: Get-BcContainerAppInfo
+        shell: powershell
+        run: |
+          $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
+          $webClient = New-Object System.Net.WebClient
+          $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
+          . $ALGoHelperPath
+          DownloadAndImportBcContainerHelper
+          Get-BcContainerAppInfo
