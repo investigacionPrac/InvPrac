@@ -24,6 +24,9 @@ jobs:
       - name: obtener info de la app
         shell: powershell
         run: |
+          $webClient = New-Object System.Net.WebClient
+          $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
+          . $ALGoHelperPath
           DownloadAndImportBcContainerHelper
           $prueba = Get-BcContainerAppInfo
           $prueba 
