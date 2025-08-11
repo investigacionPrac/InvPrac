@@ -1,11 +1,7 @@
 name: Test
 on:
   workflow_dispatch:
-    inputs:
-      entorno:
-        description: Nombre del entorno a crear
-        required: true
-        default: 'test'
+    
 
 jobs:
   build:
@@ -27,19 +23,17 @@ jobs:
           Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
         
-      - name: Descargar BcContainerHelper y obtener appinfo
-        shell: powershell
-        run: |
-          $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
-          $webClient = New-Object System.Net.WebClient
-          $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
-          . $ALGoHelperPath
-          DownloadAndImportBcContainerHelper
-          .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
+      # - name: Descargar BcContainerHelper y obtener appinfo
+      #   shell: powershell
+      #   run: |
+      #     $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
+      #     $webClient = New-Object System.Net.WebClient
+      #     $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
+      #     . $ALGoHelperPath
+      #     DownloadAndImportBcContainerHelper
+      #     .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
       
       - name: Ejecutar test
         shell: powershell
         run: |
-          $envName = ${{ github.event.inputs.entorno }}
-          Write-Host "Entorno: $envName"
-          .github/scripts/test.ps1 -envName $envName
+          .github/scripts/test.ps1
