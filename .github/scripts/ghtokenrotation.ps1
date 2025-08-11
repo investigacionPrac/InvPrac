@@ -100,21 +100,21 @@ switch ($action) {
         $environments = (gh api repos/investigacionPrac/InvPrac/environments) | ConvertFrom-Json
         $names = $environments.environments.Name
         foreach($envName in $names){
-                $metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
-                $token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
-                $value=$token.value
-                Write-Host "---------------- token: $token"     #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                $secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
-                if ($null -eq $secretName){
-                    $secretName = $envName +"_AUTHCONTEXT"
-                }
+                #$metaPath = Join-Path $commonPath "${envName}-secrets-metadata.json"
+                #$token= getToken -matchPattern "^${envName}-AUTHCONTEXT-pool-\d{3}$" -metadataPath $metaPath # <<<<<<<<<<<<< con este patron hacemos que solo obtenga el valor del token de cada entorno ya que si no estuviese 
+                #$value=$token.value
+                #Write-Host "---------------- token: $token"     #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                #$secretName = (gh secret list -e $envName --json name | ConvertFrom-Json).name
+                #if ($null -eq $secretName){
+                #    $secretName = $envName +"_AUTHCONTEXT"
+                #}
                 $appInfo = Get-BcContainerAppInfo -containerName $envName   #<<<<<<<<<<<<<<<<<<<<<<<<eliminar esta linea, de momento es debug
                 $appInfo                                                    #<<<<<<<<<<<<<<<<<<<<<<<<eliminar esta linea, de momento es debug 
-                if (($envName -match '^test$')-or ($envName -match '^cliente\d{1}$') -and ($null -ne $value) ){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
-                    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    //gh secret set $secretName -e $envName -b $value
-                }
-            }
+                ##if (($envName -match '^test$')-or ($envName -match '^cliente\d{1}$') -and ($null -ne $value) ){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
+                ##    Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
+                ##    gh secret set $secretName -e $envName -b $value
+                ##}
+            }##
           }
     Default {
         Write-Error "No es una opción válida"
