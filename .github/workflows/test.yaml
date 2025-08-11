@@ -22,7 +22,7 @@ jobs:
           Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
         
-      - name: Descargar BcContainerHelper
+      - name: Descargar BcContainerHelper y obtener appinfo
         shell: powershell
         run: |
           $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
@@ -30,7 +30,4 @@ jobs:
           $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
           . $ALGoHelperPath
           DownloadAndImportBcContainerHelper
-
-      - name: Obtener información de la app
-        shell: powershell
-        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
+          .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
