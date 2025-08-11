@@ -1,4 +1,4 @@
-$environments = (gh api repos/$env:OWNER/$appRepo/environments) | ConvertFrom-Json
+$environments = (gh api repos/investigacionPrac/InvPrac/environments) | ConvertFrom-Json
 $names = $environments.environments.Name
 
 foreach ($envName in $names){
