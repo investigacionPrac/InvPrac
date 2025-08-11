@@ -5,8 +5,15 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
+    env:    
+      GH_TOKEN: ${{secrets.ghTokenWorkflow}}
+      
     steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          token: ${{secrets.ghTokenWorkflow}}
+
       - name: Obtener appName
         run: | 
           $appName= Split-Path ${{github.repository}} -Leaf
