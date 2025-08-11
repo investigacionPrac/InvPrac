@@ -2,10 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/settings.schema.json",
   "country": "es",
   "appFolders": [
-    "ALGOInv",
-    "app1",
-    "app2",
-    "app3"
+    "ALGOInv"
   ],
   "testFolders": [
     "ALGOInv.Test"
