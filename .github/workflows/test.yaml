@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      VAULTNAME: 'KeyVaultInv'    
+      VAULTNAME: ${{secrets.KEYVAULTNAME}}  
       GH_TOKEN: ${{secrets.ghTokenWorkflow}}
       
     steps:
@@ -22,6 +22,7 @@ jobs:
           $workspace = $env:GITHUB_WORKSPACE
           Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
+          Write-Host "-------------- AKV: $env:VAULTNAME"
         
       # - name: Descargar BcContainerHelper y obtener appinfo
       #   shell: powershell
