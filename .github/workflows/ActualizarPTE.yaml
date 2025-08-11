@@ -1,10 +1,13 @@
-name: Crear entornos por cada cliente que tenga esta app
+name: Modificar entorno a PTE el cliente en concreto
 
 on: 
     workflow_dispatch:
+        inputs:
+            client:
+                description: 'Cliente al que se le va a modificar el entorno a PTE'
 
 jobs:
-    crearEntorno:
+    ActualizarPTE:
       runs-on: windows-latest
       env:
         OWNER: ${{github.repository_owner}}
@@ -16,8 +19,8 @@ jobs:
           with:
             token: ${{secrets.ghTokenWorkflow}}
         
-        - name: Crear Entornos
+        - name: Actualizar a PTE
           shell: powershell
-          run: .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
+          run: .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'actualizarPTE' -client ${{github.event.inputs.client}}
           env:
             REPOPATH: ${{github.repository}}

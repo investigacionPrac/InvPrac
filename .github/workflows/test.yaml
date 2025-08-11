@@ -37,12 +37,3 @@ jobs:
       #   shell: powershell
       #   run: |
       #     .github/scripts/test.ps1
-
-      - name: Ver Settings
-        run: |
-          $settings = $env:SETTINGS | ConvertFrom-Json
-          $setProp = $settings.PSObject.Properties
-          $setName = $settings.PSObject.Properties.Name
-
-          Write-Host "Properties: $setProp"
-          Write-Host "Names: $setName"
