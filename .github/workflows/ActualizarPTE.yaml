@@ -24,3 +24,16 @@ jobs:
           run: .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'actualizarPTE' -client ${{github.event.inputs.client}}
           env:
             REPOPATH: ${{github.repository}}
+
+        - name: Set up Git
+          run: |
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+        - name: Commit changes y push
+          shell: powershell
+          run: |
+            git add .
+            git commit -m "Actualizar Cliente seleccionado a PTE"
+            git push origin main
+            
