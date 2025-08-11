@@ -21,7 +21,10 @@ jobs:
           Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
         
-      - name: Run a multi-line script
+      - name: obtener info de la app
+        shell: powershell
         run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned -Force
+          Import-Module BcContainerHelper
           $prueba = Get-BcContainerAppInfo
           $prueba 
