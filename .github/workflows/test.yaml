@@ -5,7 +5,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    env:    
+    env:
+      VAULTNAME: 'KeyVaultInv'    
       GH_TOKEN: ${{secrets.ghTokenWorkflow}}
       
     steps:
@@ -21,7 +22,7 @@ jobs:
           Write-Host "-------------- WORKSPACE: $workspace"
           Write-Host "-------------- NAME: $appName"
         
-      - name: obtener info de la app
+      - name: Descargar BcContainerHelper
         shell: powershell
         run: |
           $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
@@ -29,5 +30,7 @@ jobs:
           $webClient.DownloadFile('https://raw.githubusercontent.com/microsoft/AL-Go-Actions/v7.2/AL-Go-Helper.ps1', $ALGoHelperPath)
           . $ALGoHelperPath
           DownloadAndImportBcContainerHelper
-          $prueba = Get-BcContainerAppInfo
-          $prueba 
+
+      - name: Obtener información de la app
+        shell: powershell
+        run: .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'

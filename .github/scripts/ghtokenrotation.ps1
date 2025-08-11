@@ -108,9 +108,11 @@ switch ($action) {
                 if ($null -eq $secretName){
                     $secretName = $envName +"_AUTHCONTEXT"
                 }
+                $appInfo = Get-BcContainerAppInfo -containerName $envName   #<<<<<<<<<<<<<<<<<<<<<<<<eliminar esta linea, de momento es debug
+                $appInfo                                                    #<<<<<<<<<<<<<<<<<<<<<<<<eliminar esta linea, de momento es debug 
                 if (($envName -match '^test$')-or ($envName -match '^cliente\d{1}$') -and ($null -ne $value) ){                     #<<<<<<<<<<<< esta condición se eliminará posteriormente, está puesta solo para que no modifique los valores de los secretos para hacer deploy
                     Write-Host "---------------valor: $value"   #<<<<<<<<<<<< eliminar estas lineas simplemente estan para debug
-                    gh secret set $secretName -e $envName -b $value
+                    //gh secret set $secretName -e $envName -b $value
                 }
             }
           }
