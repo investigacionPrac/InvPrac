@@ -25,6 +25,7 @@ jobs:
         shell: powershell
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned -Force
+          Install-Module -Name BcContainerHelper
           Import-Module BcContainerHelper
           $prueba = Get-BcContainerAppInfo
           $prueba 
