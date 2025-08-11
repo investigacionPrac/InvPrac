@@ -14,6 +14,7 @@ jobs:
       VAULTNAME: ${{secrets.KEYVAULTNAME}}
       ORG: ${{github.repository_owner}}
       GITHUB_TOKEN: ${{secrets.ghTokenWorkflow}}
+      REPOPATH: ${{github.repository}}
 
     steps:
       - name: Checkout
