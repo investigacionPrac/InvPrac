@@ -33,7 +33,16 @@ jobs:
       #     DownloadAndImportBcContainerHelper
       #     .github/scripts/ghtokenrotation.ps1 -keyvaultname $env:VAULTNAME -action 'environment'
       
-      - name: Ejecutar test
-        shell: powershell
+      # - name: Ejecutar test
+      #   shell: powershell
+      #   run: |
+      #     .github/scripts/test.ps1
+
+      - name: Ver Settings
         run: |
-          .github/scripts/test.ps1
+          $settings = $env:SETTINGS | ConvertFrom-Json
+          $setProp = $settings.PSObject.Properties
+          $setName = $settings.PSObject.Properties.Name
+
+          Write-Host "Properties: $setProp"
+          Write-Host "Names: $setName"
