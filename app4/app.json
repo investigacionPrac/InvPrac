@@ -1,0 +1,40 @@
+﻿{
+    "id":  "82bdfd99-454d-4e2d-aee3-50091bc74010",
+    "name":  "app4",
+    "publisher":  "alvaro",
+    "version":  "2.250812.0.0",
+    "brief":  "",
+    "description":  "",
+    "privacyStatement":  "https://www.tecon.es/",
+    "EULA":  "https://www.tecon.es/",
+    "help":  "https://www.tecon.es/",
+    "url":  "https://www.tecon.es/",
+    "logo":  "./Logo/Tecon.png",
+    "dependencies":  [
+                         {
+                             "publisher":  "Tecon",
+                             "name":  "Comun",
+                             "id":  "09e8e853-9a52-43c6-a954-1a4a69cd7cbc",
+                             "version":  "2.0.0.0"
+                         }
+                     ],
+    "screenshots":  [
+
+                    ],
+    "platform":  "1.0.0.0",
+    "application":  "22.0.0.0",
+    "idRanges":  [
+                     {
+                         "from":  95606,
+                         "to":  95607
+                     }
+                 ],
+    "features":  [
+                     "NoImplicitWith"
+                 ],
+    "resourceExposurePolicy":  {
+                                   "allowDebugging":  true,
+                                   "allowDownloadingSource":  false,
+                                   "includeSourceInSymbolFile":  false
+                               }
+}
