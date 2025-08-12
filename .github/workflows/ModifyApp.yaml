@@ -19,8 +19,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ matrix.branch }}
           token: ${{ secrets.ghTokenWorkflow }}
+          ref: ${{github.ref_name}}
           fetch-depth: 0
 
       - name: Modify app.json files
@@ -51,7 +51,7 @@ jobs:
           #     Write-Host "No hay cambios para commitear."
           # }
             
-          branch = git rev-parse --abbrev-ref HEAD
+          branch = ${{github.ref_name}}
           Write-Host "Estás en la rama: $branch"
 
           #git push -u origin HEAD
