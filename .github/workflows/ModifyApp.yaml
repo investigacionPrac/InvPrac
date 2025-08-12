@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
     name: Modify app files
     outputs: 
-      appName: ${{steps.ModifyAppJson.outputs.appName}}
+      APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
 
     steps:
       - name: Checkout
@@ -23,11 +23,6 @@ jobs:
           fetch-depth: 0
           ref: ${{github.event.workflow_run.head_branch}}
 
-      - name: Debug
-        run: |
-          Write-Host "rama actual: ${{github.ref_name}}"
-          Write-Host "Rama de la que se ha creado la app $appName : ${{github.event.workflow_run.head_branch}}"
-          Write-Host "appName: $env:APPNAME"
       - name: Modify app.json files
         id: ModifyAppJson
         shell: powershell
@@ -41,6 +36,14 @@ jobs:
         shell: powershell
         run: .github/scripts/modifyFiles.ps1 -Action "settings"
       
+      - name: Debug
+        run: |
+          Write-Host "rama actual: ${{github.ref_name}}"
+          Write-Host "Rama de la que se ha creado la app $appName : ${{github.event.workflow_run.head_branch}}"
+          Write-Host "appName desde entorno: $env:APPNAME"
+          Write-Host "appName desde steps: ${{steps.ModifyAppJson.outputs.appName}}"
+          Write-Host "appName desde outputs: $outputs.APPNAME"
+          
       - name: Set up Git
         run: |
           git config --global user.name 'github-actions[bot]'
