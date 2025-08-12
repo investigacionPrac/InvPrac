@@ -43,6 +43,8 @@ jobs:
           Write-Host "appName desde entorno: $env:APPNAME"
           Write-Host "appName desde steps: ${{steps.ModifyAppJson.outputs.appName}}"
           Write-Host "appName desde outputs: $outputs.APPNAME"
+        env:
+          appName: ${{steps.ModifyAppJson.outputs.appName}}
           
       - name: Set up Git
         run: |
@@ -52,7 +54,6 @@ jobs:
       - name: Commit changes y push a rama en la que se ha creado la app
         shell: powershell
         run: |
-
           git add .
           git commit -m "Establecer valores prederteminados de la app $env:APPNAME (app.json, settings y launch)"
           git push $branch
