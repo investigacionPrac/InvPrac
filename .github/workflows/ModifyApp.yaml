@@ -49,15 +49,11 @@ jobs:
       - name: Commit changes y push a rama en la que se ha creado la app
         shell: powershell
         run: |
-          # git add .
-          # if (-not (git diff --cached --quiet)) {
-          #     git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
-          # } else {
-          #     Write-Host "No hay cambios para commitear."
-          # }
-          $branch = git rev-parse --abbrev-ref HEAD
-          $branchNueva = "${{github.event.workflow_run.head_branch}}"
-          Write-Host "Estás en la rama: $branch"
-          $branch -eq $branchNueva
+          git add .
+          if (-not (git diff --cached --quiet)) {
+              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+          } else {
+              Write-Host "No hay cambios para commitear."
+          }
 
-          #git push -u origin HEAD
+          git push $branch
