@@ -39,7 +39,7 @@ jobs:
       #   run: |
       #     .github/scripts/test.ps1
 
-      - name: Get-BcContainerAppInfo
+      - name: Get-BcPubishedApp
         shell: powershell
         run: |
           $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
