@@ -4,7 +4,8 @@
   "appFolders": [
     "ALGOInv",
     "app1",
-    "app4"
+    "app4",
+    "app5"
   ],
   "testFolders": [
     "ALGOInv.Test"
