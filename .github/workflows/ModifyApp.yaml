@@ -58,7 +58,7 @@ jobs:
           $userName 
           $now = Get-Date
           $fechaString = $now.ToString("yyyyMMdd_HHmmss")
-          $branch = "$fechaString" + "_$userName" +"_$env:APPNAME"   
+          $branch = "$fechaString" + "_$userName" +"$env:APPNAME"   
 
           git fetch origin
           
