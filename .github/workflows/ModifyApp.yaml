@@ -40,23 +40,18 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-      - name: debug
-        run: |
-          $userName = git config --get user.name
-          $now = Get-Date
-          $fechaString = $now.ToString("yyyyMMdd_HHmmss")
-          $branch = "$fechaString" + "_$userName" +"_$env:APPNAME"   
-        env:
-          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
-
+          
       - name: Commit changes y push a rama en la que se ha creado la app
         shell: powershell
         run: |
-          git add .
-          if (-not (git diff --cached --quiet)) {
-              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
-          } else {
-              Write-Host "No hay cambios para commitear."
-          }
-          git push -u origin HEAD
+          # git add .
+          # if (-not (git diff --cached --quiet)) {
+          #     git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+          # } else {
+          #     Write-Host "No hay cambios para commitear."
+          # }
+            
+          branch = git rev-parse --abbrev-ref HEAD
+          Write-Host "Estás en la rama: $branch"
+
+          #git push -u origin HEAD
