@@ -50,35 +50,13 @@ jobs:
         env:
           APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
 
-      - name: Commit changes y push a nueva rama
+      - name: Commit changes y push a rama en la que se ha creado la app
         shell: powershell
         run: |
-          $userName = git config --get user.name
-          $userName = $userName -replace '[\[,\]]','_'
-          $userName 
-          $now = Get-Date
-          $fechaString = $now.ToString("yyyyMMdd_HHmmss")
-          $branch = "$fechaString" + "_$userName" +"$env:APPNAME"   
-
-          git fetch origin
-          
-          $output = git ls-remote --heads origin $branch
-          $exists = -not [String]::IsNullOrEmpty($output)
-
-          if (-not $exists) {
-              git switch -c $branch
-          } else {
-              git switch $branch
-          }
-
           git add .
-          
           if (-not (git diff --cached --quiet)) {
               git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
           } else {
               Write-Host "No hay cambios para commitear."
           }
-          git push origin $branch
-        
-        env:
-          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
+          git push -u origin HEAD
