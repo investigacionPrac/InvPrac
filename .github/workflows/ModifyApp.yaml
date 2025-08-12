@@ -27,7 +27,7 @@ jobs:
         run: |
           Write-Host "rama actual: ${{github.ref_name}}"
           Write-Host "Rama de la que se ha creado la app $appName : ${{github.event.workflow_run.head_branch}}"
-
+          Write-Host "appName: $env:APPNAME"
       - name: Modify app.json files
         id: ModifyAppJson
         shell: powershell
@@ -49,12 +49,7 @@ jobs:
       - name: Commit changes y push a rama en la que se ha creado la app
         shell: powershell
         run: |
-          
-          if (-not (git diff --cached --quiet)) {
-              git add .
-              git commit -m "Establecer valores prederteminados de la app $env:APPNAME (app.json, settings y launch)"
-          } else {
-              Write-Host "No hay cambios para commitear de $env:APPNAME."
-          }
 
+          git add .
+          git commit -m "Establecer valores prederteminados de la app $env:APPNAME (app.json, settings y launch)"
           git push $branch
