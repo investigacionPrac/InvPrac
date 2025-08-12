@@ -26,7 +26,7 @@ jobs:
       - name: Debug
         run: |
           Write-Host "rama actual: ${{github.ref_name}}"
-          Write-Host "Rama de la que se ha creado la app: ${{github.event.workflow_run.head_branch}}"
+          Write-Host "Rama de la que se ha creado la app $appName: ${{github.event.workflow_run.head_branch}}"
 
       - name: Modify app.json files
         id: ModifyAppJson
@@ -51,9 +51,9 @@ jobs:
         run: |
           git add .
           if (-not (git diff --cached --quiet)) {
-              git commit -m "Establecer valores prederteminados de la app (app.json, settings y launch)"
+              git commit -m "Establecer valores prederteminados de la app $env:APPNAME (app.json, settings y launch)"
           } else {
-              Write-Host "No hay cambios para commitear."
+              Write-Host "No hay cambios para commitear de $env:APPNAME."
           }
 
           git push $branch
