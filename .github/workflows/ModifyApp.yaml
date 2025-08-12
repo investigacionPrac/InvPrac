@@ -26,7 +26,7 @@ jobs:
       - name: Debug
         run: |
           Write-Host "rama actual: ${{github.ref_name}}"
-          Write-Host "Rama de la que se ha creado la app $appName: ${{github.event.workflow_run.head_branch}}"
+          Write-Host "Rama de la que se ha creado la app $appName : ${{github.event.workflow_run.head_branch}}"
 
       - name: Modify app.json files
         id: ModifyAppJson
