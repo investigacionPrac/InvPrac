@@ -20,8 +20,13 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           token: ${{ secrets.ghTokenWorkflow }}
-          ref: ${{github.ref_name}}
           fetch-depth: 0
+          ref: ${{github.event.workflow_run.head_branch}}
+
+      - name: Debug
+        run: |
+          Write-Host "rama actual: ${{github.ref_name}}"
+          Write-Host "Rama de la que se ha creado la app: ${{github.event.workflow_run.head_branch}}"
 
       - name: Modify app.json files
         id: ModifyAppJson
