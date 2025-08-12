@@ -36,16 +36,6 @@ jobs:
         shell: powershell
         run: .github/scripts/modifyFiles.ps1 -Action "settings"
       
-      - name: Debug
-        run: |
-          Write-Host "rama actual: ${{github.ref_name}}"
-          Write-Host "Rama de la que se ha creado la app $appName : ${{github.event.workflow_run.head_branch}}"
-          Write-Host "appName desde entorno: $env:APPNAME"
-          Write-Host "appName desde steps: ${{steps.ModifyAppJson.outputs.appName}}"
-          Write-Host "appName desde outputs: $outputs.APPNAME"
-        env:
-          appName: ${{steps.ModifyAppJson.outputs.appName}}
-          
       - name: Set up Git
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -57,3 +47,5 @@ jobs:
           git add .
           git commit -m "Establecer valores prederteminados de la app $env:APPNAME (app.json, settings y launch)"
           git push $branch
+        env:
+          APPNAME: ${{steps.ModifyAppJson.outputs.appName}}
