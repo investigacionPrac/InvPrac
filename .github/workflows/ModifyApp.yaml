@@ -56,7 +56,7 @@ jobs:
           #     Write-Host "No hay cambios para commitear."
           # }
           $branch = git rev-parse --abbrev-ref HEAD
-          $branchNueva = ${{github.event.workflow_run.head_branch}}
+          $branchNueva = "${{github.event.workflow_run.head_branch}}"
           Write-Host "Estás en la rama: $branch"
           $branch -eq $branchNueva
 
