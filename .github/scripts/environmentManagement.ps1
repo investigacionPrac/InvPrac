@@ -3,8 +3,8 @@ param (
     [String] $action,
     [String] $client
 )
+Install-Module -Name BcContainerHelper -Force -AllowClobber
 
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned -Force
 Import-Module BcContainerHelper
 
 $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
