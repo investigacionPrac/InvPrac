@@ -4,6 +4,9 @@ param (
     [String] $client
 )
 
+Install-Module BcContainerHelper
+Import-Module BcContainerHelper 
+
 $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
 
 $appRepo = Split-Path $repoPath -Leaf
