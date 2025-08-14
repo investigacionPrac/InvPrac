@@ -9,9 +9,7 @@ jobs:
       env:
         OWNER: ${{github.repository_owner}}
         GH_TOKEN: ${{secrets.ghTokenWorkflow}}
-        CLIENTID: ${{secrets.CLIENTID}}
-        CLIENTSECRET: ${{secrets.CLIENTSECRET}}
-        TENANTID: ${{secrets.TENANTID}}
+        
       
       steps:
         - name: Checkout
@@ -24,3 +22,6 @@ jobs:
           run: .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
           env:
             REPOPATH: ${{github.repository}}
+            CLIENTID: ${{secrets.clientID}}
+            CLIENTSECRET: ${{secrets.clientSECRET}}
+            TENANTID: ${{secrets.tenantID}}
