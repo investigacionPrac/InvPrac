@@ -29,6 +29,7 @@ if ($action -eq 'crear') {
     for ($i = 0; $i -lt $envirnomentsBC.Length; $i++) {
         $environmentsBCNames += $environmentsBC[$i].Name + ""
     }
+    Write-Host "Environments BC: $environmentsBCNames"
     foreach ($client in $environmentsBCNames) {
         $appNames = @()
         $clientApps = @()

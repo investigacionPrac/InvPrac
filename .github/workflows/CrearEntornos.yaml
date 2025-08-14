@@ -28,5 +28,5 @@ jobs:
           env:
             REPOPATH: ${{github.repository}}
             CLIENTID: ${{secrets.clientID}}
-            CLIENTSECRET: ${{secrets.clientSECRET}}
+            CLIENTSECRET: ${{secrets.clientSecret}}
             TENANTID: ${{secrets.tenantID}}
