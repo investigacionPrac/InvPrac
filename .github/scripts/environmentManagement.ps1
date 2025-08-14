@@ -29,7 +29,6 @@ if ($action -eq 'crear') {
     for ($i = 0; $i -lt $environmentsBC.length; $i++) {
         $environmentsBCNames += $environmentsBC[$i].Name
     }
-    Write-Host "Environments BC: $environmentsBCNames"
     foreach ($client in $environmentsBCNames) {
         $appNames = @()
         $clientApps = @()
@@ -39,21 +38,18 @@ if ($action -eq 'crear') {
         for ($i = 0; $i -lt $clientApps.Length; $i++) {
             $appNames += $clientApps[$i].Name + ""
         }
-        foreach ($app in $appNames) {
-            if ($app -eq $appRepo) {
-                $clientes += $client + " "
-                if ($environmentsGHNames.Contains($client)) {
-                    Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
-                }
-                else {
-                    gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appRepo/environments/$client
-                    Write-Host "Entorno $client creado correctamente"
-                }
+        if ($appNames.Contains($appRepo)) {
+            $clientes += $client + " "
+            if ($environmentsGHNames.Contains($client)) {
+                Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
             }
             else {
-                Write-Warning "La aplicación $app no está publicada en el entorno $client, por lo que no se creará ningún entorno con ese nombre"
+                gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appRepo/environments/$client
+                Write-Host "Entorno $client creado correctamente"
             }
-
+        }
+        else {
+            Write-Warning "La aplicación $appRepo no está publicada en el entorno $client, por lo que no se creará ningún entorno con ese nombre"
         }
     }
 }
