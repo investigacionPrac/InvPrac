@@ -9,6 +9,9 @@ jobs:
       env:
         OWNER: ${{github.repository_owner}}
         GH_TOKEN: ${{secrets.ghTokenWorkflow}}
+        CLIENTID: ${{secrets.CLIENTID}}
+        CLIENTSECRET: ${{secrets.CLIENTSECRET}}
+        TENANTID: ${{secrets.TENANTID}}
       
       steps:
         - name: Checkout
