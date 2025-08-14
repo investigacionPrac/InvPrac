@@ -17,11 +17,12 @@ $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIE
 
 Write-Host "AuthContext $authContext"
 
-$appRepo = Split-Path $repoPath -Leaf
+$app = Get-Content './app.json' -Raw | ConvertFrom-Json
+$appName = $app.name
 
 
 $environmentsBC = Get-BcEnvironments -bcAuthContext $authContext
-# $environmentsGH = (gh api repos/$env:OWNER/$appRepo/environments) | ConvertFrom-Json
+# $environmentsGH = (gh api repos/$env:OWNER/$appName/environments) | ConvertFrom-Json
 # $environmentsGHNames = $environmentsGH.environments.Name
 $environmentsBCNames = @()
 $clientes = @()
@@ -38,18 +39,18 @@ if ($action -eq 'crear') {
         for ($i = 0; $i -lt $clientApps.Length; $i++) {
             $appNames += $clientApps[$i].Name + ""
         }
-        if ($appNames.Contains($appRepo)) {
+        if ($appNames.Contains($appName)) {
             $clientes += $client + " "
             if ($environmentsGHNames.Contains($client)) {
                 Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
             }
             else {
-                gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appRepo/environments/$client
+                gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appName/environments/$client
                 Write-Host "Entorno $client creado correctamente"
             }
         }
         else {
-            Write-Warning "La aplicación $appRepo no está publicada en el entorno $client, por lo que no se creará ningún entorno con ese nombre"
+            Write-Warning "La aplicación $appName no está publicada en el entorno $client, por lo que no se creará ningún entorno con ese nombre"
         }
     }
 }
