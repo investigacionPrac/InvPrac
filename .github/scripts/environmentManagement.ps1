@@ -7,6 +7,12 @@ Install-Module -Name BcContainerHelper -Force -AllowClobber
 
 Import-Module BcContainerHelper
 
+
+Write-Host "Dentro de la función"
+Write-Host clientID: $env:CLIENTID
+Write-Host clientSecret: $env:CLIENTSECRET
+Write-Host tenantID: $env:TENANTID
+
 $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
 
 $appRepo = Split-Path $repoPath -Leaf
