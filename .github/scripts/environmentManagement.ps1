@@ -15,6 +15,8 @@ Write-Host "tenantID: $env:TENANTID         length: $($env:TENANTID.Length)"
 
 $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
 
+Write-Host "AuthContext $authContext"
+
 $appRepo = Split-Path $repoPath -Leaf
 
 
