@@ -20,10 +20,10 @@ jobs:
         - name: Crear Entornos
           shell: pwsh
           run: |
-            Write-Host clientID: $env:CLIENTID
-            Write-Host clientSecret: $env:CLIENTSECRET
-            Write-Host tenantID: $env:TENANTID
-            $env:GH_TOKEN | gh auth login --with-token 
+            Write-Host "clientID: $env:CLIENTID         length: $($env:CLIENTID.Length)"
+            Write-Host "clientSecret: $env:CLIENTSECRET length: $($env:CLIENTSECRET.Length)"
+            Write-Host "tenantID: $env:TENANTID         length: $($env:TENANTID.Length)"
+            ${{secrets.ghTokenWorkflow}}| gh auth login --with-token 
             .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
           env:
             REPOPATH: ${{github.repository}}
