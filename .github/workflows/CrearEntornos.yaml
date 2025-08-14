@@ -23,7 +23,7 @@ jobs:
             Write-Host clientID: $env:CLIENTID
             Write-Host clientSecret: $env:CLIENTSECRET
             Write-Host tenantID: $env:TENANTID
-            gh auth login --with-token < $env:GH_TOKEN
+            $env:GH_TOKEN | gh auth login --with-token 
             .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
           env:
             REPOPATH: ${{github.repository}}
