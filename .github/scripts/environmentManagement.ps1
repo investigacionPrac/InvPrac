@@ -21,13 +21,13 @@ $appRepo = Split-Path $repoPath -Leaf
 
 
 $environmentsBC = Get-BcEnvironments -bcAuthContext $authContext
-$environmentsGH = (gh api repos/$env:OWNER/$appRepo/environments) | ConvertFrom-Json
-$environmentsGHNames = $environmentsGH.environments.Name
+# $environmentsGH = (gh api repos/$env:OWNER/$appRepo/environments) | ConvertFrom-Json
+# $environmentsGHNames = $environmentsGH.environments.Name
 $environmentsBCNames = @()
 $clientes = @()
 if ($action -eq 'crear') {
-    for ($i = 0; $i -lt $envirnomentsBC.Length; $i++) {
-        $environmentsBCNames += $environmentsBC[$i].Name + ""
+    for ($i = 0; $i -lt $environmentsBC.length; $i++) {
+        $environmentsBCNames += $environmentsBC[$i].Name
     }
     Write-Host "Environments BC: $environmentsBCNames"
     foreach ($client in $environmentsBCNames) {
