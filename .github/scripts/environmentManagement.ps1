@@ -9,9 +9,9 @@ Import-Module BcContainerHelper
 
 
 Write-Host "Dentro de la función"
-Write-Host clientID: $env:CLIENTID
-Write-Host clientSecret: $env:CLIENTSECRET
-Write-Host tenantID: $env:TENANTID
+Write-Host "clientID: $env:CLIENTID         length: $($env:CLIENTID.Length)"
+Write-Host "clientSecret: $env:CLIENTSECRET length: $($env:CLIENTSECRET.Length)"
+Write-Host "tenantID: $env:TENANTID         length: $($env:TENANTID.Length)"
 
 $authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
 
