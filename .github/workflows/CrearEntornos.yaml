@@ -19,7 +19,11 @@ jobs:
         
         - name: Crear Entornos
           shell: powershell
-          run: .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
+          run: |
+            Write-Host clientID: $env:CLIENTID
+            Write-Host clientSecret: $env:CLIENTSECRET
+            Write-Host tenantID: $env:TENANTID
+            .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
           env:
             REPOPATH: ${{github.repository}}
             CLIENTID: ${{secrets.clientID}}
