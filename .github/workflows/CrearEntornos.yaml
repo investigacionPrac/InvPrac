@@ -18,11 +18,12 @@ jobs:
             token: ${{secrets.ghTokenWorkflow}}
         
         - name: Crear Entornos
-          shell: powershell
+          shell: pwsh
           run: |
             Write-Host clientID: $env:CLIENTID
             Write-Host clientSecret: $env:CLIENTSECRET
             Write-Host tenantID: $env:TENANTID
+            gh auth login --with-token < $env:GH_TOKEN
             .github/scripts/environmentManagement.ps1 -repoPath $env:REPOPATH -action 'crear'
           env:
             REPOPATH: ${{github.repository}}
