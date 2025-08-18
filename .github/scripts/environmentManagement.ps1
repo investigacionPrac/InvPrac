@@ -22,8 +22,8 @@ $appName = $app.name
 
 
 $environmentsBC = Get-BcEnvironments -bcAuthContext $authContext
-# $environmentsGH = (gh api repos/$env:OWNER/$appName/environments) | ConvertFrom-Json
-# $environmentsGHNames = $environmentsGH.environments.Name
+$environmentsGH = (gh api repos/$env:OWNER/$appName/environments) | ConvertFrom-Json
+$environmentsGHNames = $environmentsGH.environments.Name
 $environmentsBCNames = @()
 $clientes = @()
 if ($action -eq 'crear') {
