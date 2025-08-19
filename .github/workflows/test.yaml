@@ -41,5 +41,6 @@ jobs:
 
       - name: debug
         run: |
-          Write-Host "ejecutor del workflow: ${{github.actor}}"
-          Write-Host "mailbot del ejecutor: ${{github.actor}}[bot]@users.noreply.github.com"
+          $app = Get-Content './app.json' -Raw | ConvertFrom-Json
+          $appName = $app.name
+          Write-Host "App Name: $appName"
