@@ -1,0 +1,97 @@
+name: Update Tecon System Files
+
+on:
+  workflow_dispatch:
+    inputs:
+        URL:
+            description: 'URL to update the Tecon System files'
+            required: true
+            default: ''
+        directCommit:
+          description: Direct Commit?
+          type: boolean
+          default: false
+
+jobs:
+  updateTeconSystemFiles:
+    runs-on: windows-latest
+
+    steps:
+        - name: Checkout
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+          with:
+            token: ${{secrets.ghTokenWorkflow}}
+            fetch-depth: 0
+        
+        - name: Configurar identidad de Git
+          run: |
+            git config --global user.name "${{github.actor}}[bot]"
+            git config --global user.email "${{github.actor}}[bot]@users.noreply.github.com"
+
+        - name: Comprobar que es un template
+          shell: pwsh
+          run: |
+            $parent= Split-Path ${{github.event.inputs.URL}} -Parent
+            $org = Split-Path $parent -Leaf
+            $repo = Split-Path ${{github.event.inputs.URL}} -Leaf
+            $headers = @{
+                "Authorization" = "Bearer ${{secrets.ghTokenWorkflow}}"
+                "Accept" = "application/vnd.github.v3+json"
+            }
+            $response = Invoke-RestMethod -Uri "https://api.github.com/repos/$org/$repo" -Headers $headers
+
+            if ($response.is_template -ne $true) {
+                Write-Error "El repositorio no es un template"
+                exit 1
+            }
+
+        - name: Clonar repo y traer archivos workflow y scripts
+          shell: pwsh
+          run: |
+            if (-not (Test-Path "./.github/scripts")) {
+              Write-Host "no existe la carpeta scripts"
+              mkdir "./.github/scripts"
+            }
+            if (-not (Test-Path "./.github/workflows")) { 
+              Write-Host "no existe la carpeta scripts"
+              mkdir "./.github/workflows"
+            }
+            $url = "https://${{github.actor}}:${{secrets.ghTokenWorkflow}}@github.com/${{github.event.inputs.URL}}"
+            git clone $url tecon-system-files
+            if ($LASTEXITCODE -ne 0){
+              Write-Error "Se ha producido un error al clonar el repositorio"
+              exit 1
+            }
+            Copy-Item -Path "tecon-system-files/.github/workflows/*" -Destination ".github/workflows/" -Recurse -Force -ErrorAction SilentlyContinue
+            Copy-Item -Path "tecon-system-files/.github/scripts/*" -Destination ".github/scripts/" -Recurse -Force -ErrorAction SilentlyContinue
+
+            git diff --quiet
+            switch($LASTEXITCODE){
+                0 {
+                    Write-Host "No hay cambios en los archivos de workflow o scripts"
+                }
+                1 {
+                  Write-Host "Hay cambios en los archivos de workflow o scripts"
+                  Remove-Item -Path "tecon-system-files" -Recurse -Force -ErrorAction SilentlyContinue
+                  git add .
+                  if ($env:directCommit -eq 'true') {
+                      Write-Host "Haciendo commit directo"
+                      git commit -m "Update Tecon System files from ${{github.event.inputs.URL}}"
+                      git push
+                  } else {
+                      $branch = "update-tecon-system-files" + (Get-Date -Format "yyyyMMddHHmmss")
+                      git checkout -b $branch
+                      git commit -m "Update Tecon System files from ${{github.event.inputs.URL}}"
+                      git push origin $branch
+                      gh pr create --title "Update Tecon System files" --body "This PR updates the Tecon System files from ${{github.event.inputs.URL}}" --head $branch
+                    }
+                }
+                default {
+                    Write-Error "código de error distinto a 1 o 0: $LASTEXITCODE"
+                    exit 1
+                }
+            }
+          env:
+            directCommit: ${{github.event.inputs.directCommit}}
+            GH_TOKEN: ${{secrets.ghTokenWorkflow}}
+                
