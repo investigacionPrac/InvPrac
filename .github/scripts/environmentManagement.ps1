@@ -14,6 +14,9 @@ $tenants = Get-Content '.github\metadata\tenants.json' -Raw | ConvertFrom-Json
 if ($action -eq 'crear') {
     foreach ($tenant in $tenants) {
         Write-Host "Evaluando a la empresa/cliente $($tenant.name)"
+        Write-Host "ClientId: $clienID"
+        Write-Host "ClientSecret: $clientSecret"
+        Write-Host "TenantId: $($tenant.tenantID)"
         $authContext = New-BcAuthContext -clientID $clientID -clientSecret $clientSecret -tenantID $tenant.tenantID
 
         $repoName = Split-Path -Path $repoPath -Leaf
