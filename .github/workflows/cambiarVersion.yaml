@@ -1,0 +1,103 @@
+name: Cambiar Version
+
+on: 
+    workflow_dispatch:
+        inputs:
+            versionBC:
+                description: 'Version de BC a la que se quiere desplegar'
+                required: true
+                default: '19'
+            
+            versionTCN:
+                description: 'Version de Tecon a la que se quiere desplegar (v1 o v2)'
+                required: true
+                default: 'v1'
+
+            OnPrem:
+                description: '¿OnPrem?'
+                required: true
+                type: boolean
+                default: true
+
+            ESP:
+                description: '¿Versión española?'
+                required: true
+                type: boolean
+                default: true
+
+            clientes:
+                description: 'a que clientes o clientes se les va a publicar esta version separados por comas si son todos, dejar vacío'
+                required: false
+                default: ''
+
+jobs:
+  CambiarVersion:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          token: ${{secrets.ghTokenWorkflow}}
+          fetch-depth: 0
+    
+      - name: eliminar Comentarios
+        run: |
+          $onPrem = [boolean]::Parse($env:ONPREM)
+          $esp = [boolean]::Parse($env:ESP)
+          $versionBC = [Int32]::Parse($env:VERSIONBC)
+          .github/scripts/cambiarVersion.ps1 -versionBC $versionBC -versionTCN $env:VERSIONTCN -OnPrem $onPrem -ESP $esp
+        env:
+            VERSIONBC: ${{github.event.inputs.versionBC}}
+            VERSIONTCN: ${{github.event.inputs.versionTCN}} 
+            ONPREM: ${{github.event.inputs.OnPrem}}
+            ESP: ${{github.event.inputs.ESP}}
+      
+      - name: commit y push
+        run: |
+          git config --global user.name "${{github.actor}}[bot]"
+          git config --global user.email "${{github.actor}}[bot]@users.noreply.github.com"
+
+          git add .
+          git commit -m "Eliminar comentarios para que pueda pasar el CI/CD"
+          git push
+
+  excluirEntornos:
+    runs-on: windows-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          token: ${{secrets.ghTokenWorkflow}}
+          fetch-depth: 0
+      - name: autenticarse en gh cli
+        run: $env:ghToken | gh auth login --with-token
+        env:
+          ghToken: ${{secrets.GHTOKENWORKFLOW}}
+
+      - name: obtener entornos y excluir en los no requeridos
+        run: |
+          $repoName = Split-Path ${{github.repository}} -leaf
+
+          $environmentsGH = (gh api repos/$env:OWNER/$repoName/environments) | ConvertFrom-Json
+          $environmentsGHNames = $environmentsGH.environments.Name
+          $excClientes = $environmentsGHNames | ? {$_ -notin ($env:CLIENTES -split '\,\s*')}
+          
+          $ALGoSetsPath = Join-Path './.github' 'AL-Go-Settings.json'
+          $data = Get-Content $ALGoSetsPath | ConvertFrom-Json
+          if ( -not ($data.excludeEnvironments)){
+            $data | Add-Member -NotePropertyName "excludeEnvironments" -NotePropertyValue @()
+          }
+          $data.excludeEnvironments = @() #se inicializa a vacío para que no se añadan clientes constantemente
+
+          foreach ($cliente in $excClientes){
+            $data.excludeEnvironments += @($cliente)
+          }
+
+          $data | ConvertTo-Json -Depth 10 | Set-Content .github/AL-Go-Settings.json
+        env:
+          OWNER: ${{github.repository_owner}}
+          CLIENTES: ${{github.event.inputs.clientes}}
+        

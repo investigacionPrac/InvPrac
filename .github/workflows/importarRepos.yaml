@@ -17,50 +17,45 @@ jobs:
         - name: Checkout
           uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
           with:
-            token: ${{ github.token }}
+            token: ${{ secrets.ghTokenWorkflow }}
 
         - name: Configurar identidad de Git
           run: |
-            git config --global user.name 'github-actions[bot]'
-            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git config --global user.name "${{github.actor}}[bot]"
+            git config --global user.email "${{github.actor}}[bot]@users.noreply.github.com"
         
         - name: Importar repositorio
           shell: pwsh
-          continue-on-error: true
           run: |
             $url = "https://${{github.actor}}:${{secrets.GitLabToken}}@gitlab.com/${{github.event.inputs.URL}}"
+
             git remote add oldRepo $url
             git fetch oldRepo
-            git merge oldRepo/main --allow-unrelated-histories 
+            git merge oldRepo/main --allow-unrelated-histories -X theirs
             if ($LASTEXITCODE -ne 0){
-              Write-Host "Merge conflict detected, resolving automatically"
+              Write-Error "Se ha producido un error al importar el repositorio"
+              exit 1
             }
-        
-        - name: resolver conflictos en Readme
-          run: |
-            $file = "README.md"
-            git show HEAD:$file > ours.tmp
-            git show oldRepo/main:$file > theirs.tmp
 
-            Get-Content ours.tmp, theirs.tmp | Set-Content $file
-            git add $file
+            $app = Get-Content './app.json' -Raw | ConvertFrom-Json
+            $appName = $app.name
+            if (-not(Test-Path $appName)){
+              mkdir $appName
+            }
 
-        - name: resolver conflictos en .gitignore
-          run: |
-            $file = ".gitignore"
-            git show HEAD:$file > ours.tmp
-            git show oldRepo/main:$file > theirs.tmp
+            Get-ChildItem ${{github.workspace}} -Exclude .git, .github, $appName, .AL-Go, .gitignore, CODEOWNERS, README.md, Security.md, Support.md, Logo, 'al.code-workspace' | ForEach-Object {
+              Move-Item -Path $_.FullName -Destination $appName -Force
+            }
+            $data = Get-Content ./.AL-Go/settings.json -Raw | ConvertFrom-Json
+            if (-not $data.appFolders.Contains($appName)) {
+              $data.appFolders += $appName
+            }
+            $data | ConvertTo-Json -Depth 10 | Set-Content ./.AL-Go/settings.json
 
-            Get-Content ours.tmp, theirs.tmp | Set-Content $file
-            git add $file
-        
-        - name: Eliminar temporales y rama remote
-          run: |
-            Remove-Item ours.tmp, theirs.tmp -ErrorAction SilentlyContinue
             git remote remove oldRepo
 
         - name: Commit y push a main
           run: | 
             git add .
             git commit -m "Importar repositorio desde ${{github.event.inputs.URL}}"
-            git push origin main
+            git push 

@@ -1,0 +1,58 @@
+name: Añadir url de repos dependencia
+
+on:
+    workflow_dispatch:
+        inputs:
+            Url:
+                description: 'URL del repo donde está alojada la dependencia'
+                required: true
+                default: ''
+
+jobs:
+    addProbingPath:
+        runs-on: windows-latest
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            with:
+              token: ${{secrets.ghTokenWorkflow}}
+              fetch-depth: 0
+
+          - name: auth login
+            run: | 
+              $env:ghToken | gh auth login --with-token
+            env:
+              ghToken: ${{secrets.GHTOKENWORKFLOW}}
+          
+          - name: Obtener y añadir variables del repo
+            run: |
+              $repoVars = gh variable list
+              $variables = (gh variable list --json name,value) | ConvertFrom-Json
+              if (($null -eq $repoVars) -or (-not ($variables.name.Contains('ALGOREPOSETTINGS')))){
+                $probingPath = @{
+                  "appDependencyProbingPaths" = @(
+                    @{ 
+                        "repo" = "${{github.event.inputs.Url}}"
+                        "release_status" = "latestBuild"
+                        "AuthTokenSecret" = "ghTokenWorkflow"
+                    }
+                  )
+                }
+                $probingPathJson = $probingPath | ConvertTo-Json -Depth 10
+                gh variable set 'ALGOREPOSETTINGS' -b $probingPathJson
+              } else {
+                $data = $variables | Where-Object {$_.Name -eq 'ALGOREPOSETTINGS'}
+                $value = $data.value | ConvertFrom-Json
+                if ($value.appDependencyProbingPaths.repo -eq "${{github.event.inputs.Url}}"){
+                  $value.appDependencyProbingPaths = $value.appDependencyProbingPaths | Where-Object {$_.repo -notlike "${{github.event.inputs.Url}}"}
+                }
+                $value.appDependencyProbingPaths += @{ 
+                        "repo" = "${{github.event.inputs.Url}}"
+                        "release_status" = "latestBuild"
+                        "AuthTokenSecret" = "ghTokenWorkflow"
+                    }
+                $value = $value | ConvertTo-Json -Depth 10
+                gh variable set 'ALGOREPOSETTINGS' -b $value
+              }
+                

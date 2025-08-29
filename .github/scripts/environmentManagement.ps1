@@ -1,56 +1,63 @@
 param (
     [String] $repoPath,
     [String] $action,
-    [String] $client
+    [String] $envBC
 )
 Install-Module -Name BcContainerHelper -Force -AllowClobber
 
 Import-Module BcContainerHelper
 
+$clientID = $env:CLIENTID
+$clientSecret = $env:CLIENTSECRET
 
-Write-Host "Dentro de la función"
-Write-Host "clientID: $env:CLIENTID         length: $($env:CLIENTID.Length)"
-Write-Host "clientSecret: $env:CLIENTSECRET length: $($env:CLIENTSECRET.Length)"
-Write-Host "tenantID: $env:TENANTID         length: $($env:TENANTID.Length)"
-
-$authContext = New-BcAuthContext -clientID $env:CLIENTID -clientSecret $env:CLIENTSECRET -tenantID $env:TENANTID
-
-Write-Host "AuthContext $authContext"
-
-$app = Get-Content './app.json' -Raw | ConvertFrom-Json
-$appName = $app.name
-
-
-$environmentsBC = Get-BcEnvironments -bcAuthContext $authContext
-$environmentsGH = (gh api repos/$env:OWNER/$appName/environments) | ConvertFrom-Json
-$environmentsGHNames = $environmentsGH.environments.Name
-$environmentsBCNames = @()
-$clientes = @()
+$tenants = Get-Content '.github\metadata\tenants.json' -Raw | ConvertFrom-Json
 if ($action -eq 'crear') {
-    for ($i = 0; $i -lt $environmentsBC.length; $i++) {
-        $environmentsBCNames += $environmentsBC[$i].Name
-    }
-    foreach ($client in $environmentsBCNames) {
-        $appNames = @()
-        $clientApps = @()
-        Write-Host "Evaluando al cliente $client"
-        $clientApps = Get-BcPublishedApps -bcAuthContext $authContext -environment $client
-        
-        for ($i = 0; $i -lt $clientApps.Length; $i++) {
-            $appNames += $clientApps[$i].Name + ""
+    foreach ($tenant in $tenants) {
+        Write-Host "Evaluando a la empresa/cliente $($tenant.name)"
+        $authContext = New-BcAuthContext -clientID $clientID -clientSecret $clientSecret -tenantID $tenant.tenantID
+
+        $repoName = Split-Path -Path $repoPath -Leaf
+        $environmentsBC = Get-BcEnvironments -bcAuthContext $authContext
+        $environmentsBCNames = @()
+
+        $environmentsGH = (gh api repos/$env:OWNER/$repoName/environments) | ConvertFrom-Json
+        $environmentsGHNames = $environmentsGH.environments.Name
+
+        $directorios = Get-ChildItem -Directory
+
+        foreach ($dir in $directorios) {
+            $appJsonPath = Join-Path $dir 'app.json'
+    
+            if (Test-Path $appJsonPath) {
+                $app = Get-Content $appJsonPath -Raw | ConvertFrom-Json
+                $appName = $app.Name
+            }
         }
-        if ($appNames.Contains($appName)) {
-            $clientes += $client + " "
-            if ($environmentsGHNames.Contains($client)) {
-                Write-Warning "El entorno $client ya existe por lo que no se creará ningún entorno con ese nombre"
+
+        for ($i = 0; $i -lt $environmentsBC.length; $i++) {
+            $environmentsBCNames += $environmentsBC[$i].Name
+        }
+        foreach ($envBC in $environmentsBCNames) {
+            $appNames = @()
+            $envApps = @()
+            Write-Host "Evaluando al entorno $envBC"
+            $envApps = Get-BcPublishedApps -bcAuthContext $authContext -environment $envBC
+
+            for ($i = 0; $i -lt $envApps.Length; $i++) {
+                $appNames += $envApps[$i].Name + ""
+            }
+            if ($appNames.Contains($appName)) {
+                if ($environmentsGHNames.Contains($envBC)) {
+                    Write-Warning "El entorno $envBC ya existe en GitHub por lo que no se creará ningún entorno con ese nombre"
+                }
+                else {
+                    gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$repoName/environments/$envBC
+                    Write-Host "Entorno $envBC creado correctamente"
+                }
             }
             else {
-                gh api --method PUT -H "Accept: application/vnd.github+json" repos/$env:OWNER/$appName/environments/$client
-                Write-Host "Entorno $client creado correctamente"
+                Write-Warning "La aplicación $appName no está publicada en el entorno $envBC, por lo que no se creará ningún entorno con ese nombre"
             }
-        }
-        else {
-            Write-Warning "La aplicación $appName no está publicada en el entorno $client, por lo que no se creará ningún entorno con ese nombre"
         }
     }
 }
@@ -60,6 +67,6 @@ elseif ($action -eq 'actualizarPTE') {
         "scope" = "PTE"
     }
 
-    $settings | Add-Member -NotePropertyName "DeployTo$client" -NotePropertyValue $PTE
+    $settings | Add-Member -NotePropertyName "DeployTo$envBC" -NotePropertyValue $PTE
     $settings | ConvertTo-Json -Depth 10 | Set-Content '.github\AL-Go-Settings.json'
 }
