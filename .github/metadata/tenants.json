@@ -1,10 +1,6 @@
 [
-  {
-    "name": "CRMbc466932",
-    "tenantID": "a696c986-7d05-4db2-a76f-3e8e9fa86142"
-  },
-  {
-    "name": "prueba",
-    "tenantID": "12345678-90ab-4cde-af12-34567890abcd"
-  }
+    {
+        "name": "CRMbc466932",
+        "tenantID": "a696c986-7d05-4db2-a76f-3e8e9fa86142"
+    }
 ]
