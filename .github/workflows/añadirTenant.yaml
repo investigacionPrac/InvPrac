@@ -31,9 +31,7 @@ jobs:
               exit 1
           }
           $data = Get-Content ./.github/metadata/tenants.json | ConvertFrom-Json
-          if ($data.GetType().Name -like 'PSCustomObject'){
             $data = @($data)
-          }
           $data += [PSCustomObject]@{
               name = $tenantName
               tenantID = $tenantId
